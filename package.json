@@ -1,5 +1,5 @@
 {
-  "name": "hledger-parser",
+  "name": "@jones.tristand/hledger-parser",
   "version": "0.2.0-alpha.0",
   "description": "A parser for ledger/hledger journal files based on Chevrotain",
   "main": "build/main/index.js",
@@ -22,8 +22,7 @@
     "test": "run-s build test:*",
     "test:lint": "eslint src --ext .ts",
     "test:prettier": "prettier \"src/**/*.ts\" --list-different",
-    "test:spelling": "cspell \"{README.md,.github/*.md,src/**/*.ts}\"",
-    "test:unit": "nyc --silent ava",
+    "test:unit": "nyc ava",
     "check-cli": "run-s test diff-integration-tests check-integration-tests",
     "check-integration-tests": "run-s check-integration-test:*",
     "diff-integration-tests": "mkdir -p diff && rm -rf diff/test && cp -r test diff/test && rm -rf diff/test/test-*/.git && cd diff && git init --quiet && git add -A && git commit --quiet --no-verify --allow-empty -m 'WIP' && echo '\\n\\nCommitted most recent integration test output in the \"diff\" directory. Review the changes with \"cd diff && git diff HEAD\" or your preferred git diff viewer.'",
@@ -90,7 +89,7 @@
     "README.md"
   ],
   "ava": {
-    "failFast": true,
+    "failFast": false,
     "timeout": "60s",
     "typescript": {
       "rewritePaths": {
@@ -98,8 +97,10 @@
       }
     },
     "files": [
+      "src/__tests__/*.test.ts",
       "!build/module/**"
-    ]
+    ],
+    "verbose": true
   },
   "config": {
     "commitizen": {
@@ -107,6 +108,9 @@
     }
   },
   "prettier": {
+    "trailingComma": "none",
+    "tabWidth": 2,
+    "semi": true,
     "singleQuote": true
   },
   "nyc": {

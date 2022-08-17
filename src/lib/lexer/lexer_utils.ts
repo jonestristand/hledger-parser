@@ -67,16 +67,15 @@ export const matchCommodityText: CustomPatternMatcherFunc = (text, offset) => {
   return result;
 };
 
-export function matchAccountName(start?: '(' | '[', end?: ')' | ']') {
-  const s = start ?? '(';
-  const e = end ?? ')';
+export function matchAccountName(delimiter?: '(' | '[') {
+  const s = delimiter ?? '(';
+  const e = delimiter === '[' ? ']' : ')';
   const DelimitedAccountNameRegex = new RegExp(
     `\\${s}(?!.*[ \\t]{2,}.*\\${e})([^;\\r\\n]*)\\${e}(?=[ \\t]{2,}|[\\r\\n])`,
     'y'
   );
-  const NormalAccountNameRegex = /(.+?)(?=[\t ]{2,}|;|[\r\n])/y;
-  const Regex =
-    start && end ? DelimitedAccountNameRegex : NormalAccountNameRegex;
+  const NormalAccountNameRegex = /(.+?)(?=[\t ]{2,}|[\t ]{1,};|[\r\n])/y;
+  const Regex = delimiter ? DelimitedAccountNameRegex : NormalAccountNameRegex;
 
   const matcher: CustomPatternMatcherFunc = (text, offset) => {
     Regex.lastIndex = offset;

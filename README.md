@@ -1,4 +1,5 @@
 # Welcome to hledger-parser 👋
+
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/jonestristand/hledger-parser#readme" target="_blank">
@@ -10,6 +11,9 @@
   <a href="https://github.com/jonestristand/hledger-parser/blob/master/LICENSE" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/github/license/jonestristand/hledger-parser" />
   </a>
+  <a href="https://dl.circleci.com/status-badge/redirect/gh/jonestristand/hledger-parser/tree/main" target="_blank">
+    <img alt="Circle CI" src="https://dl.circleci.com/status-badge/img/gh/jonestristand/hledger-parser/tree/main.svg?style=shield">
+  </a>
   <a href="https://twitter.com/TDJonesEM" target="_blank">
     <img alt="Twitter: TDJonesEM" src="https://img.shields.io/twitter/follow/TDJonesEM.svg?style=social" />
   </a>
@@ -20,8 +24,8 @@
 > A parser for ledger/hledger journal files based on Chevrotain
 
 ## Grammar
-[🏗️ Parsing diagram](https://raw.githack.com/jonestristand/hledger-parser/main/diagram.html)
 
+[🏗️ Parsing diagram](https://raw.githack.com/jonestristand/hledger-parser/main/diagram.html)
 
 ## Install as Library
 

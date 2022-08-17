@@ -1,4 +1,4 @@
-export type StatusIndicator = "cleared" | "pending" | "unmarked";
+export type StatusIndicator = 'cleared' | 'pending' | 'unmarked';
 
 export interface Date {
   y: number;
@@ -17,7 +17,7 @@ export interface Tag {
 }
 
 export interface Account {
-  type: "real" | "virtual" | "virtualBalanced";
+  type: 'real' | 'virtual' | 'virtualBalanced';
   name: string[];
 }
 
@@ -28,12 +28,12 @@ export interface Amount {
 
 export interface LotPrice {
   amount: Amount;
-  lotPriceType: "total" | "unit";
+  lotPriceType: 'total' | 'unit';
 }
 
 export interface Assertion {
   amount: Amount;
-  type: "strong" | "normal";
+  type: 'strong' | 'normal';
   subaccounts: boolean;
 }
 

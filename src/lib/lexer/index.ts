@@ -4,7 +4,7 @@ import { account_mode } from './tokens_account_modes';
 import {
   comment_mode,
   inline_comment_mode,
-  inline_comment_tag_mode,
+  inline_comment_tag_mode
 } from './tokens_comment_modes';
 import { default_mode } from './tokens_default_mode';
 import { posting_amount_mode, posting_mode } from './tokens_posting_modes';
@@ -22,9 +22,9 @@ export const tokenModeDefinitions = {
     posting_amount_mode,
     price_mode,
     price_amounts_mode,
-    default_mode,
+    default_mode
   },
-  defaultMode: 'default_mode',
+  defaultMode: 'default_mode'
 };
 
 export default new Lexer(tokenModeDefinitions);

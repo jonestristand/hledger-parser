@@ -17,12 +17,10 @@ export function parseLedger(text: string) {
   const ast = HLedgerRawVisitor.journal(cst.children);
 
   return {
-    // This is a pure grammar, the value will be undefined until we add embedded actions
-    // or enable automatic CST creation.
     ast,
     tokens: lexResult.tokens,
     lexErrors: lexResult.errors,
-    parseErrors: HLedgerParser.errors,
+    parseErrors: HLedgerParser.errors
   };
 }
 

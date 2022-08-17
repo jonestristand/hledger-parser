@@ -93,8 +93,8 @@ export const inline_comment_tag_mode = [
 
 // ====- Token Export -========================================================
 export default {
-  SemicolonComment,
   SEMICOLON_AT_START,
+  SemicolonComment,
   HASHTAG_AT_START,
   ASTERISK_AT_START,
   CommentText,

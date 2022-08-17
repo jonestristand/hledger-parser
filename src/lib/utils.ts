@@ -1,4 +1,4 @@
-import type { IToken } from "@chevrotain/types";
+import type { IToken } from '@chevrotain/types';
 
 export function printTokenList(tokens: IToken[]) {
   const nameColumnWidth = Math.floor(process.stdout.columns * 0.2);
@@ -10,14 +10,14 @@ export function printTokenList(tokens: IToken[]) {
   const valueColumnWidth =
     process.stdout.columns - nameColumnWidth - pushColumnWidth - popColumnWidth;
 
-  const header = `Token Type${" ".repeat(
+  const header = `Token Type${' '.repeat(
     nameColumnWidth - 10
-  )}Value${" ".repeat(valueColumnWidth - 5)}Push Lexer Mode${" ".repeat(
+  )}Value${' '.repeat(valueColumnWidth - 5)}Push Lexer Mode${' '.repeat(
     pushColumnWidth - 15
-  )}Pop Lexer Mode${" ".repeat(popColumnWidth - 14)}`;
-  const headerUnderline = `${"=".repeat(nameColumnWidth - 2)}  ${"=".repeat(
+  )}Pop Lexer Mode${' '.repeat(popColumnWidth - 14)}`;
+  const headerUnderline = `${'='.repeat(nameColumnWidth - 2)}  ${'='.repeat(
     valueColumnWidth - 2
-  )}  ${"=".repeat(pushColumnWidth - 2)}  ${"=".repeat(popColumnWidth - 1)}`;
+  )}  ${'='.repeat(pushColumnWidth - 2)}  ${'='.repeat(popColumnWidth - 1)}`;
 
   const fmtTokenList = tokens.map((token) => {
     const nameColumnValue = `[${token.tokenType.name.substring(
@@ -25,27 +25,27 @@ export function printTokenList(tokens: IToken[]) {
       nameColumnWidth - 2
     )}]`;
     const valueColumnValue = `|${token.image
-      .replace(/[\r\n]/, "\\n")
+      .replace(/[\r\n]/, '\\n')
       .substring(0, valueColumnWidth - 2)}|`;
-    const pushColumnValue = token.tokenType.PUSH_MODE ?? "";
-    const popColumnValue = token.tokenType.POP_MODE ?? "";
+    const pushColumnValue = token.tokenType.PUSH_MODE ?? '';
+    const popColumnValue = token.tokenType.POP_MODE ?? '';
     return (
-      `${nameColumnValue}${" ".repeat(
+      `${nameColumnValue}${' '.repeat(
         Math.max(0, nameColumnWidth - nameColumnValue.length)
       )}` +
-      `${valueColumnValue}${" ".repeat(
+      `${valueColumnValue}${' '.repeat(
         Math.max(0, valueColumnWidth - valueColumnValue.length)
       )}` +
-      `${pushColumnValue}${" ".repeat(
+      `${pushColumnValue}${' '.repeat(
         Math.max(0, pushColumnWidth - pushColumnValue.length)
       )}` +
       `${
-        typeof popColumnValue === "boolean"
+        typeof popColumnValue === 'boolean'
           ? popColumnValue.toString()
           : popColumnValue
       }`
     );
   });
 
-  return [header, headerUnderline, ...fmtTokenList].join("\n");
+  return [header, headerUnderline, ...fmtTokenList].join('\n');
 }

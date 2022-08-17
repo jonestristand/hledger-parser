@@ -193,9 +193,9 @@ export interface LotPriceCstNode extends CstNode {
 }
 
 export type LotPriceCstChildren = {
-  LBRACKET?: IToken[];
+  LPAREN?: IToken[];
   AT?: (IToken)[];
-  RBRACKET?: IToken[];
+  RPAREN?: IToken[];
   amount: AmountCstNode[];
 };
 

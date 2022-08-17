@@ -28,8 +28,8 @@ const SEMICOLON = createToken({ name: 'SEMICOLON', pattern: /;/ });
 const HASHTAG = createToken({ name: 'HASHTAG', pattern: /#/ });
 const ASTERISK = createToken({ name: 'ASTERISK', pattern: /\*/ });
 
-const LPAREN = createToken({ name: 'LBRACKET', pattern: '(' });
-const RPAREN = createToken({ name: 'RBRACKET', pattern: ')' });
+const LPAREN = createToken({ name: 'LPAREN', pattern: '(' });
+const RPAREN = createToken({ name: 'RPAREN', pattern: ')' });
 
 const LBRACKET = createToken({ name: 'LBRACKET', pattern: '[' });
 const RBRACKET = createToken({ name: 'RBRACKET', pattern: ']' });
@@ -44,6 +44,7 @@ const Date = createToken({
 export default {
   NEWLINE,
   SINGLE_WS,
+  Date,
   DIGIT,
   SLASH,
   DOT,
@@ -60,6 +61,5 @@ export default {
   LPAREN,
   RPAREN,
   LBRACKET,
-  RBRACKET,
-  Date
+  RBRACKET
 };

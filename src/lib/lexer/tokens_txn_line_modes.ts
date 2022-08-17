@@ -25,7 +25,7 @@ export const ParenValue = createToken({
 
 export const Text = createToken({
   name: 'Text',
-  pattern: /[^;\r\n]+/ ///[a-zA-Z_][a-zA-Z _]*[a-zA-Z_]/
+  pattern: /[^|;\r\n]+/ ///[a-zA-Z_][a-zA-Z _]*[a-zA-Z_]/
 });
 
 // ====- Lexing modes -========================================================
@@ -34,6 +34,7 @@ export const txn_line_mode = [
   BasicTokens.NEWLINE,
   BasicTokens.EQUALS,
   BasicTokens.Date,
+  BasicTokens.PIPE,
   ParenValue,
   TxnStatusIndicator,
   CommentModeTokens.SemicolonComment,

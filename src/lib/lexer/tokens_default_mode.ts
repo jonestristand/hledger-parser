@@ -15,7 +15,7 @@ const DateAtStart = createToken({
 
 const INDENT = createToken({
   name: 'INDENT',
-  pattern: matchOnlyAtStart(/[ \t]+/y),
+  pattern: matchOnlyAtStart(/  +|\t+/y),
   start_chars_hint: [' ', '\t'],
   line_breaks: false,
   push_mode: 'posting_mode'
