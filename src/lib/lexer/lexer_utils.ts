@@ -26,24 +26,6 @@ export function matchOnlyAtStart(regex: RegExp) {
   return matcher;
 }
 
-export function matchNotAtStart(regex: RegExp) {
-  const matcher: CustomPatternMatcherFunc = (text, offset, tokens) => {
-    const prevToken = _.last(tokens);
-    if (
-      offset !== 0 &&
-      prevToken?.tokenType.name !== BasicTokens.NEWLINE.name
-    ) {
-      regex.lastIndex = offset;
-      const match = regex.exec(text);
-      return match ? [match[0]] : null;
-    } else {
-      return null;
-    }
-  };
-
-  return matcher;
-}
-
 const parenValueRegex = /\(([^)\n]*)\)/y;
 export const matchParenValue: CustomPatternMatcherFunc = (text, offset) => {
   parenValueRegex.lastIndex = offset;
@@ -93,9 +75,8 @@ export function matchAccountName(delimiter?: '(' | '[') {
   return matcher;
 }
 
-export function matchOnlyAfter(match: RegExp, after: TokenType | TokenType[]) {
-  const afterArr = after instanceof Array ? after : [after];
-  const afterTokenNames = afterArr.map((token) => token.name);
+export function matchOnlyAfter(match: RegExp, after: TokenType[]) {
+  const afterTokenNames = after.map((token) => token.name);
 
   const matcher: CustomPatternMatcherFunc = (text, offset, tokens) => {
     const lastNonWsToken = _.findLast(
