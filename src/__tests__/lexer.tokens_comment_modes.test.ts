@@ -20,39 +20,39 @@ const lex = new Lexer(defaultModeTokensWithoutModes, { skipValidations: true });
 test('SEMICOLON_AT_START', (t) => {
   // Separators
   t.is(
-    utils.simplifyLexResult(lex.tokenize(';')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize(';'))[0],
     'SEMICOLON_AT_START',
     'accepts ;'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize(':')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize(':'))[0],
     'SEMICOLON_AT_START',
     'does not accept colon'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize('*')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('*'))[0],
     'SEMICOLON_AT_START',
     'does not accept asterisk'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize('#')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('#'))[0],
     'SEMICOLON_AT_START',
     'does not accept hashtag'
   );
 
   // Start of line
   t.is(
-    utils.simplifyLexResult(lex.tokenize(';')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize(';'))[0],
     'SEMICOLON_AT_START',
     'accepts SEMICOLON_AT_START at start of file'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('#\n;')).map((t) => t.n)[2],
+    utils.simplifyLexResult(lex.tokenize('#\n;'))[2],
     'SEMICOLON_AT_START',
     'accepts SEMICOLON_AT_START at start of line'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize('=;')).map((t) => t.n)[1],
+    utils.simplifyLexResult(lex.tokenize('=;'))[1],
     'SEMICOLON_AT_START',
     'does not accept SEMICOLON_AT_START in middle of line'
   );
@@ -61,34 +61,34 @@ test('SEMICOLON_AT_START', (t) => {
 test('HASHTAG_AT_START', (t) => {
   // Separators
   t.is(
-    utils.simplifyLexResult(lex.tokenize('#')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('#'))[0],
     'HASHTAG_AT_START',
     'accepts #'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize(';')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize(';'))[0],
     'HASHTAG_AT_START',
     'does not accept semicolon'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize('*')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('*'))[0],
     'HASHTAG_AT_START',
     'does not accept asterisk'
   );
 
   // Start of line
   t.is(
-    utils.simplifyLexResult(lex.tokenize('#')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('#'))[0],
     'HASHTAG_AT_START',
     'accepts HASHTAG_AT_START at start of file'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize(';\n#')).map((t) => t.n)[2],
+    utils.simplifyLexResult(lex.tokenize(';\n#'))[2],
     'HASHTAG_AT_START',
     'accepts HASHTAG_AT_START at start of line'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize('=#')).map((t) => t.n)[1],
+    utils.simplifyLexResult(lex.tokenize('=#'))[1],
     'HASHTAG_AT_START',
     'does not accept HASHTAG_AT_START in middle of line'
   );
@@ -97,34 +97,34 @@ test('HASHTAG_AT_START', (t) => {
 test('ASTERISK_AT_START', (t) => {
   // Separators
   t.is(
-    utils.simplifyLexResult(lex.tokenize('*')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('*'))[0],
     'ASTERISK_AT_START',
     'accepts *'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize(';')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize(';'))[0],
     'ASTERISK_AT_START',
     'does not accept semicolon'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize('#')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('#'))[0],
     'ASTERISK_AT_START',
     'does not accept hashtag'
   );
 
   // Start of line
   t.is(
-    utils.simplifyLexResult(lex.tokenize('*')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('*'))[0],
     'ASTERISK_AT_START',
     'accepts ASTERISK_AT_START at start of file'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('#\n*')).map((t) => t.n)[2],
+    utils.simplifyLexResult(lex.tokenize('#\n*'))[2],
     'ASTERISK_AT_START',
     'accepts ASTERISK_AT_START at start of line'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize('=*')).map((t) => t.n)[1],
+    utils.simplifyLexResult(lex.tokenize('=*'))[1],
     'ASTERISK_AT_START',
     'does not accept ASTERISK_AT_START in middle of line'
   );

@@ -20,73 +20,73 @@ const lex = new Lexer(defaultModeTokensWithoutModes, { skipValidations: true });
 test('DateAtStart', (t) => {
   // Separators
   t.is(
-    utils.simplifyLexResult(lex.tokenize('2000/01/01')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('2000/01/01'))[0],
     'DateAtStart',
     'accepts yyyy/mm/dd'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('2000-01-01')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('2000-01-01'))[0],
     'DateAtStart',
     'accepts yyyy-mm-dd'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('2000.01.01')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('2000.01.01'))[0],
     'DateAtStart',
     'accepts yyyy.mm.dd'
   );
 
   // Single digit month and date
   t.is(
-    utils.simplifyLexResult(lex.tokenize('2000/1/01')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('2000/1/01'))[0],
     'DateAtStart',
     'accepts yyyy/m/dd'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('2000/01/1')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('2000/01/1'))[0],
     'DateAtStart',
     'accepts yyyy/mm/d'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('2000/1/1')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('2000/1/1'))[0],
     'DateAtStart',
     'accepts yyyy/m/d'
   );
 
   // Missing year
   t.is(
-    utils.simplifyLexResult(lex.tokenize('01/01')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('01/01'))[0],
     'DateAtStart',
     'accepts mm/dd'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('1/01')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('1/01'))[0],
     'DateAtStart',
     'accepts m/dd'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('01/1')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('01/1'))[0],
     'DateAtStart',
     'accepts mm/d'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('1/1')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('1/1'))[0],
     'DateAtStart',
     'accepts m/d'
   );
 
   // Start of line
   t.is(
-    utils.simplifyLexResult(lex.tokenize('2002/02/03')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('2002/02/03'))[0],
     'DateAtStart',
     'accepts DateAtStart at start of file'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('#\n2002/02/03')).map((t) => t.n)[2],
+    utils.simplifyLexResult(lex.tokenize('#\n2002/02/03'))[2],
     'DateAtStart',
     'accepts DateAtStart at start of line'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize('=2002/03/03')).map((t) => t.n)[1],
+    utils.simplifyLexResult(lex.tokenize('=2002/03/03'))[1],
     'DateAtStart',
     'does not accept DateAtStart in middle of line'
   );
@@ -95,46 +95,46 @@ test('DateAtStart', (t) => {
 test('INDENT', (t) => {
   // Allowed
   t.is(
-    utils.simplifyLexResult(lex.tokenize('  ')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('  '))[0],
     'INDENT',
     'accepts two spaces'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('    ')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('    '))[0],
     'INDENT',
     'accepts 4 spaces'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('\t')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('\t'))[0],
     'INDENT',
     'accepts a single tab'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('\t\t')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('\t\t'))[0],
     'INDENT',
     'accepts two tabs'
   );
 
   // Not allowed
   t.not(
-    utils.simplifyLexResult(lex.tokenize(' ')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize(' '))[0],
     'INDENT',
     'does not accept a single space'
   );
 
   // Start of line
   t.is(
-    utils.simplifyLexResult(lex.tokenize('    ')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('    '))[0],
     'INDENT',
     'accepts INDENT at beginning of file'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('#\n    ')).map((t) => t.n)[2],
+    utils.simplifyLexResult(lex.tokenize('#\n    '))[2],
     'INDENT',
     'accepts INDENT at beginning of line'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize('=    ')).map((t) => t.n)[1],
+    utils.simplifyLexResult(lex.tokenize('=    '))[1],
     'INDENT',
     'does not accept INDENT in middle of line'
   );
@@ -143,31 +143,31 @@ test('INDENT', (t) => {
 test('PDirective', (t) => {
   // Allowed
   t.is(
-    utils.simplifyLexResult(lex.tokenize('P')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('P'))[0],
     'PDirective',
     'accepts P'
   );
 
   // Not allowed
   t.not(
-    utils.simplifyLexResult(lex.tokenize('p')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('p'))[0],
     'PDirective',
     'does not accept p'
   );
 
   // Start of line
   t.is(
-    utils.simplifyLexResult(lex.tokenize('P')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('P'))[0],
     'PDirective',
     'accepts PDirective at start of file'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('#\nP')).map((t) => t.n)[2],
+    utils.simplifyLexResult(lex.tokenize('#\nP'))[2],
     'PDirective',
     'accepts PDirective at start of line'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize('=P')).map((t) => t.n)[3],
+    utils.simplifyLexResult(lex.tokenize('=P'))[3],
     'PDirective',
     'does not accept PDirective in middle of line'
   );
@@ -176,37 +176,37 @@ test('PDirective', (t) => {
 test('AccountDirective', (t) => {
   // Allowed
   t.is(
-    utils.simplifyLexResult(lex.tokenize('account')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('account'))[0],
     'AccountDirective',
     'accepts account'
   );
 
   // Not allowed
   t.not(
-    utils.simplifyLexResult(lex.tokenize('Account')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('Account'))[0],
     'AccountDirective',
     'does not accept Account'
   );
   // Not allowed
   t.not(
-    utils.simplifyLexResult(lex.tokenize('aCCOUNT')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('aCCOUNT'))[0],
     'AccountDirective',
     'does not accept aCCOUNT'
   );
 
   // Start of line
   t.is(
-    utils.simplifyLexResult(lex.tokenize('account')).map((t) => t.n)[0],
+    utils.simplifyLexResult(lex.tokenize('account'))[0],
     'AccountDirective',
     'accepts AccountDirective at start of file'
   );
   t.is(
-    utils.simplifyLexResult(lex.tokenize('#\naccount')).map((t) => t.n)[2],
+    utils.simplifyLexResult(lex.tokenize('#\naccount'))[2],
     'AccountDirective',
     'accepts AccountDirective at start of line'
   );
   t.not(
-    utils.simplifyLexResult(lex.tokenize('=account')).map((t) => t.n)[3],
+    utils.simplifyLexResult(lex.tokenize('=account'))[3],
     'AccountDirective',
     'does not accept AccountDirective in middle of line'
   );

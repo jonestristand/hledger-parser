@@ -67,17 +67,14 @@ function isCstNode(testNode: CstElement): testNode is CstNode {
   return !!(testNode as CstNode).name;
 }
 
-interface simpleLex {
-  n: string;
-  i: string;
-  p?: unknown;
-}
+type simpleLex = string | Record<string, unknown>;
 
 export function simplifyLexResult(result: ILexingResult): simpleLex[] {
-  return result.tokens.map((t) => ({
-    n: t.tokenType.name,
-    i: t.image,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    p: t.payload
-  }));
+  return result.tokens.map((t) =>
+    t.payload
+      ? {
+          [t.tokenType.name]: t.payload as unknown
+        }
+      : t.tokenType.name
+  );
 }

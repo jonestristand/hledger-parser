@@ -56,10 +56,7 @@ test('Price directives', (t) => {
   tests.forEach((testPair) => {
     t.deepEqual(
       utils
-        .simplifyLexResult(HLedgerLexer.tokenize(testPair.pattern))
-        .map((t) => {
-          return t.p ? {[t.n]: t.p} : t.n;
-        }),
+        .simplifyLexResult(HLedgerLexer.tokenize(testPair.pattern)),
       testPair.result,
       testPair.description
     );
@@ -106,10 +103,7 @@ test('Account directives', (t) => {
   tests.forEach((testPair) => {
     t.deepEqual(
       utils
-        .simplifyLexResult(HLedgerLexer.tokenize(testPair.pattern))
-        .map((t) => {
-          return t.p ? {[t.n]: t.p} : t.n;
-        }),
+        .simplifyLexResult(HLedgerLexer.tokenize(testPair.pattern)),
       testPair.result,
       testPair.description
     );
@@ -140,10 +134,7 @@ test('Full-line comments', (t) => {
   tests.forEach((testPair) => {
     t.deepEqual(
       utils
-        .simplifyLexResult(HLedgerLexer.tokenize(testPair.pattern))
-        .map((t) => {
-          return t.p ? {[t.n]: t.p} : t.n;
-        }),
+        .simplifyLexResult(HLedgerLexer.tokenize(testPair.pattern)),
       testPair.result,
       testPair.description
     );
@@ -170,10 +161,7 @@ test('Transactions', (t) => {
   tests.forEach((testPair) => {
     t.deepEqual(
       utils
-        .simplifyLexResult(HLedgerLexer.tokenize(testPair.pattern))
-        .map((t) => {
-          return t.p ? {[t.n]: t.p} : t.n;
-        }),
+        .simplifyLexResult(HLedgerLexer.tokenize(testPair.pattern)),
       testPair.result,
       testPair.description
     );
