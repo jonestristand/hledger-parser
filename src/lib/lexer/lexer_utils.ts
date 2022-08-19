@@ -17,10 +17,9 @@ export function matchOnlyAtStart(regex: RegExp) {
     ) {
       regex.lastIndex = offset;
       const match = regex.exec(text);
-      return match ? [match[0]] : null;
-    } else {
-      return null;
+      if (match) return [match[0]];
     }
+    return null;
   };
 
   return matcher;
