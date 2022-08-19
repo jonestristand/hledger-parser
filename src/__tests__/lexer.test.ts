@@ -148,12 +148,24 @@ test('Transactions', (t) => {
       result: [ 'DateAtStart', 'NEWLINE' ],
       description: 'recognize a minimal transaction'
     }, {
+      pattern: `1900/01/01 New York Steakhouse
+                   Assets:Main Chequing  -$23.05 = $100.00
+                   Expenses:Food\n`,
+      result: [ 'DateAtStart', 'Text', 'NEWLINE',
+                'INDENT', {'RealAccountName': ['Assets', 'Main Chequing']}, 'DASH', {'CommodityText': '$'}, 'Number', 'EQUALS', {'CommodityText': '$'}, 'Number', 'NEWLINE',
+                'INDENT', {'RealAccountName': ['Expenses', 'Food']}, 'NEWLINE'],
+      description: 'recognize a realistic transaction'
+    }, {
       pattern: `1900/01/01 * (a) payee|memo ; comment and tag: value,
                    Assets:Real          -$1.00 @ 20 "green apples" = -$1.00
-                   (Assets:Virtual)     2CAD @@ 20$\n`,
+                   (Assets:Virtual)     2CAD @@ 20$ == 0.1
+                   [Assets:VirtualBal:Sub]  1.3e4 (@@) .4 *== 1 ; comment tag1: val1, tag2: val2
+                   ; another comment with a tag:value\n`,
       result: [ 'DateAtStart', 'TxnStatusIndicator', {'ParenValue': 'a'}, 'Text', 'PIPE', 'Text', 'SemicolonComment', 'InlineCommentText', 'InlineCommentTagName', 'InlineCommentTagColon', 'InlineCommentTagValue', 'InlineCommentTagComma', 'NEWLINE',
                 'INDENT', {'RealAccountName': ['Assets', 'Real']}, 'DASH', {'CommodityText': '$'}, 'Number', 'AT', 'Number', {'CommodityText': 'green apples'}, 'EQUALS', 'DASH', {'CommodityText': '$'}, 'Number', 'NEWLINE',
-                'INDENT', {'VirtualAccountName': ['Assets', 'Virtual']}, 'Number', {'CommodityText': 'CAD'}, 'AT', 'AT', 'Number', {'CommodityText': '$'}, 'NEWLINE'],
+                'INDENT', {'VirtualAccountName': ['Assets', 'Virtual']}, 'Number', {'CommodityText': 'CAD'}, 'AT', 'AT', 'Number', {'CommodityText': '$'}, 'EQUALS', 'EQUALS', 'Number', 'NEWLINE',
+                'INDENT', {'VirtualBalancedAccountName': ['Assets', 'VirtualBal', 'Sub']}, 'Number', 'LPAREN', 'AT', 'AT', 'RPAREN', 'Number', 'ASTERISK', 'EQUALS', 'EQUALS', 'Number', 'SemicolonComment', 'InlineCommentText', 'InlineCommentTagName', 'InlineCommentTagColon', 'InlineCommentTagValue', 'InlineCommentTagComma', 'InlineCommentTagName', 'InlineCommentTagColon', 'InlineCommentTagValue', 'NEWLINE',
+                'INDENT', 'SemicolonComment', 'InlineCommentText', 'InlineCommentTagName', 'InlineCommentTagColon', 'InlineCommentTagValue', 'NEWLINE'],
       description: 'recognize a maximal transaction'
     }
   ];
