@@ -179,3 +179,21 @@ test('Transactions', (t) => {
     );
   });
 });
+
+// prettier-ignore
+test('Start-of-line directives', (t) => {
+  const tests = [{
+    pattern: 'An Account:Test',
+    result: [],
+    description: `reject a line starting with anything other than date, indent, ;, #, *, 'account', or 'P'`
+  }];
+
+  tests.forEach((testPair) => {
+    t.deepEqual(
+      utils
+        .simplifyLexResult(HLedgerLexer.tokenize(testPair.pattern)),
+      testPair.result,
+      testPair.description
+    );
+  });
+})
