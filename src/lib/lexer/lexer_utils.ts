@@ -26,27 +26,33 @@ export function matchOnlyAtStart(regex: RegExp) {
   return matcher;
 }
 
-const parenValueRegex = /\(([^)\n]*)\)/y;
+const parenValueRegex = /\(([^)\n\r]*)\)/y;
 export const matchParenValue: CustomPatternMatcherFunc = (text, offset) => {
   parenValueRegex.lastIndex = offset;
   const match = parenValueRegex.exec(text);
-  const result: CustomPatternMatcherReturn | null = match ? [match[0]] : null;
 
-  if (result) result.payload = match?.[1] ?? '';
+  if (match) {
+    const result: CustomPatternMatcherReturn = [match[0]];
+    result.payload = match[1];
+    return result;
+  }
 
-  return result;
+  return null;
 };
 
 const commodityTextRegex = /([a-zA-Z\p{Sc}]+)|"([^";\r\n]*)"/uy;
 export const matchCommodityText: CustomPatternMatcherFunc = (text, offset) => {
   commodityTextRegex.lastIndex = offset;
   const match = commodityTextRegex.exec(text);
-  const result: CustomPatternMatcherReturn | null = match ? [match[0]] : null;
-  if (result) {
-    result.payload = match?.[1] ?? match?.[2] ?? '';
+
+  if (match) {
+    const result: CustomPatternMatcherReturn = [match[0]];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    result.payload = match[1] ?? match[2];
+    return result;
   }
 
-  return result;
+  return null;
 };
 
 export function matchAccountName(delimiter?: '(' | '[') {
