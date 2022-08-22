@@ -159,7 +159,7 @@ test('Transactions', (t) => {
       pattern: `1900/01/01 * (a) payee|memo ; comment and tag: value,
                    Assets:Real          -$1.00 @ 20 "green apples" = -$1.00
                    (Assets:Virtual)     2CAD @@ 20$ == 0.1
-                   [Assets:VirtualBal:Sub]  1.3e4 (@@) .4 *== 1 ; comment tag1: val1, tag2: val2
+                   [Assets:VirtualBal:Sub]  1.3e4 (@@) 0.4 *== 1 ; comment tag1: val1, tag2: val2
                    ; another comment with a tag:value\n`,
       result: [ 'DateAtStart', 'TxnStatusIndicator', {'ParenValue': 'a'}, 'Text', 'PIPE', 'Text', 'SemicolonComment', 'InlineCommentText', 'InlineCommentTagName', 'InlineCommentTagColon', 'InlineCommentTagValue', 'InlineCommentTagComma', 'NEWLINE',
                 'INDENT', {'RealAccountName': ['Assets', 'Real']}, 'DASH', {'CommodityText': '$'}, 'Number', 'AT', 'Number', {'CommodityText': 'green apples'}, 'EQUALS', 'DASH', {'CommodityText': '$'}, 'Number', 'NEWLINE',
