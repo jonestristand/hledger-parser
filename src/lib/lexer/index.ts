@@ -27,4 +27,4 @@ export const tokenModeDefinitions = {
   defaultMode: 'default_mode'
 };
 
-export default new Lexer(tokenModeDefinitions);
+export default new Lexer(tokenModeDefinitions, { recoveryEnabled: false });
