@@ -1,15 +1,24 @@
 import * as Core from '../types';
 
-//import * as ParserTypes from '../hledger_cst';
-
+/**
+ * Type for a 'raw' [hledger journal](https://hledger.org/1.26/hledger.html#journal-format), an array of {@link JournalItem}s in order
+ * of appearance in the journal source code
+ */
 export type Journal = JournalItem[];
 
+/**
+ * Type for a journal item, can be a comment, transaction, or one of many types of
+ * directives.
+ */
 export type JournalItem =
   | Transaction
   | Comment
   | PriceDirective
   | AccountDirective;
 
+/**
+ * Type for a 'raw' [hledger transaction](https://hledger.org/1.26/hledger.html#transactions)
+ */
 export interface Transaction {
   type: 'transaction';
   value: {
@@ -23,6 +32,9 @@ export interface Transaction {
   };
 }
 
+/**
+ * Type for the initialization line of a [hledger transaction](https://hledger.org/1.26/hledger.html#transactions)
+ */
 export interface TransactionInitLine {
   date: string;
   postingDate?: string;
@@ -32,35 +44,61 @@ export interface TransactionInitLine {
   comment?: InlineComment;
 }
 
+/**
+ * Type for a 'raw' transaction date, composed of a [simple date](https://hledger.org/1.26/hledger.html#simple-dates) and an
+ * optional [posting date](https://hledger.org/1.26/hledger.html#secondary-dates)
+ */
 export interface TransactionDate {
   date: string;
   postingDate?: string;
 }
 
+/**
+ * Type for a 'raw' transaction item, which can be either a [posting](https://hledger.org/1.26/hledger.html#postings) or a [comment](https://hledger.org/1.26/hledger.html#comments)
+ */
 export type TransactionItem = Posting | InlineComment;
 
+/**
+ * Type for a 'raw' transaction [posting](https://hledger.org/1.26/hledger.html#postings)
+ */
 export interface Posting {
   type: 'posting';
   value: Core.Posting & { comment?: InlineComment };
 }
 
+/**
+ * Type for a [full-line comment](https://hledger.org/1.26/hledger.html#comments)
+ */
 export interface Comment {
   type: 'comment';
   value: string;
 }
 
+/**
+ * Type for an [inline comment](https://hledger.org/1.26/hledger.html#comments)
+ */
 export interface InlineComment {
   type: 'inlineComment';
   value: InlineCommentItem[];
 }
 
+/**
+ * Type for an item in an inline comment, either a text element or a
+ * [tag](https://hledger.org/1.26/hledger.html#tags-1)
+ */
 export type InlineCommentItem = string | Tag;
 
+/**
+ * Type for a 'raw' comment [tag](https://hledger.org/1.26/hledger.html#tags-1)
+ */
 export interface Tag {
   type: 'tag';
   value: Core.Tag;
 }
 
+/**
+ * Type for a 'raw' [price directive](https://hledger.org/1.26/hledger.html#declaring-market-prices)
+ */
 export interface PriceDirective {
   type: 'priceDirective';
   value: {
@@ -70,6 +108,9 @@ export interface PriceDirective {
   };
 }
 
+/**
+ * Type for a 'raw' [account directive](https://hledger.org/1.26/hledger.html#account-comments)
+ */
 export interface AccountDirective {
   type: 'accountDirective';
   value: {
@@ -79,29 +120,8 @@ export interface AccountDirective {
   };
 }
 
+/**
+ * Type for an [account directive](https://hledger.org/1.26/hledger.html#account-comments) line,
+ * can be an inline comment or (in future) a ledger-type subdirective.
+ */
 export type AccountDirectiveContentLine = InlineComment;
-
-/*
-export type AllCstNodes =
-  | ParserTypes.JournalCstNode
-  | ParserTypes.JournalItemCstNode
-  | ParserTypes.LineCommentCstNode
-  | ParserTypes.InlineCommentCstNode
-  | ParserTypes.InlineCommentItemCstNode
-  | ParserTypes.TagCstNode
-  | ParserTypes.TransactionCstNode
-  | ParserTypes.PriceDirectiveCstNode
-  | ParserTypes.AccountDirectiveCstNode
-  | ParserTypes.AccountDirectiveContentLineCstNode
-  | ParserTypes.TransactionInitLineCstNode
-  | ParserTypes.TransactionContentLineCstNode
-  | ParserTypes.PostingCstNode
-  | ParserTypes.TransactionDateCstNode
-  | ParserTypes.AccountCstNode
-  | ParserTypes.AmountCstNode
-  | ParserTypes.LotPriceCstNode
-  | ParserTypes.AssertionCstNode
-  | ParserTypes.StatusIndicatorCstNode
-  | ParserTypes.ChequeNumberCstNode
-  | ParserTypes.DescriptionCstNode;
-  */
