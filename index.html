@@ -15,7 +15,7 @@
   <h1>Welcome to hledger-parser 👋</h1>
 </a>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/npm/v/@jones.tristand/hledger-parser" />
   <a href="https://github.com/jonestristand/hledger-parser#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
@@ -46,13 +46,13 @@
 <a href="#install-as-library" id="install-as-library" style="color: inherit; text-decoration: none;">
   <h2>Install as Library</h2>
 </a>
-<pre><code class="language-sh"><span class="hl-0">npm install hledger-parser</span>
+<pre><code class="language-sh"><span class="hl-0">npm install @jones.tristand/hledger-parser</span>
 </code></pre>
 
 <a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
   <h2>Usage</h2>
 </a>
-<pre><code class="language-typescript"><span class="hl-1">import</span><span class="hl-0"> </span><span class="hl-2">parseLedger</span><span class="hl-0"> </span><span class="hl-1">from</span><span class="hl-0"> </span><span class="hl-3">&#39;hledger-parser&#39;</span><span class="hl-0">;</span><br/><span class="hl-1">import</span><span class="hl-0"> </span><span class="hl-1">type</span><span class="hl-0"> { </span><span class="hl-2">HLedgerJournal</span><span class="hl-0"> } </span><span class="hl-1">from</span><span class="hl-0"> </span><span class="hl-3">&#39;hledger-parser&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-4">const</span><span class="hl-0"> { </span><span class="hl-2">ast</span><span class="hl-0">: </span><span class="hl-5">HLedgerJournal</span><span class="hl-0"> } = </span><span class="hl-6">parseLedger</span><span class="hl-0">(</span><span class="hl-2">fileContents</span><span class="hl-0">);</span>
+<pre><code class="language-typescript"><span class="hl-1">import</span><span class="hl-0"> { </span><span class="hl-2">parseLedgerToCooked</span><span class="hl-0"> } </span><span class="hl-1">from</span><span class="hl-0"> </span><span class="hl-3">&#39;@jones.tristand/hledger-parser&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">parseResult</span><span class="hl-0"> = </span><span class="hl-6">parseLedgerToCooked</span><span class="hl-0">(</span><span class="hl-2">sourceCode</span><span class="hl-0">);</span><br/><br/><span class="hl-2">console</span><span class="hl-0">.</span><span class="hl-6">log</span><span class="hl-0">(</span><span class="hl-3">`Lexing errors: </span><span class="hl-4">${</span><span class="hl-2">parseResult</span><span class="hl-7">.</span><span class="hl-2">lexErrors</span><span class="hl-7">.</span><span class="hl-2">length</span><span class="hl-4">}</span><span class="hl-3">`</span><span class="hl-0">);</span><br/><span class="hl-2">console</span><span class="hl-0">.</span><span class="hl-6">log</span><span class="hl-0">(</span><span class="hl-3">`Parsing errors: </span><span class="hl-4">${</span><span class="hl-2">parseResult</span><span class="hl-7">.</span><span class="hl-2">parseErrors</span><span class="hl-7">.</span><span class="hl-2">length</span><span class="hl-4">}</span><span class="hl-3">`</span><span class="hl-0">);</span><br/><span class="hl-2">console</span><span class="hl-0">.</span><span class="hl-6">log</span><span class="hl-0">(</span><span class="hl-3">&#39;Result:&#39;</span><span class="hl-0">, </span><span class="hl-2">parseResult</span><span class="hl-0">.</span><span class="hl-2">cookedJournal</span><span class="hl-0">);</span><br/><br/><span class="hl-8">// Output:</span><br/><span class="hl-8">// =&gt; Lexing errors: 0</span><br/><span class="hl-8">// =&gt; Parsing errors: 0</span><br/><span class="hl-8">// =&gt; Result: {</span><br/><span class="hl-8">// =&gt;   transactions: [</span><br/><span class="hl-8">// =&gt;     {</span><br/><span class="hl-8">// =&gt;       date: [Object],</span><br/><span class="hl-8">// =&gt;       status: &#39;unmarked&#39;,</span><br/><span class="hl-8">// =&gt;       description: &#39;Transaction&#39;,</span><br/><span class="hl-8">// =&gt;       postings: [Array],</span><br/><span class="hl-8">// =&gt;       tags: []</span><br/><span class="hl-8">// =&gt;     }</span><br/><span class="hl-8">// =&gt;   ],</span><br/><span class="hl-8">// =&gt;   accounts: [],</span><br/><span class="hl-8">// =&gt;   prices: []</span><br/><span class="hl-8">// =&gt; }</span>
 </code></pre>
 
 <a href="#author" id="author" style="color: inherit; text-decoration: none;">
