@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 
+import { notEmpty } from '../type_utils';
 import * as Core from '../types';
 
 import * as Cooked from './cooked_types';
@@ -14,7 +15,7 @@ const defaultRawToCookedVisitorState: RawToCookedVisitorState = {
   defaultYear: DateTime.now().year
 };
 
-export default class RawToCookedVisitor {
+class RawToCookedVisitor {
   private _state: RawToCookedVisitorState = defaultRawToCookedVisitorState;
 
   journal(node: Raw.Journal): Cooked.Journal {
@@ -96,9 +97,7 @@ export default class RawToCookedVisitor {
   accountDirective(node: Raw.AccountDirective): Cooked.Account {
     const tagsOnLine = this._collectTags(node.value.comments?.value);
     const tagsInContents = this._collectTags(
-      _.flatten(
-        node.value.contentLines.map((c) => c.value).filter(Core.notEmpty)
-      )
+      _.flatten(node.value.contentLines.map((c) => c.value).filter(notEmpty))
     );
     return {
       account: node.value.account,
@@ -133,3 +132,5 @@ export default class RawToCookedVisitor {
     throw new Error(`Invalid date found: ${date}`);
   }
 }
+
+export default new RawToCookedVisitor();

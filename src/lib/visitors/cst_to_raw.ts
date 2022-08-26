@@ -233,10 +233,10 @@ class HledgerToRawVisitor extends BaseCstVisitor {
 
   amount(ctx: ParserTypes.AmountCstChildren): Core.Amount {
     // TODO: Needs error checking, robust parsing for different decimal marks, etc., or maybe parsing only happens in "cooked" version of parse tree?
-    if (!ctx.Number || ctx.Number.length === 0)
-      return { value: '0', commodity: '' };
 
-    const value = (ctx.DASH ? '-' : '') + ctx.Number[0].image;
+    // We know from examining the parser that ctx.Number always exists
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const value = (ctx.DASH ? '-' : '') + ctx.Number![0].image;
     const commodity = ctx.CommodityText
       ? (ctx.CommodityText[0].payload as string)
       : '';
@@ -249,7 +249,10 @@ class HledgerToRawVisitor extends BaseCstVisitor {
 
   lotPrice(ctx: ParserTypes.LotPriceCstChildren): Core.LotPrice {
     const amount = this.amount(ctx.amount[0].children);
-    const lotPriceType = ctx.AT?.length === 2 ? 'total' : 'unit';
+
+    // Know from examining the parser that ctx.AT always exists in this rule
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const lotPriceType = ctx.AT!.length === 2 ? 'total' : 'unit';
 
     return {
       amount,
@@ -268,27 +271,36 @@ class HledgerToRawVisitor extends BaseCstVisitor {
   statusIndicator(
     ctx: ParserTypes.StatusIndicatorCstChildren
   ): Core.StatusIndicator | null {
-    const tokenText =
-      ctx.TxnStatusIndicator?.[0]?.image ??
-      ctx.PostingStatusIndicator?.[0]?.image;
-    let status: Core.StatusIndicator | null = null;
-    if (tokenText === '!') status = 'pending';
-    else if (tokenText === '*') status = 'cleared';
+    // Know from examining the parser that ctx.PostingStatus will exist if TxnStatusIndicator does not
+    const tokenText = (
+      ctx.TxnStatusIndicator
+        ? ctx.TxnStatusIndicator[0].image
+        : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          ctx.PostingStatusIndicator![0].image
+    ) as '!' | '*';
 
-    return status;
+    switch (tokenText) {
+      case '!':
+        return 'pending';
+      case '*':
+        return 'cleared';
+    }
   }
 
   chequeNumber(
     ctx: ParserTypes.ChequeNumberCstChildren
   ): Raw.TransactionInitLine['chequeNumber'] | null {
-    return ctx.ParenValue[0]?.payload as string;
+    return ctx.ParenValue[0].payload as string;
   }
 
   description(ctx: ParserTypes.DescriptionCstChildren): Core.TxnDescription {
     if (ctx.Text.length == 1) {
-      return ctx.Text[0].image;
+      return ctx.Text[0].image.trim();
     } else if (ctx.Text.length == 2) {
-      return { payee: ctx.Text[0].image, memo: ctx.Text[1].image };
+      return {
+        payee: ctx.Text[0].image.trim(),
+        memo: ctx.Text[1].image.trim()
+      };
     } else {
       return ''; // default blank description
     }
