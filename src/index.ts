@@ -61,11 +61,11 @@ export interface CookedParseReturn {
  * the type, position and text image of each parsed node.
  *
  * A 'raw' journal object can be translated into a 'cooked' journal object using the
- * {@link CstToRawLedger} method.
+ * {@link cstToRawLedger} method.
  *
  * ### Example (ESModule)
  * ```js
- * import { parseLedgerToCST } from 'hledger-parser'
+ * import { parseLedgerToCST } from '@jones.tristand/hledger-parser'
  *
  * const parseResult = parseLedgerToCST(sourceCode)
  * console.log(`Lexing errors: ${parseResult.lexErrors.length}`);
@@ -82,7 +82,7 @@ export interface CookedParseReturn {
  *
  * ### Example (CommonJS)
  * ```js
- * const { parseLedgerToCST } = require('hledger-parser');
+ * const { parseLedgerToCST } = require('@jones.tristand/hledger-parser');
  *
  * const parseResult = parseLedgerToCST(sourceCode)
  * console.log(`Lexing errors: ${parseResult.lexErrors.length}`);
@@ -122,11 +122,11 @@ export function parseLedgerToCST(source: string): CSTParseReturn {
  * so that information such as default account or year directives can be preserved.
  *
  * A 'raw' journal object can be translated into a 'cooked' journal object using the
- * {@link RawToCookedLedger} method.
+ * {@link rawToCookedLedger} method.
  *
  * ### Example (ESModule)
  * ```js
- * import { parseLedgerToRaw } from 'hledger-parser'
+ * import { parseLedgerToRaw } from '@jones.tristand/hledger-parser'
  *
  * const parseResult = parseLedgerToRaw(sourceCode)
  * console.log(`Lexing errors: ${parseResult.lexErrors.length}`);
@@ -150,7 +150,7 @@ export function parseLedgerToCST(source: string): CSTParseReturn {
  *
  * ### Example (CommonJS)
  * ```js
- * const { parseLedgerToRaw } = require('hledger-parser');
+ * const { parseLedgerToRaw } = require('@jones.tristand/hledger-parser');
  *
  * const parseResult = parseLedgerToRaw(sourceCode)
  * console.log(`Lexing errors: ${parseResult.lexErrors.length}`);
@@ -194,7 +194,7 @@ export function parseLedgerToRaw(source: string): RawParseReturn {
  *
  * ### Example (ESModule)
  * ```js
- * import { parseLedgerToCooked } from 'hledger-parser'
+ * import { parseLedgerToCooked } from '@jones.tristand/hledger-parser'
  *
  * const parseResult = parseLedgerToCooked(sourceCode)
  * console.log(`Lexing errors: ${parseResult.lexErrors.length}`);
@@ -220,7 +220,7 @@ export function parseLedgerToRaw(source: string): RawParseReturn {
  *
  * ### Example (CommonJS)
  * ```js
- * const { parseLedgerToCooked } = require('hledger-parser');
+ * const { parseLedgerToCooked } = require('@jones.tristand/hledger-parser');
  *
  * const parseResult = parseLedgerToRaw(sourceCode)
  * console.log(`Lexing errors: ${parseResult.lexErrors.length}`);

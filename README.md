@@ -1,7 +1,7 @@
 # Welcome to hledger-parser 👋
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/npm/v/@jones.tristand/hledger-parser" />
   <a href="https://github.com/jonestristand/hledger-parser#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
@@ -30,16 +30,36 @@
 ## Install as Library
 
 ```sh
-npm install hledger-parser
+npm install @jones.tristand/hledger-parser
 ```
 
 ## Usage
 
 ```typescript
-import parseLedger from 'hledger-parser';
-import type { HLedgerJournal } from 'hledger-parser';
+import { parseLedgerToCooked } from '@jones.tristand/hledger-parser';
 
-const { ast: HLedgerJournal } = parseLedger(fileContents);
+const parseResult = parseLedgerToCooked(sourceCode);
+
+console.log(`Lexing errors: ${parseResult.lexErrors.length}`);
+console.log(`Parsing errors: ${parseResult.parseErrors.length}`);
+console.log('Result:', parseResult.cookedJournal);
+
+// Output:
+// => Lexing errors: 0
+// => Parsing errors: 0
+// => Result: {
+// =>   transactions: [
+// =>     {
+// =>       date: [Object],
+// =>       status: 'unmarked',
+// =>       description: 'Transaction',
+// =>       postings: [Array],
+// =>       tags: []
+// =>     }
+// =>   ],
+// =>   accounts: [],
+// =>   prices: []
+// => }
 ```
 
 ## Author
