@@ -7,7 +7,7 @@ import {
 } from 'chevrotain';
 import _ from 'lodash';
 
-import { notEmpty } from '../lib/types';
+import { notEmpty } from '../lib/type_utils';
 
 import type { CstNode } from 'chevrotain';
 
