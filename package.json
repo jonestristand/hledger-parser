@@ -43,7 +43,7 @@
     "version": "standard-version",
     "commit": "git cz",
     "reset-hard": "git clean -dfx && git reset --hard && npm i",
-    "prepare-release": "run-s reset-hard test cov:check doc:html clean build:prod version doc:publish"
+    "prepare-release": "run-s reset-hard test cov:check clean doc:html build:prod version doc:publish"
   },
   "engines": {
     "node": ">=10"
