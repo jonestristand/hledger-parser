@@ -1,10 +1,7 @@
 .idea/*
-.nyc_output
-build
 node_modules
 test
 src/**.js
-coverage
 yarn.lock
 
 # Build products
@@ -114,7 +111,7 @@ dist
 
 # vuepress v2.x temp and cache directory
 .temp
-.cache
+#.cache
 
 # Docusaurus cache and generated files
 .docusaurus
