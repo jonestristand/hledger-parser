@@ -6,14 +6,14 @@ import {
 } from 'chevrotain';
 import _ from 'lodash';
 
-import BasicTokens from './tokens_basic';
+export const NewlineName = 'NEWLINE';
 
 export function matchOnlyAtStart(regex: RegExp) {
   const matcher: CustomPatternMatcherFunc = (text, offset, tokens) => {
     const prevToken = _.last(tokens);
     if (
       offset === 0 ||
-      prevToken?.tokenType.name === BasicTokens.NEWLINE.name
+      prevToken?.tokenType.name === NewlineName
     ) {
       regex.lastIndex = offset;
       const match = regex.exec(text);
