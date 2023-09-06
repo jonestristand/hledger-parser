@@ -99,7 +99,7 @@
       }
     },
     "files": [
-      "src/__tests__/*.test.ts",
+      "src/__tests__/**/*.test.ts",
       "!build/module/**"
     ],
     "verbose": true
