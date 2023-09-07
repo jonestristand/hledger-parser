@@ -1,19 +1,22 @@
-import anyTest, {TestInterface} from 'ava';
+import anyTest, { TestInterface } from 'ava';
 
 import { CommentModeTokens } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
-const test = anyTest as TestInterface<{lexer: MockLexer}>
+const test = anyTest as TestInterface<{ lexer: MockLexer }>;
 
-test.before(t => {
+test.before((t) => {
   t.context = {
-    lexer: new MockLexer(),
+    lexer: new MockLexer()
   };
 });
 
 test('parses inline comment text', (t) => {
-  t.context.lexer.addToken(CommentModeTokens.InlineCommentText, 'an inline comment');
+  t.context.lexer.addToken(
+    CommentModeTokens.InlineCommentText,
+    'an inline comment'
+  );
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -46,7 +49,10 @@ test('parses inline comment tags', (t) => {
 });
 
 test('does not parse full-line comments as inline', (t) => {
-  t.context.lexer.addToken(CommentModeTokens.CommentText, 'full-line comment text token');
+  t.context.lexer.addToken(
+    CommentModeTokens.CommentText,
+    'full-line comment text token'
+  );
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(

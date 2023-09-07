@@ -44,4 +44,3 @@ test('does not lex journal items that are not newline terminated', (t) => {
 });
 
 // TODO: May have to write a test for journal items that are EOF terminated.
-

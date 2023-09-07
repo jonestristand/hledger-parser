@@ -28,11 +28,13 @@ test('returns an account directive with multiple content lines', (t) => {
     ; content line
     ; more content
     ; even more content
-`
-    ).cstJournal
-      .children
+`).cstJournal.children
   );
-  t.is(result.length, 1, 'should modify multiple account directive content lines');
+  t.is(
+    result.length,
+    1,
+    'should modify multiple account directive content lines'
+  );
   t.is(
     result[0].type,
     'accountDirective',

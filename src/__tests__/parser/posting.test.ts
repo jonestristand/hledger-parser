@@ -1,20 +1,26 @@
-import anyTest, {TestInterface} from 'ava';
+import anyTest, { TestInterface } from 'ava';
 
-import { BasicTokens, CommentModeTokens, PostingModeTokens } from '../../lib/lexer/tokens';
+import {
+  BasicTokens,
+  CommentModeTokens,
+  PostingModeTokens
+} from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
-const test = anyTest as TestInterface<{lexer: MockLexer}>
+const test = anyTest as TestInterface<{ lexer: MockLexer }>;
 
-test.before(t => {
+test.before((t) => {
   t.context = {
-    lexer: new MockLexer(),
+    lexer: new MockLexer()
   };
 });
 
 test('parses a posting containing account name', (t) => {
-  t.context.lexer
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing');
+  t.context.lexer.addToken(
+    PostingModeTokens.RealAccountName,
+    'Assets:Chequing'
+  );
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -175,7 +181,8 @@ test('parses a posting containing account name and inline comment', (t) => {
 });
 
 test('does not parse a posting without account name', (t) => {
-  t.context.lexer.addToken(PostingModeTokens.PostingStatusIndicator, '!')
+  t.context.lexer
+    .addToken(PostingModeTokens.PostingStatusIndicator, '!')
     .addToken(PostingModeTokens.Number, '1.00')
     .addToken(PostingModeTokens.CommodityText, '$');
   HLedgerParser.input = t.context.lexer.tokenize();

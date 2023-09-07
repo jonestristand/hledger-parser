@@ -1,14 +1,19 @@
-import anyTest, {TestInterface} from 'ava';
+import anyTest, { TestInterface } from 'ava';
 
-import { BasicTokens, CommentModeTokens, DefaultModeTokens, TxnLineModeTokens } from '../../lib/lexer/tokens';
+import {
+  BasicTokens,
+  CommentModeTokens,
+  DefaultModeTokens,
+  TxnLineModeTokens
+} from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
-const test = anyTest as TestInterface<{lexer: MockLexer}>
+const test = anyTest as TestInterface<{ lexer: MockLexer }>;
 
-test.before(t => {
+test.before((t) => {
   t.context = {
-    lexer: new MockLexer(),
+    lexer: new MockLexer()
   };
 });
 

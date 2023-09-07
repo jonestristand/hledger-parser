@@ -1,14 +1,14 @@
-import anyTest, {TestInterface} from 'ava';
+import anyTest, { TestInterface } from 'ava';
 
 import { CommentModeTokens } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
-const test = anyTest as TestInterface<{lexer: MockLexer}>
+const test = anyTest as TestInterface<{ lexer: MockLexer }>;
 
-test.before(t => {
+test.before((t) => {
   t.context = {
-    lexer: new MockLexer(),
+    lexer: new MockLexer()
   };
 });
 
@@ -92,7 +92,7 @@ test('does not parse a tag not containing a colon', (t) => {
 });
 
 test('does not parse a tag value pair not separated by a colon', (t) => {
-t.context.lexer
+  t.context.lexer
     .addToken(CommentModeTokens.InlineCommentTagName, 'tag')
     .addToken(CommentModeTokens.InlineCommentTagValue, 'value');
   HLedgerParser.input = t.context.lexer.tokenize();
