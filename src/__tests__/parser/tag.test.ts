@@ -1,6 +1,11 @@
 import anyTest, {TestInterface} from 'ava';
 
-import { CommentModeTokens } from '../../lib/lexer/tokens';
+import {
+  InlineCommentTagColon,
+  InlineCommentTagComma,
+  InlineCommentTagName,
+  InlineCommentTagValue
+} from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -14,8 +19,8 @@ test.before(t => {
 
 test('parses an empty tag', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.InlineCommentTagName, 'tag')
-    .addToken(CommentModeTokens.InlineCommentTagColon, ':');
+    .addToken(InlineCommentTagName, 'tag')
+    .addToken(InlineCommentTagColon, ':');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -30,9 +35,9 @@ test('parses an empty tag', (t) => {
 
 test('parses a tag containing a value', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.InlineCommentTagName, 'tag')
-    .addToken(CommentModeTokens.InlineCommentTagColon, ':')
-    .addToken(CommentModeTokens.InlineCommentTagValue, 'value');
+    .addToken(InlineCommentTagName, 'tag')
+    .addToken(InlineCommentTagColon, ':')
+    .addToken(InlineCommentTagValue, 'value');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -48,9 +53,9 @@ test('parses a tag containing a value', (t) => {
 
 test('parses a comma terminated empty tag', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.InlineCommentTagName, 'tag')
-    .addToken(CommentModeTokens.InlineCommentTagColon, ':')
-    .addToken(CommentModeTokens.InlineCommentTagComma, ',');
+    .addToken(InlineCommentTagName, 'tag')
+    .addToken(InlineCommentTagColon, ':')
+    .addToken(InlineCommentTagComma, ',');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -66,10 +71,10 @@ test('parses a comma terminated empty tag', (t) => {
 
 test('parses a comma terminated tag containing a value', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.InlineCommentTagName, 'tag')
-    .addToken(CommentModeTokens.InlineCommentTagColon, ':')
-    .addToken(CommentModeTokens.InlineCommentTagValue, 'value')
-    .addToken(CommentModeTokens.InlineCommentTagComma, ',');
+    .addToken(InlineCommentTagName, 'tag')
+    .addToken(InlineCommentTagColon, ':')
+    .addToken(InlineCommentTagValue, 'value')
+    .addToken(InlineCommentTagComma, ',');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -85,7 +90,7 @@ test('parses a comma terminated tag containing a value', (t) => {
 });
 
 test('does not parse a tag not containing a colon', (t) => {
-  t.context.lexer.addToken(CommentModeTokens.InlineCommentTagName, 'tag');
+  t.context.lexer.addToken(InlineCommentTagName, 'tag');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(HLedgerParser.journalItem(), '<tag!> tag');
@@ -93,8 +98,8 @@ test('does not parse a tag not containing a colon', (t) => {
 
 test('does not parse a tag value pair not separated by a colon', (t) => {
 t.context.lexer
-    .addToken(CommentModeTokens.InlineCommentTagName, 'tag')
-    .addToken(CommentModeTokens.InlineCommentTagValue, 'value');
+    .addToken(InlineCommentTagName, 'tag')
+    .addToken(InlineCommentTagValue, 'value');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(HLedgerParser.journalItem(), '<tag!> tag value');

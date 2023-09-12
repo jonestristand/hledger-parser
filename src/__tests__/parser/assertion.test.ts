@@ -1,5 +1,12 @@
 import anyTest, {TestInterface} from 'ava';
-import { BasicTokens, PostingModeTokens } from '../../lib/lexer/tokens';
+
+import {
+  ASTERISK,
+  CommodityText,
+  DASH,
+  EQUALS,
+  JournalNumber
+} from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -13,12 +20,12 @@ test.before(t => {
 
 test('parses a strong balance assertion with subaccount modifier', (t) => {
   t.context.lexer
-    .addToken(BasicTokens.EQUALS, '=')
-    .addToken(BasicTokens.EQUALS, '=')
-    .addToken(BasicTokens.ASTERISK, '*')
-    .addToken(BasicTokens.DASH, '-')
-    .addToken(PostingModeTokens.CommodityText, '$')
-    .addToken(PostingModeTokens.Number, '1.00');
+    .addToken(EQUALS, '=')
+    .addToken(EQUALS, '=')
+    .addToken(ASTERISK, '*')
+    .addToken(DASH, '-')
+    .addToken(CommodityText, '$')
+    .addToken(JournalNumber, '1.00');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -40,11 +47,11 @@ test('parses a strong balance assertion with subaccount modifier', (t) => {
 
 test('parses a strong balance assertion', (t) => {
   t.context.lexer
-    .addToken(BasicTokens.EQUALS, '=')
-    .addToken(BasicTokens.EQUALS, '=')
-    .addToken(BasicTokens.DASH, '-')
-    .addToken(PostingModeTokens.CommodityText, '$')
-    .addToken(PostingModeTokens.Number, '1.00');
+    .addToken(EQUALS, '=')
+    .addToken(EQUALS, '=')
+    .addToken(DASH, '-')
+    .addToken(CommodityText, '$')
+    .addToken(JournalNumber, '1.00');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -65,11 +72,11 @@ test('parses a strong balance assertion', (t) => {
 
 test('parses a balance assertion with subaccount modifier', (t) => {
   t.context.lexer
-    .addToken(BasicTokens.EQUALS, '=')
-    .addToken(BasicTokens.ASTERISK, '*')
-    .addToken(BasicTokens.DASH, '-')
-    .addToken(PostingModeTokens.CommodityText, '$')
-    .addToken(PostingModeTokens.Number, '1.00');
+    .addToken(EQUALS, '=')
+    .addToken(ASTERISK, '*')
+    .addToken(DASH, '-')
+    .addToken(CommodityText, '$')
+    .addToken(JournalNumber, '1.00');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -91,10 +98,10 @@ test('parses a balance assertion with subaccount modifier', (t) => {
 
 test('parses a balance assertion', (t) => {
   t.context.lexer
-    .addToken(BasicTokens.EQUALS, '=')
-    .addToken(BasicTokens.DASH, '-')
-    .addToken(PostingModeTokens.CommodityText, '$')
-    .addToken(PostingModeTokens.Number, '1.00');
+    .addToken(EQUALS, '=')
+    .addToken(DASH, '-')
+    .addToken(CommodityText, '$')
+    .addToken(JournalNumber, '1.00');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(

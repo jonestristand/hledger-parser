@@ -236,20 +236,3 @@ export const PDirectiveDate = createToken({
   pattern: JournalDate.PATTERN,
   push_mode: 'price_amounts_mode'
 });
-
-// ====- Commodity Directive Tokens -====
-
-export const CommodityDirective = createToken({
-  name: 'CommodityDirective',
-  pattern: matchOnlyAtStart(/commodity/y),
-  start_chars_hint: ['C', 'c'],
-  line_breaks: false,
-  push_mode: 'commodity_mode'
-});
-
-export const FormatSubDirective = createToken({
-  name: 'FormatSubDirective',
-  pattern: matchOnlyAfter(/format/y, [INDENT]),
-  line_breaks: false,
-  push_mode: 'commodity_format_mode'
-});

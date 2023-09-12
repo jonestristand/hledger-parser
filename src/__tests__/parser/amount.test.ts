@@ -1,6 +1,6 @@
 import anyTest, {TestInterface} from 'ava';
 
-import { BasicTokens, PostingModeTokens } from '../../lib/lexer/tokens';
+import { CommodityText, DASH, JournalNumber } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -14,9 +14,9 @@ test.before(t => {
 
 test('parses a negative amount with commodity symbol next to number', (t) => {
   t.context.lexer
-    .addToken(BasicTokens.DASH, '-')
-    .addToken(PostingModeTokens.CommodityText, '$')
-    .addToken(PostingModeTokens.Number, '1.00');
+    .addToken(DASH, '-')
+    .addToken(CommodityText, '$')
+    .addToken(JournalNumber, '1.00');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -32,8 +32,8 @@ test('parses a negative amount with commodity symbol next to number', (t) => {
 
 test('parses a positive amount with prepended commodity symbol', (t) => {
   t.context.lexer
-    .addToken(PostingModeTokens.CommodityText, '$')
-    .addToken(PostingModeTokens.Number, '1.00');
+    .addToken(CommodityText, '$')
+    .addToken(JournalNumber, '1.00');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -48,8 +48,8 @@ test('parses a positive amount with prepended commodity symbol', (t) => {
 
 test('parses a positive amount with appended commodity symbol', (t) => {
   t.context.lexer
-    .addToken(PostingModeTokens.Number, '1.00')
-    .addToken(PostingModeTokens.CommodityText, '$');
+    .addToken(JournalNumber, '1.00')
+    .addToken(CommodityText, '$');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -63,7 +63,7 @@ test('parses a positive amount with appended commodity symbol', (t) => {
 });
 
 test('parses a positive amount with no commodity symbol', (t) => {
-  t.context.lexer.addToken(PostingModeTokens.Number, '1.00');
+  t.context.lexer.addToken(JournalNumber, '1.00');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(

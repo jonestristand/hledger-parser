@@ -1,6 +1,6 @@
 import anyTest, {TestInterface} from 'ava';
 
-import { BasicTokens, CommentModeTokens, DefaultModeTokens } from '../../lib/lexer/tokens';
+import { INDENT, NEWLINE, SemicolonComment } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -14,9 +14,9 @@ test.before(t => {
 
 test('parses an account directive content line', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.INDENT, '    ')
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(INDENT, '    ')
+    .addToken(SemicolonComment, ';')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -36,8 +36,8 @@ test('parses an account directive content line', (t) => {
 
 test('does not parse an account directive content line without newline termination', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.INDENT, '    ')
-    .addToken(CommentModeTokens.SemicolonComment, ';');
+    .addToken(INDENT, '    ')
+    .addToken(SemicolonComment, ';');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
@@ -48,8 +48,8 @@ test('does not parse an account directive content line without newline terminati
 
 test('does not parse non-indented account directive content line', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(SemicolonComment, ';')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(

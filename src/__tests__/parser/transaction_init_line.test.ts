@@ -1,6 +1,14 @@
 import anyTest, {TestInterface} from 'ava';
 
-import { BasicTokens, CommentModeTokens, DefaultModeTokens, TxnLineModeTokens } from '../../lib/lexer/tokens';
+import {
+  DateAtStart,
+  InlineCommentText,
+  NEWLINE,
+  ParenValue,
+  SemicolonComment,
+  Text,
+  TxnStatusIndicator
+} from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -14,8 +22,8 @@ test.before(t => {
 
 test('parses a transaction init line containing only date', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -34,9 +42,9 @@ test('parses a transaction init line containing only date', (t) => {
 
 test('parses a transaction init line with date and status', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(TxnLineModeTokens.TxnStatusIndicator, '!')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(TxnStatusIndicator, '!')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -60,10 +68,10 @@ test('parses a transaction init line with date and status', (t) => {
 
 test('parses a transaction init line with date, status, and code', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(TxnLineModeTokens.TxnStatusIndicator, '!')
-    .addToken(TxnLineModeTokens.ParenValue, '(#443)')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(TxnStatusIndicator, '!')
+    .addToken(ParenValue, '(#443)')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -92,11 +100,11 @@ test('parses a transaction init line with date, status, and code', (t) => {
 
 test('parses a transaction init line with date, status, code, and description', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(TxnLineModeTokens.TxnStatusIndicator, '!')
-    .addToken(TxnLineModeTokens.ParenValue, '(#443)')
-    .addToken(TxnLineModeTokens.Text, 'description text')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(TxnStatusIndicator, '!')
+    .addToken(ParenValue, '(#443)')
+    .addToken(Text, 'description text')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -130,13 +138,13 @@ test('parses a transaction init line with date, status, code, and description', 
 
 test('parses a transaction init line with date, status, code, description, and comment', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(TxnLineModeTokens.TxnStatusIndicator, '!')
-    .addToken(TxnLineModeTokens.ParenValue, '(#443)')
-    .addToken(TxnLineModeTokens.Text, 'description text')
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(CommentModeTokens.InlineCommentText, 'a comment')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(TxnStatusIndicator, '!')
+    .addToken(ParenValue, '(#443)')
+    .addToken(Text, 'description text')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'a comment')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -180,12 +188,12 @@ test('parses a transaction init line with date, status, code, description, and c
 
 test('parses a transaction init line with date, code, description, and comment', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(TxnLineModeTokens.ParenValue, '(#443)')
-    .addToken(TxnLineModeTokens.Text, 'description text')
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(CommentModeTokens.InlineCommentText, 'a comment')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(ParenValue, '(#443)')
+    .addToken(Text, 'description text')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'a comment')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -224,11 +232,11 @@ test('parses a transaction init line with date, code, description, and comment',
 
 test('parses a transaction init line with date, description, and comment', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(TxnLineModeTokens.Text, 'description text')
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(CommentModeTokens.InlineCommentText, 'a comment')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(Text, 'description text')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'a comment')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -262,10 +270,10 @@ test('parses a transaction init line with date, description, and comment', (t) =
 
 test('parses a transaction init line with date and comment', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(CommentModeTokens.InlineCommentText, 'a comment')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'a comment')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -293,7 +301,7 @@ test('parses a transaction init line with date and comment', (t) => {
 });
 
 test('does not parse an empty transaction init line', (t) => {
-  t.context.lexer.addToken(BasicTokens.NEWLINE, '\n');
+  t.context.lexer.addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(HLedgerParser.transactionInitLine(), '<transactionInitLine!> \\n');
@@ -301,8 +309,8 @@ test('does not parse an empty transaction init line', (t) => {
 
 test('does not parse a transaction init line without newline termination', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1901/02/02')
-    .addToken(TxnLineModeTokens.Text, 'description text');
+    .addToken(DateAtStart, '1901/02/02')
+    .addToken(Text, 'description text');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(

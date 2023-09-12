@@ -1,6 +1,13 @@
 import anyTest, {TestInterface} from 'ava';
 
-import { BasicTokens, CommentModeTokens, DefaultModeTokens, PostingModeTokens } from '../../lib/lexer/tokens';
+import {
+  CommentText,
+  INDENT,
+  InlineCommentText,
+  NEWLINE,
+  RealAccountName,
+  SemicolonComment
+} from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -14,9 +21,9 @@ test.before(t => {
 
 test('parses a transaction content line with only account name', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.INDENT, '    ')
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(INDENT, '    ')
+    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -40,10 +47,10 @@ test('parses a transaction content line with only account name', (t) => {
 
 test('parses a transaction content line with only an inline comment', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.INDENT, '    ')
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(CommentModeTokens.InlineCommentText, 'a comment')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(INDENT, '    ')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'a comment')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -68,8 +75,8 @@ test('parses a transaction content line with only an inline comment', (t) => {
 
 test('does not parse an unindented transaction content line containing an account name', (t) => {
   t.context.lexer
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
@@ -80,8 +87,8 @@ test('does not parse an unindented transaction content line containing an accoun
 
 test('does not parse a transaction content line containing an account name without newline termination', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.INDENT, '    ')
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing');
+    .addToken(INDENT, '    ')
+    .addToken(RealAccountName, 'Assets:Chequing');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
@@ -92,9 +99,9 @@ test('does not parse a transaction content line containing an account name witho
 
 test('does not parse an unindented transaction content line containing an inline comment', (t) => {
   t.context.lexer
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing')
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(CommentModeTokens.CommentText, 'a comment');
+    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(SemicolonComment, ';')
+    .addToken(CommentText, 'a comment');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
@@ -105,9 +112,9 @@ test('does not parse an unindented transaction content line containing an inline
 
 test('does not parse a transaction content line containing an inline comment without newline termination', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.INDENT, '    ')
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(CommentModeTokens.CommentText, 'a comment');
+    .addToken(INDENT, '    ')
+    .addToken(SemicolonComment, ';')
+    .addToken(CommentText, 'a comment');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(

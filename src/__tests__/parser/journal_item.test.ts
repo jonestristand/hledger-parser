@@ -1,11 +1,18 @@
 import anyTest, {TestInterface} from 'ava';
 
 import {
-  BasicTokens,
-  CommentModeTokens,
-  DefaultModeTokens,
-  PostingModeTokens,
-  PriceModeTokens
+  AccountDirective,
+  CommentText,
+  CommodityText,
+  DateAtStart,
+  HASHTAG_AT_START,
+  JournalDate,
+  JournalNumber,
+  NEWLINE,
+  PDirective,
+  PDirectiveDate,
+  RealAccountName,
+  SemicolonComment
 } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
@@ -20,8 +27,8 @@ test.before(t => {
 
 test('parses a transaction init line', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -48,9 +55,9 @@ test('parses a transaction init line', (t) => {
 
 test('parses a hash tag full line comment', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.HASHTAG_AT_START, '#')
-    .addToken(CommentModeTokens.CommentText, 'a full line comment')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(HASHTAG_AT_START, '#')
+    .addToken(CommentText, 'a full line comment')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -70,12 +77,12 @@ test('parses a hash tag full line comment', (t) => {
 
 test('parses a price directive', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.PDirective, 'P')
-    .addToken(PriceModeTokens.PDirectiveDate, '2000/01/02')
-    .addToken(PostingModeTokens.CommodityText, '€')
-    .addToken(PostingModeTokens.CommodityText, '$')
-    .addToken(PostingModeTokens.Number, '1.50')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(PDirective, 'P')
+    .addToken(PDirectiveDate, '2000/01/02')
+    .addToken(CommodityText, '€')
+    .addToken(CommodityText, '$')
+    .addToken(JournalNumber, '1.50')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -102,9 +109,9 @@ test('parses a price directive', (t) => {
 
 test('parses an account directive', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.AccountDirective, 'account')
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(AccountDirective, 'account')
+    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -123,7 +130,7 @@ test('parses an account directive', (t) => {
 });
 
 test('does not parse a transaction init line without newline termination', (t) => {
-  t.context.lexer.addToken(BasicTokens.Date, '1900/03/03');
+  t.context.lexer.addToken(JournalDate, '1900/03/03');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
@@ -134,9 +141,9 @@ test('does not parse a transaction init line without newline termination', (t) =
 
 test('does not parse a full line semicolon comment with incorrect token', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.SemicolonComment, ';')
+    .addToken(SemicolonComment, ';')
     .addToken(
-      CommentModeTokens.CommentText,
+      CommentText,
       'a comment with wrong semicolon token'
     );
   HLedgerParser.input = t.context.lexer.tokenize();

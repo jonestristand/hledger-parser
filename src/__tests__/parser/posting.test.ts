@@ -1,6 +1,15 @@
 import anyTest, {TestInterface} from 'ava';
 
-import { BasicTokens, CommentModeTokens, PostingModeTokens } from '../../lib/lexer/tokens';
+import {
+  AT,
+  CommodityText,
+  EQUALS,
+  InlineCommentText,
+  JournalNumber,
+  PostingStatusIndicator,
+  RealAccountName,
+  SemicolonComment
+} from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -14,7 +23,7 @@ test.before(t => {
 
 test('parses a posting containing account name', (t) => {
   t.context.lexer
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing');
+    .addToken(RealAccountName, 'Assets:Chequing');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -32,8 +41,8 @@ test('parses a posting containing account name', (t) => {
 
 test('parses a posting containing status and account name', (t) => {
   t.context.lexer
-    .addToken(PostingModeTokens.PostingStatusIndicator, '*')
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing');
+    .addToken(PostingStatusIndicator, '*')
+    .addToken(RealAccountName, 'Assets:Chequing');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -56,9 +65,9 @@ test('parses a posting containing status and account name', (t) => {
 
 test('parses a posting containing account name and amount', (t) => {
   t.context.lexer
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing')
-    .addToken(PostingModeTokens.CommodityText, '$')
-    .addToken(PostingModeTokens.Number, '1.00');
+    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(CommodityText, '$')
+    .addToken(JournalNumber, '1.00');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -82,10 +91,10 @@ test('parses a posting containing account name and amount', (t) => {
 
 test('parses a posting containing account name and unit price', (t) => {
   t.context.lexer
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing')
-    .addToken(BasicTokens.AT, '@')
-    .addToken(PostingModeTokens.CommodityText, '$')
-    .addToken(PostingModeTokens.Number, '1.00');
+    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(AT, '@')
+    .addToken(CommodityText, '$')
+    .addToken(JournalNumber, '1.00');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -114,10 +123,10 @@ test('parses a posting containing account name and unit price', (t) => {
 
 test('parses a posting containing account name and balance assertion', (t) => {
   t.context.lexer
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing')
-    .addToken(BasicTokens.EQUALS, '=')
-    .addToken(PostingModeTokens.CommodityText, '$')
-    .addToken(PostingModeTokens.Number, '1.00');
+    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(EQUALS, '=')
+    .addToken(CommodityText, '$')
+    .addToken(JournalNumber, '1.00');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -146,9 +155,9 @@ test('parses a posting containing account name and balance assertion', (t) => {
 
 test('parses a posting containing account name and inline comment', (t) => {
   t.context.lexer
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing')
-    .addToken(CommentModeTokens.SemicolonComment, '=')
-    .addToken(CommentModeTokens.InlineCommentText, 'a comment');
+    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(SemicolonComment, '=')
+    .addToken(InlineCommentText, 'a comment');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -175,9 +184,9 @@ test('parses a posting containing account name and inline comment', (t) => {
 });
 
 test('does not parse a posting without account name', (t) => {
-  t.context.lexer.addToken(PostingModeTokens.PostingStatusIndicator, '!')
-    .addToken(PostingModeTokens.Number, '1.00')
-    .addToken(PostingModeTokens.CommodityText, '$');
+  t.context.lexer.addToken(PostingStatusIndicator, '!')
+    .addToken(JournalNumber, '1.00')
+    .addToken(CommodityText, '$');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(HLedgerParser.posting(), '<posting!> ! 1.00$');

@@ -1,6 +1,6 @@
 import anyTest, {TestInterface} from 'ava';
 
-import { PostingModeTokens, TxnLineModeTokens } from '../../lib/lexer/tokens';
+import { PostingStatusIndicator, TxnStatusIndicator } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -13,7 +13,7 @@ test.before(t => {
 });
 
 test('parses a pending status indicator', (t) => {
-  t.context.lexer.addToken(PostingModeTokens.PostingStatusIndicator, '!');
+  t.context.lexer.addToken(PostingStatusIndicator, '!');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -26,7 +26,7 @@ test('parses a pending status indicator', (t) => {
 });
 
 test('parses a cleared status indicator', (t) => {
-  t.context.lexer.addToken(TxnLineModeTokens.TxnStatusIndicator, '*');
+  t.context.lexer.addToken(TxnStatusIndicator, '*');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(

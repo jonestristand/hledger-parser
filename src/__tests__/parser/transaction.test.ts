@@ -1,11 +1,14 @@
 import anyTest, {TestInterface} from 'ava';
 
 import {
-  BasicTokens,
-  CommentModeTokens,
-  DefaultModeTokens,
-  PostingModeTokens,
-  TxnLineModeTokens
+  DateAtStart,
+  INDENT,
+  InlineCommentText,
+  JournalDate,
+  NEWLINE,
+  RealAccountName,
+  SemicolonComment,
+  Text
 } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
@@ -20,9 +23,9 @@ test.before(t => {
 
 test('parses a transaction with only init line with date and description', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(TxnLineModeTokens.Text, 'description text')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(Text, 'description text')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -50,12 +53,12 @@ test('parses a transaction with only init line with date and description', (t) =
 
 test('parses a transaction containing one posting without an amount', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(TxnLineModeTokens.Text, 'description text')
-    .addToken(BasicTokens.NEWLINE, '\n')
-    .addToken(DefaultModeTokens.INDENT, '    ')
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(Text, 'description text')
+    .addToken(NEWLINE, '\n')
+    .addToken(INDENT, '    ')
+    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -98,16 +101,16 @@ test('parses a transaction containing one posting without an amount', (t) => {
 
 test('parses a transaction containing one posting without an amount and an inline comment', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(TxnLineModeTokens.Text, 'description text')
-    .addToken(BasicTokens.NEWLINE, '\n')
-    .addToken(DefaultModeTokens.INDENT, '    ')
-    .addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing')
-    .addToken(BasicTokens.NEWLINE, '\n')
-    .addToken(DefaultModeTokens.INDENT, '    ')
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(CommentModeTokens.InlineCommentText, 'a comment')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(Text, 'description text')
+    .addToken(NEWLINE, '\n')
+    .addToken(INDENT, '    ')
+    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(NEWLINE, '\n')
+    .addToken(INDENT, '    ')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'a comment')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -164,9 +167,9 @@ test('parses a transaction containing one posting without an amount and an inlin
 
 test('does not parse a transaction with incorrect Date token', (t) => {
   t.context.lexer
-    .addToken(BasicTokens.Date, '1900/03/03')
-    .addToken(TxnLineModeTokens.Text, 'a description')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(JournalDate, '1900/03/03')
+    .addToken(Text, 'a description')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(

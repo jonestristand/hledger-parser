@@ -3,8 +3,6 @@ import { Lexer } from 'chevrotain';
 import {
   account_mode,
   comment_mode,
-  commodity_format_mode,
-  commodity_mode,
   default_mode,
   indent_mode,
   inline_comment_mode,
@@ -28,8 +26,6 @@ export const tokenModeDefinitions = {
     posting_amount_mode,
     price_mode,
     price_amounts_mode,
-    commodity_mode,
-    commodity_format_mode,
     default_mode
   },
   defaultMode: 'default_mode'

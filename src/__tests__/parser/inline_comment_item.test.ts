@@ -1,6 +1,15 @@
 import anyTest, {TestInterface} from 'ava';
 
-import { CommentModeTokens } from '../../lib/lexer/tokens';
+import {
+  ASTERISK_AT_START,
+  CommentText,
+  HASHTAG_AT_START,
+  InlineCommentTagColon,
+  InlineCommentTagName,
+  InlineCommentText,
+  SEMICOLON_AT_START,
+  SemicolonComment
+} from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -13,7 +22,7 @@ test.before(t => {
 });
 
 test('parses inline comment text', (t) => {
-  t.context.lexer.addToken(CommentModeTokens.InlineCommentText, 'an inline comment');
+  t.context.lexer.addToken(InlineCommentText, 'an inline comment');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -27,8 +36,8 @@ test('parses inline comment text', (t) => {
 
 test('parses inline comment tags', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.InlineCommentTagName, 'tag')
-    .addToken(CommentModeTokens.InlineCommentTagColon, ':');
+    .addToken(InlineCommentTagName, 'tag')
+    .addToken(InlineCommentTagColon, ':');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -46,7 +55,7 @@ test('parses inline comment tags', (t) => {
 });
 
 test('does not parse full-line comments as inline', (t) => {
-  t.context.lexer.addToken(CommentModeTokens.CommentText, 'full-line comment text token');
+  t.context.lexer.addToken(CommentText, 'full-line comment text token');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
@@ -57,8 +66,8 @@ test('does not parse full-line comments as inline', (t) => {
 
 test('does not parse an inline comment as an inline comment item', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(CommentModeTokens.InlineCommentText, 'an inline comment');
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'an inline comment');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
@@ -69,8 +78,8 @@ test('does not parse an inline comment as an inline comment item', (t) => {
 
 test('does not parse a hashtag full-line comment as an inline comment item', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.HASHTAG_AT_START, '#')
-    .addToken(CommentModeTokens.CommentText, 'a full-line comment');
+    .addToken(HASHTAG_AT_START, '#')
+    .addToken(CommentText, 'a full-line comment');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
@@ -81,8 +90,8 @@ test('does not parse a hashtag full-line comment as an inline comment item', (t)
 
 test('does not parse an asterisk full-line comment as an inline comment item', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.ASTERISK_AT_START, '*')
-    .addToken(CommentModeTokens.CommentText, 'a full-line comment');
+    .addToken(ASTERISK_AT_START, '*')
+    .addToken(CommentText, 'a full-line comment');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
@@ -93,8 +102,8 @@ test('does not parse an asterisk full-line comment as an inline comment item', (
 
 test('does not parse a semicolon full-line comment as an inline comment item', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.SEMICOLON_AT_START, ';')
-    .addToken(CommentModeTokens.CommentText, 'a full-line comment');
+    .addToken(SEMICOLON_AT_START, ';')
+    .addToken(CommentText, 'a full-line comment');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(

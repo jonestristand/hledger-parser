@@ -1,6 +1,10 @@
 import anyTest, {TestInterface} from 'ava';
 
-import { PostingModeTokens } from '../../lib/lexer/tokens';
+import {
+  RealAccountName,
+  VirtualAccountName,
+  VirtualBalancedAccountName
+} from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -13,7 +17,7 @@ test.before(t => {
 });
 
 test('parses a real account name', (t) => {
-  t.context.lexer.addToken(PostingModeTokens.RealAccountName, 'Assets:Chequing');
+  t.context.lexer.addToken(RealAccountName, 'Assets:Chequing');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -26,7 +30,7 @@ test('parses a real account name', (t) => {
 });
 
 test('parses a virtual account name', (t) => {
-  t.context.lexer.addToken(PostingModeTokens.VirtualAccountName, '(Assets:Chequing)');
+  t.context.lexer.addToken(VirtualAccountName, '(Assets:Chequing)');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -40,7 +44,7 @@ test('parses a virtual account name', (t) => {
 
 test('parses a virtual balanced account name', (t) => {
   t.context.lexer.addToken(
-    PostingModeTokens.VirtualBalancedAccountName,
+    VirtualBalancedAccountName,
     '[Assets:Chequing]'
   );
   HLedgerParser.input = t.context.lexer.tokenize();

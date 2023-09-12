@@ -4,13 +4,10 @@ import {
   ASTERISK_AT_START,
   AT,
   CommentText,
-  CommodityDirective,
   CommodityText,
   DASH,
-  JournalDate,
   DateAtStart,
   EQUALS,
-  FormatSubDirective,
   HASHTAG_AT_START,
   INDENT,
   InlineCommentTagColon,
@@ -18,10 +15,11 @@ import {
   InlineCommentTagName,
   InlineCommentTagValue,
   InlineCommentText,
+  JournalDate,
+  JournalNumber,
   LPAREN,
   MultipleWSPostingMode,
   NEWLINE,
-  JournalNumber,
   ParenValue,
   PDirective,
   PDirectiveDate,
@@ -42,7 +40,6 @@ export const default_mode = [
   DateAtStart,
   AccountDirective,
   PDirective,
-  CommodityDirective,
   INDENT,
   SEMICOLON_AT_START,
   HASHTAG_AT_START,
@@ -50,13 +47,13 @@ export const default_mode = [
   NEWLINE
 ];
 
+// Note: Subdirectives must be listed before RealAccountName
 export const indent_mode = [
-  RealAccountName,
+  SemicolonComment,
+  PostingStatusIndicator,
   VirtualAccountName,
   VirtualBalancedAccountName,
-  PostingStatusIndicator,
-  FormatSubDirective,
-  SemicolonComment
+  RealAccountName
 ];
 
 export const account_mode = [
@@ -138,20 +135,3 @@ export const price_amounts_mode = [
   CommodityText,
   DASH
 ];
-
-export const commodity_mode = [
-  SINGLE_WS,
-  CommodityText,
-  JournalNumber,
-  SemicolonComment,
-  NEWLINE
-];
-
-export const commodity_format_mode = [
-  SINGLE_WS,
-  CommodityText,
-  JournalNumber,
-  SemicolonComment,
-  NEWLINE
-];
-
