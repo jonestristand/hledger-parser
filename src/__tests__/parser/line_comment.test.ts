@@ -1,4 +1,4 @@
-import anyTest, {TestInterface} from 'ava';
+import anyTest, { TestInterface } from 'ava';
 
 import {
   ASTERISK_AT_START,
@@ -11,11 +11,11 @@ import {
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
-const test = anyTest as TestInterface<{lexer: MockLexer}>
+const test = anyTest as TestInterface<{ lexer: MockLexer }>;
 
-test.before(t => {
+test.before((t) => {
   t.context = {
-    lexer: new MockLexer(),
+    lexer: new MockLexer()
   };
 });
 

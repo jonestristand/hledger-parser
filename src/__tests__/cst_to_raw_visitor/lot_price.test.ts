@@ -35,11 +35,7 @@ test('returns a transaction object with a posting containing a total lot price',
     parseLedgerToCST(`1900/01/01\n    Account:Test  $1 @@ 2CAD\n`).cstJournal
       .children
   );
-  t.is(
-    result.length,
-    1,
-    'should modify a transaction posting total lot price'
-  );
+  t.is(result.length, 1, 'should modify a transaction posting total lot price');
   t.is(result[0].type, 'transaction', 'should be a transaction object');
   t.is(
     (result[0] as Raw.Transaction).value.contentLines[0].type,

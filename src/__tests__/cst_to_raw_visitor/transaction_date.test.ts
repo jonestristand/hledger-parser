@@ -23,8 +23,7 @@ test('returns a transaction object containing only a date', (t) => {
 
 test('returns a transaction object containing only a date and posting date', (t) => {
   const result = CstToRawVisitor.journal(
-    parseLedgerToCST(`1900/01/01=2020/02/02\n`).cstJournal
-      .children
+    parseLedgerToCST(`1900/01/01=2020/02/02\n`).cstJournal.children
   );
   t.is(
     result.length,
