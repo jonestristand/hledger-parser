@@ -1,11 +1,14 @@
 import anyTest, {TestInterface} from 'ava';
 
 import {
-  AccountDirective, INDENT,
+  AccountDirective,
+  INDENT,
   InlineCommentText,
   NEWLINE,
   RealAccountName,
-  SemicolonComment, VirtualAccountName, VirtualBalancedAccountName
+  SemicolonComment,
+  VirtualAccountName,
+  VirtualBalancedAccountName
 } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';

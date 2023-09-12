@@ -256,14 +256,6 @@ class HLedgerParser extends CstParser {
       this.CONSUME1(Text);
     });
   });
-
-  // public commodityDirective = this.RULE('commodityDirective', () => {
-  //
-  // });
-  //
-  // public formatSubdirective = this.RULE('formatSubdirective', () => {
-  //
-  // });
 }
 
 const ParserInstance = new HLedgerParser();
