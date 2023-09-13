@@ -1,6 +1,12 @@
 import anyTest, { TestInterface } from 'ava';
 
-import { CommentModeTokens } from '../../lib/lexer/tokens';
+import {
+  InlineCommentTagColon,
+  InlineCommentTagName,
+  InlineCommentText,
+  SEMICOLON_AT_START,
+  SemicolonComment
+} from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -13,7 +19,7 @@ test.before((t) => {
 });
 
 test('parses an empty inline comment', (t) => {
-  t.context.lexer.addToken(CommentModeTokens.SemicolonComment, ';');
+  t.context.lexer.addToken(SemicolonComment, ';');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -27,8 +33,8 @@ test('parses an empty inline comment', (t) => {
 
 test('parses an inline comment containing text', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(CommentModeTokens.InlineCommentText, 'an inline comment');
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'an inline comment');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -47,10 +53,10 @@ test('parses an inline comment containing text', (t) => {
 
 test('parses an inline comment containing text and a tag', (t) => {
   t.context.lexer
-    .addToken(CommentModeTokens.SemicolonComment, ';')
-    .addToken(CommentModeTokens.InlineCommentText, 'an inline comment')
-    .addToken(CommentModeTokens.InlineCommentTagName, 'tag')
-    .addToken(CommentModeTokens.InlineCommentTagColon, ':');
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'an inline comment')
+    .addToken(InlineCommentTagName, 'tag')
+    .addToken(InlineCommentTagColon, ':');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -76,7 +82,7 @@ test('parses an inline comment containing text and a tag', (t) => {
 });
 
 test('does not parse unindented comments', (t) => {
-  t.context.lexer.addToken(CommentModeTokens.SEMICOLON_AT_START, ';');
+  t.context.lexer.addToken(SEMICOLON_AT_START, ';');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(HLedgerParser.inlineComment(), '<inlineComment!> ;');

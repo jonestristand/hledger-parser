@@ -1,6 +1,6 @@
 import anyTest, { TestInterface } from 'ava';
 
-import { TxnLineModeTokens } from '../../lib/lexer/tokens';
+import { ParenValue } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -16,7 +16,7 @@ test.before((t) => {
 //  limited to that usage. https://hledger.org/1.30/hledger.html#code
 
 test('parses a transaction code (cheque number)', (t) => {
-  t.context.lexer.addToken(TxnLineModeTokens.ParenValue, '(#443)');
+  t.context.lexer.addToken(ParenValue, '(#443)');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(

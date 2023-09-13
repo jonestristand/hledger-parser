@@ -1,6 +1,6 @@
 import anyTest, { TestInterface } from 'ava';
 
-import { BasicTokens, TxnLineModeTokens } from '../../lib/lexer/tokens';
+import { PIPE, Text } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -13,7 +13,7 @@ test.before((t) => {
 });
 
 test('parses a description', (t) => {
-  t.context.lexer.addToken(TxnLineModeTokens.Text, 'descriptionText');
+  t.context.lexer.addToken(Text, 'descriptionText');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -27,9 +27,9 @@ test('parses a description', (t) => {
 
 test('parses a description with a single memo', (t) => {
   t.context.lexer
-    .addToken(TxnLineModeTokens.Text, 'payee')
-    .addToken(BasicTokens.PIPE, '|')
-    .addToken(TxnLineModeTokens.Text, 'memo');
+    .addToken(Text, 'payee')
+    .addToken(PIPE, '|')
+    .addToken(Text, 'memo');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(

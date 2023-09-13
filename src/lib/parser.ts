@@ -2,12 +2,39 @@ import { CstParser } from 'chevrotain';
 
 import { tokenModeDefinitions } from './lexer';
 import {
-  BasicTokens,
-  CommentModeTokens,
-  DefaultModeTokens,
-  PostingModeTokens,
-  PriceModeTokens,
-  TxnLineModeTokens
+  AccountDirective,
+  ASTERISK,
+  ASTERISK_AT_START,
+  AT,
+  CommentText,
+  CommodityText,
+  DASH,
+  DateAtStart,
+  EQUALS,
+  HASHTAG_AT_START,
+  INDENT,
+  InlineCommentTagColon,
+  InlineCommentTagComma,
+  InlineCommentTagName,
+  InlineCommentTagValue,
+  InlineCommentText,
+  JournalDate,
+  JournalNumber,
+  LPAREN,
+  NEWLINE,
+  ParenValue,
+  PDirective,
+  PDirectiveDate,
+  PIPE,
+  PostingStatusIndicator,
+  RealAccountName,
+  RPAREN,
+  SEMICOLON_AT_START,
+  SemicolonComment,
+  Text,
+  TxnStatusIndicator,
+  VirtualAccountName,
+  VirtualBalancedAccountName
 } from './lexer/tokens';
 
 class HLedgerParser extends CstParser {
@@ -18,33 +45,33 @@ class HLedgerParser extends CstParser {
 
   public lineComment = this.RULE('lineComment', () => {
     this.OR([
-      { ALT: () => this.CONSUME(CommentModeTokens.SEMICOLON_AT_START) },
-      { ALT: () => this.CONSUME(CommentModeTokens.HASHTAG_AT_START) },
-      { ALT: () => this.CONSUME(CommentModeTokens.ASTERISK_AT_START) }
+      { ALT: () => this.CONSUME(SEMICOLON_AT_START) },
+      { ALT: () => this.CONSUME(HASHTAG_AT_START) },
+      { ALT: () => this.CONSUME(ASTERISK_AT_START) }
     ]);
     this.OPTION(() => {
-      this.CONSUME(CommentModeTokens.CommentText);
+      this.CONSUME(CommentText);
     });
-    this.CONSUME(BasicTokens.NEWLINE);
+    this.CONSUME(NEWLINE);
   });
 
   public inlineComment = this.RULE('inlineComment', () => {
-    this.CONSUME(CommentModeTokens.SemicolonComment);
+    this.CONSUME(SemicolonComment);
     this.MANY(() => this.SUBRULE(this.inlineCommentItem));
   });
 
   public inlineCommentItem = this.RULE('inlineCommentItem', () => {
     this.OR([
-      { ALT: () => this.CONSUME(CommentModeTokens.InlineCommentText) },
+      { ALT: () => this.CONSUME(InlineCommentText) },
       { ALT: () => this.SUBRULE(this.tag) }
     ]);
   });
 
   public tag = this.RULE('tag', () => {
-    this.CONSUME(CommentModeTokens.InlineCommentTagName);
-    this.CONSUME(CommentModeTokens.InlineCommentTagColon);
-    this.OPTION(() => this.CONSUME(CommentModeTokens.InlineCommentTagValue));
-    this.OPTION1(() => this.CONSUME(CommentModeTokens.InlineCommentTagComma));
+    this.CONSUME(InlineCommentTagName);
+    this.CONSUME(InlineCommentTagColon);
+    this.OPTION(() => this.CONSUME(InlineCommentTagValue));
+    this.OPTION1(() => this.CONSUME(InlineCommentTagComma));
   });
 
   public journal = this.RULE('journal', () => {
@@ -59,7 +86,7 @@ class HLedgerParser extends CstParser {
       { ALT: () => this.SUBRULE(this.lineComment) },
       { ALT: () => this.SUBRULE(this.priceDirective) },
       { ALT: () => this.SUBRULE(this.accountDirective) },
-      { ALT: () => this.CONSUME(BasicTokens.NEWLINE) }
+      { ALT: () => this.CONSUME(NEWLINE) }
     ]);
   });
 
@@ -71,20 +98,20 @@ class HLedgerParser extends CstParser {
   });
 
   public priceDirective = this.RULE('priceDirective', () => {
-    this.CONSUME(DefaultModeTokens.PDirective);
-    this.CONSUME(PriceModeTokens.PDirectiveDate);
-    this.CONSUME(PostingModeTokens.CommodityText);
+    this.CONSUME(PDirective);
+    this.CONSUME(PDirectiveDate);
+    this.CONSUME(CommodityText);
     this.SUBRULE(this.amount);
-    this.CONSUME(BasicTokens.NEWLINE);
+    this.CONSUME(NEWLINE);
   });
 
   public accountDirective = this.RULE('accountDirective', () => {
-    this.CONSUME(DefaultModeTokens.AccountDirective);
-    this.CONSUME(PostingModeTokens.RealAccountName);
+    this.CONSUME(AccountDirective);
+    this.CONSUME(RealAccountName);
     this.OPTION(() => {
       this.SUBRULE(this.inlineComment);
     });
-    this.CONSUME(BasicTokens.NEWLINE);
+    this.CONSUME(NEWLINE);
     this.MANY(() => {
       this.SUBRULE(this.accountDirectiveContentLine);
     });
@@ -93,11 +120,11 @@ class HLedgerParser extends CstParser {
   public accountDirectiveContentLine = this.RULE(
     'accountDirectiveContentLine',
     () => {
-      this.CONSUME(DefaultModeTokens.INDENT);
+      this.CONSUME(INDENT);
       // this.OR([
       /* { ALT: () =>  */ this.SUBRULE(this.inlineComment); /*  }, */
       // ]);
-      this.CONSUME(BasicTokens.NEWLINE);
+      this.CONSUME(NEWLINE);
     }
   );
 
@@ -115,16 +142,16 @@ class HLedgerParser extends CstParser {
     this.OPTION3(() => {
       this.SUBRULE(this.inlineComment);
     });
-    this.CONSUME(BasicTokens.NEWLINE);
+    this.CONSUME(NEWLINE);
   });
 
   public transactionContentLine = this.RULE('transactionContentLine', () => {
-    this.CONSUME(DefaultModeTokens.INDENT);
+    this.CONSUME(INDENT);
     this.OR([
       { ALT: () => this.SUBRULE(this.posting) },
       { ALT: () => this.SUBRULE(this.inlineComment) }
     ]);
-    this.CONSUME(BasicTokens.NEWLINE);
+    this.CONSUME(NEWLINE);
   });
 
   public posting = this.RULE('posting', () => {
@@ -147,18 +174,18 @@ class HLedgerParser extends CstParser {
   });
 
   public transactionDate = this.RULE('transactionDate', () => {
-    this.CONSUME(DefaultModeTokens.DateAtStart);
+    this.CONSUME(DateAtStart);
     this.OPTION(() => {
-      this.CONSUME(BasicTokens.EQUALS);
-      this.CONSUME(BasicTokens.Date);
+      this.CONSUME(EQUALS);
+      this.CONSUME(JournalDate);
     });
   });
 
   public account = this.RULE('account', () => {
     this.OR([
-      { ALT: () => this.CONSUME(PostingModeTokens.RealAccountName) },
-      { ALT: () => this.CONSUME(PostingModeTokens.VirtualAccountName) },
-      { ALT: () => this.CONSUME(PostingModeTokens.VirtualBalancedAccountName) }
+      { ALT: () => this.CONSUME(RealAccountName) },
+      { ALT: () => this.CONSUME(VirtualAccountName) },
+      { ALT: () => this.CONSUME(VirtualBalancedAccountName) }
     ]);
   });
 
@@ -166,15 +193,15 @@ class HLedgerParser extends CstParser {
     this.OR1([
       {
         ALT: () => {
-          this.OPTION(() => this.CONSUME(BasicTokens.DASH));
-          this.CONSUME(PostingModeTokens.CommodityText);
-          this.CONSUME(PostingModeTokens.Number);
+          this.OPTION(() => this.CONSUME(DASH));
+          this.CONSUME(CommodityText);
+          this.CONSUME(JournalNumber);
         }
       },
       {
         ALT: () => {
-          this.CONSUME1(PostingModeTokens.Number);
-          this.OPTION1(() => this.CONSUME1(PostingModeTokens.CommodityText));
+          this.CONSUME1(JournalNumber);
+          this.OPTION1(() => this.CONSUME1(CommodityText));
         }
       }
     ]);
@@ -184,16 +211,16 @@ class HLedgerParser extends CstParser {
     this.OR([
       {
         ALT: () => {
-          this.CONSUME(BasicTokens.LPAREN);
-          this.CONSUME(BasicTokens.AT);
-          this.OPTION(() => this.CONSUME1(BasicTokens.AT));
-          this.CONSUME(BasicTokens.RPAREN);
+          this.CONSUME(LPAREN);
+          this.CONSUME(AT);
+          this.OPTION(() => this.CONSUME1(AT));
+          this.CONSUME(RPAREN);
         }
       },
       {
         ALT: () => {
-          this.CONSUME2(BasicTokens.AT);
-          this.OPTION1(() => this.CONSUME3(BasicTokens.AT));
+          this.CONSUME2(AT);
+          this.OPTION1(() => this.CONSUME3(AT));
         }
       }
     ]);
@@ -201,32 +228,32 @@ class HLedgerParser extends CstParser {
   });
 
   public assertion = this.RULE('assertion', () => {
-    this.CONSUME(BasicTokens.EQUALS);
+    this.CONSUME(EQUALS);
     this.OPTION(() => {
-      this.CONSUME1(BasicTokens.EQUALS);
+      this.CONSUME1(EQUALS);
     });
     this.OPTION1(() => {
-      this.CONSUME(BasicTokens.ASTERISK);
+      this.CONSUME(ASTERISK);
     });
     this.SUBRULE(this.amount);
   });
 
   public statusIndicator = this.RULE('statusIndicator', () => {
     this.OR([
-      { ALT: () => this.CONSUME(PostingModeTokens.PostingStatusIndicator) },
-      { ALT: () => this.CONSUME(TxnLineModeTokens.TxnStatusIndicator) }
+      { ALT: () => this.CONSUME(PostingStatusIndicator) },
+      { ALT: () => this.CONSUME(TxnStatusIndicator) }
     ]);
   });
 
   public chequeNumber = this.RULE('chequeNumber', () => {
-    this.CONSUME(TxnLineModeTokens.ParenValue);
+    this.CONSUME(ParenValue);
   });
 
   public description = this.RULE('description', () => {
-    this.CONSUME(TxnLineModeTokens.Text);
+    this.CONSUME(Text);
     this.OPTION(() => {
-      this.CONSUME(BasicTokens.PIPE);
-      this.CONSUME1(TxnLineModeTokens.Text);
+      this.CONSUME(PIPE);
+      this.CONSUME1(Text);
     });
   });
 }

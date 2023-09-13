@@ -1,6 +1,6 @@
 import anyTest, { TestInterface } from 'ava';
 
-import { BasicTokens, DefaultModeTokens } from '../../lib/lexer/tokens';
+import { DateAtStart, NEWLINE } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -14,8 +14,8 @@ test.before((t) => {
 
 test('parses a journal containing a single journal item', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -46,10 +46,10 @@ test('parses a journal containing a single journal item', (t) => {
 
 test('parses a journal containing multiple journal items', (t) => {
   t.context.lexer
-    .addToken(DefaultModeTokens.DateAtStart, '1900/01/01')
-    .addToken(BasicTokens.NEWLINE, '\n')
-    .addToken(DefaultModeTokens.DateAtStart, '1901/02/02')
-    .addToken(BasicTokens.NEWLINE, '\n');
+    .addToken(DateAtStart, '1900/01/01')
+    .addToken(NEWLINE, '\n')
+    .addToken(DateAtStart, '1901/02/02')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -95,7 +95,7 @@ test('parses a journal containing multiple journal items', (t) => {
 });
 
 test('does not parse a journal without newline terminated journal items', (t) => {
-  t.context.lexer.addToken(DefaultModeTokens.DateAtStart, '1900/03/03');
+  t.context.lexer.addToken(DateAtStart, '1900/03/03');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(HLedgerParser.journalItem(), '<journalItem!> 1900/03/03');

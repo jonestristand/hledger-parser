@@ -1,6 +1,12 @@
 import anyTest, { TestInterface } from 'ava';
 
-import { BasicTokens, PostingModeTokens } from '../../lib/lexer/tokens';
+import {
+  AT,
+  CommodityText,
+  JournalNumber,
+  LPAREN,
+  RPAREN
+} from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -14,11 +20,11 @@ test.before((t) => {
 
 test('parses a virtual lot price', (t) => {
   t.context.lexer
-    .addToken(BasicTokens.LPAREN, '(')
-    .addToken(BasicTokens.AT, '@')
-    .addToken(BasicTokens.RPAREN, ')')
-    .addToken(PostingModeTokens.Number, '1.00')
-    .addToken(PostingModeTokens.CommodityText, '$');
+    .addToken(LPAREN, '(')
+    .addToken(AT, '@')
+    .addToken(RPAREN, ')')
+    .addToken(JournalNumber, '1.00')
+    .addToken(CommodityText, '$');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -40,12 +46,12 @@ test('parses a virtual lot price', (t) => {
 
 test('parses a virtual total lot price', (t) => {
   t.context.lexer
-    .addToken(BasicTokens.LPAREN, '(')
-    .addToken(BasicTokens.AT, '@')
-    .addToken(BasicTokens.AT, '@')
-    .addToken(BasicTokens.RPAREN, ')')
-    .addToken(PostingModeTokens.Number, '1.00')
-    .addToken(PostingModeTokens.CommodityText, '$');
+    .addToken(LPAREN, '(')
+    .addToken(AT, '@')
+    .addToken(AT, '@')
+    .addToken(RPAREN, ')')
+    .addToken(JournalNumber, '1.00')
+    .addToken(CommodityText, '$');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -67,9 +73,9 @@ test('parses a virtual total lot price', (t) => {
 
 test('parses a lot price', (t) => {
   t.context.lexer
-    .addToken(BasicTokens.AT, '@')
-    .addToken(PostingModeTokens.Number, '1.00')
-    .addToken(PostingModeTokens.CommodityText, '$');
+    .addToken(AT, '@')
+    .addToken(JournalNumber, '1.00')
+    .addToken(CommodityText, '$');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -89,10 +95,10 @@ test('parses a lot price', (t) => {
 
 test('parses a total lot price', (t) => {
   t.context.lexer
-    .addToken(BasicTokens.AT, '@')
-    .addToken(BasicTokens.AT, '@')
-    .addToken(PostingModeTokens.Number, '1.00')
-    .addToken(PostingModeTokens.CommodityText, '$');
+    .addToken(AT, '@')
+    .addToken(AT, '@')
+    .addToken(JournalNumber, '1.00')
+    .addToken(CommodityText, '$');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
