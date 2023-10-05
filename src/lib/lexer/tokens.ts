@@ -3,9 +3,11 @@ import { createToken, Lexer } from 'chevrotain';
 import {
   matchAccountName,
   matchCommodityText,
+  matchJournalNumber,
   matchOnlyAfter,
   matchOnlyAtStart,
   matchParenValue,
+  matchPriceCommodityText,
   NewlineName
 } from './lexer_utils';
 
@@ -37,6 +39,7 @@ export const SLASH = createToken({ name: 'SLASH', pattern: '/' });
 export const DOT = createToken({ name: 'DOT', pattern: '.' });
 export const COMMA = createToken({ name: 'COMMA', pattern: ',' });
 export const DASH = createToken({ name: 'DASH', pattern: '-' });
+export const PLUS = createToken({ name: 'PLUS', pattern: '+' });
 export const COLON = createToken({ name: 'COLON', pattern: ':' });
 export const EXCLAMATION = createToken({ name: 'EXCLAMATION', pattern: '!' });
 export const EQUALS = createToken({ name: 'EQUALS', pattern: '=' });
@@ -144,7 +147,7 @@ export const MultipleWSPostingMode = createToken({
   pattern: /[ \t][ \t]+/,
   group: Lexer.SKIPPED,
   pop_mode: true,
-  push_mode: 'posting_amount_mode'
+  push_mode: 'posting_amount_mode',
 });
 
 export const RealAccountName = createToken({
@@ -172,7 +175,9 @@ export const VirtualBalancedAccountName = createToken({
 
 export const JournalNumber = createToken({
   name: 'Number',
-  pattern: /[-+]?[\d,]+(\.\d+)?([Ee][+-]?\d+)?/
+  pattern: matchJournalNumber,
+  start_chars_hint: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+  line_breaks: false
 });
 
 export const CommodityText = createToken({
@@ -180,6 +185,8 @@ export const CommodityText = createToken({
   pattern: matchCommodityText,
   line_breaks: false
 });
+
+export const AMOUNT_WS = createToken({ name: 'AMOUNT_WS', pattern: / +/ });
 
 export const PostingStatusIndicator = createToken({
   name: 'PostingStatusIndicator',
@@ -231,8 +238,9 @@ export const PDirective = createToken({
   push_mode: 'price_mode'
 });
 
-export const PDirectiveDate = createToken({
-  name: 'PDirectiveDate',
-  pattern: JournalDate.PATTERN,
+export const PDirectiveCommodityText = createToken({
+  name: 'PDirectiveCommodityText',
+  pattern: matchPriceCommodityText,
+  line_breaks: false,
   push_mode: 'price_amounts_mode'
 });

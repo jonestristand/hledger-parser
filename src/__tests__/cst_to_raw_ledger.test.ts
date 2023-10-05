@@ -1,10 +1,12 @@
 import test from 'ava';
 
-import * as indexInterface from '../index';
+import { cstToRawLedger, parseLedgerToCST } from '../index';
+
+import { assertNoLexingOrParsingErrors } from './utils';
+
 
 test('converts from concrete syntax tree to raw journal', (t) => {
-  const result = indexInterface.cstToRawLedger(
-    indexInterface.parseLedgerToCST(`1900/01/01 A transaction ; a comment
+  const cstResult = parseLedgerToCST(`1900/01/01 A transaction ; a comment
     Assets:Chequing        -$1.00 = $99.00
     Expenses:Food
 
@@ -18,7 +20,12 @@ account Expenses:Food ; type: E
 # Full-line comment
 
 P 1900/01/02 $ CAD 10.00
-`).cstJournal
+`);
+
+  assertNoLexingOrParsingErrors(t, cstResult);
+
+  const result = cstToRawLedger(
+    cstResult.cstJournal
   );
   t.is(result.length, 6, 'should have 6 items in the parsed object');
   t.is(

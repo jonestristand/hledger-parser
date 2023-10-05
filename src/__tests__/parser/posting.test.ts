@@ -1,6 +1,7 @@
 import anyTest, { TestInterface } from 'ava';
 
 import {
+  AMOUNT_WS,
   AT,
   CommodityText,
   EQUALS,
@@ -93,6 +94,7 @@ test('parses a posting containing account name and unit price', (t) => {
   t.context.lexer
     .addToken(RealAccountName, 'Assets:Chequing')
     .addToken(AT, '@')
+    .addToken(AMOUNT_WS, ' ')
     .addToken(CommodityText, '$')
     .addToken(JournalNumber, '1.00');
   HLedgerParser.input = t.context.lexer.tokenize();
@@ -108,6 +110,7 @@ test('parses a posting containing account name and unit price', (t) => {
       lotPrice: [
         {
           AT: 1,
+          AMOUNT_WS: 1,
           amount: [
             {
               CommodityText: 1,
@@ -125,6 +128,7 @@ test('parses a posting containing account name and balance assertion', (t) => {
   t.context.lexer
     .addToken(RealAccountName, 'Assets:Chequing')
     .addToken(EQUALS, '=')
+    .addToken(AMOUNT_WS, ' ')
     .addToken(CommodityText, '$')
     .addToken(JournalNumber, '1.00');
   HLedgerParser.input = t.context.lexer.tokenize();
@@ -140,6 +144,7 @@ test('parses a posting containing account name and balance assertion', (t) => {
       assertion: [
         {
           EQUALS: 1,
+          AMOUNT_WS: 1,
           amount: [
             {
               CommodityText: 1,
@@ -156,7 +161,7 @@ test('parses a posting containing account name and balance assertion', (t) => {
 test('parses a posting containing account name and inline comment', (t) => {
   t.context.lexer
     .addToken(RealAccountName, 'Assets:Chequing')
-    .addToken(SemicolonComment, '=')
+    .addToken(SemicolonComment, ';')
     .addToken(InlineCommentText, 'a comment');
   HLedgerParser.input = t.context.lexer.tokenize();
 

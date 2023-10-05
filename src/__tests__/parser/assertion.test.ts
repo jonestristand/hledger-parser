@@ -1,6 +1,7 @@
 import anyTest, {TestInterface} from 'ava';
 
 import {
+  AMOUNT_WS,
   ASTERISK,
   CommodityText,
   DASH,
@@ -23,6 +24,7 @@ test('parses a strong balance assertion with subaccount modifier', (t) => {
     .addToken(EQUALS, '=')
     .addToken(EQUALS, '=')
     .addToken(ASTERISK, '*')
+    .addToken(AMOUNT_WS, ' ')
     .addToken(DASH, '-')
     .addToken(CommodityText, '$')
     .addToken(JournalNumber, '1.00');
@@ -33,6 +35,7 @@ test('parses a strong balance assertion with subaccount modifier', (t) => {
     {
       EQUALS: 2,
       ASTERISK: 1,
+      AMOUNT_WS: 1,
       amount: [
         {
           DASH: 1,
@@ -49,6 +52,7 @@ test('parses a strong balance assertion', (t) => {
   t.context.lexer
     .addToken(EQUALS, '=')
     .addToken(EQUALS, '=')
+    .addToken(AMOUNT_WS, ' ')
     .addToken(DASH, '-')
     .addToken(CommodityText, '$')
     .addToken(JournalNumber, '1.00');
@@ -58,6 +62,7 @@ test('parses a strong balance assertion', (t) => {
     simplifyCst(HLedgerParser.assertion()),
     {
       EQUALS: 2,
+      AMOUNT_WS: 1,
       amount: [
         {
           DASH: 1,
@@ -74,6 +79,7 @@ test('parses a balance assertion with subaccount modifier', (t) => {
   t.context.lexer
     .addToken(EQUALS, '=')
     .addToken(ASTERISK, '*')
+    .addToken(AMOUNT_WS, ' ')
     .addToken(DASH, '-')
     .addToken(CommodityText, '$')
     .addToken(JournalNumber, '1.00');
@@ -84,6 +90,7 @@ test('parses a balance assertion with subaccount modifier', (t) => {
     {
       EQUALS: 1,
       ASTERISK: 1,
+      AMOUNT_WS: 1,
       amount: [
         {
           DASH: 1,
@@ -99,6 +106,7 @@ test('parses a balance assertion with subaccount modifier', (t) => {
 test('parses a balance assertion', (t) => {
   t.context.lexer
     .addToken(EQUALS, '=')
+    .addToken(AMOUNT_WS, ' ')
     .addToken(DASH, '-')
     .addToken(CommodityText, '$')
     .addToken(JournalNumber, '1.00');
@@ -108,6 +116,7 @@ test('parses a balance assertion', (t) => {
     simplifyCst(HLedgerParser.assertion()),
     {
       EQUALS: 1,
+      AMOUNT_WS: 1,
       amount: [
         {
           DASH: 1,

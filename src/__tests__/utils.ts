@@ -1,3 +1,4 @@
+import { ExecutionContext } from 'ava';
 import {
   createTokenInstance,
   CstElement,
@@ -7,6 +8,7 @@ import {
 } from 'chevrotain';
 import _ from 'lodash';
 
+import { ParseReturn } from '../index';
 import { notEmpty } from '../lib/type_utils';
 
 import type { CstNode } from 'chevrotain';
@@ -76,5 +78,19 @@ export function simplifyLexResult(result: ILexingResult): simpleLex[] {
           [t.tokenType.name]: t.payload as unknown
         }
       : t.tokenType.name
+  );
+}
+
+export function assertNoLexingOrParsingErrors(t: ExecutionContext, result: ParseReturn) {
+  t.is(
+    result.lexErrors.length,
+    0,
+    `should not produce lexing errors: ${result.lexErrors.toString()}`
+  );
+
+  t.is(
+    result.parseErrors.length,
+    0,
+    `should not produce parsing errors: ${result.parseErrors.toString()}`
   );
 }

@@ -104,8 +104,8 @@ class HledgerToRawVisitor extends BaseCstVisitor {
     ctx: ParserTypes.PriceDirectiveCstChildren
   ): Raw.PriceDirective['value'] {
     return {
-      date: ctx.PDirectiveDate[0].image,
-      commodity: ctx.CommodityText[0].payload as string,
+      date: ctx.Date[0].image,
+      commodity: ctx.PDirectiveCommodityText[0].payload as string,
       price: this.amount(ctx.amount[0].children)
     };
   }
