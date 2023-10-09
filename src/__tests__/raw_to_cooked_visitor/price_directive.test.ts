@@ -14,8 +14,10 @@ test('parses a price directive', (t) => {
       date: { y: 1900, m: 1, d: 1 },
       commodity: '$',
       price: {
+        number: '10',
         commodity: 'CAD',
-        value: '10'
+        value: '10CAD',
+        sign: undefined
       }
     },
     'should have parsed price directive'

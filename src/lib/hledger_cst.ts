@@ -185,7 +185,7 @@ export type AmountCstChildren = {
   DASH?: IToken[];
   PLUS?: IToken[];
   CommodityText?: (IToken)[];
-  Number?: (IToken)[];
+  Number: (IToken)[];
   AMOUNT_WS?: IToken[];
 };
 

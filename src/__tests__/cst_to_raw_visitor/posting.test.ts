@@ -68,7 +68,12 @@ test('returns an transaction object containing a posting with an account name an
         type: 'real',
         name: ['Account', 'Test']
       },
-      amount: { commodity: '', value: '10' },
+      amount: {
+        number: '10',
+        value: '10',
+        commodity: undefined,
+        sign: undefined
+      },
       assertion: undefined,
       comment: undefined,
       lotPrice: undefined,
@@ -106,12 +111,22 @@ test('returns a transaction object containing a posting with an account name and
         type: 'real',
         name: ['Account', 'Test']
       },
-      amount: { commodity: '', value: '10' },
+      amount: {
+        number: '10',
+        value: '10 ',
+        commodity: undefined,
+        sign: undefined
+      },
       assertion: undefined,
       comment: undefined,
       lotPrice: {
         lotPriceType: 'unit',
-        amount: { commodity: 'USD', value: '2' }
+        amount: {
+          number: '2',
+          commodity: 'USD',
+          value: '2USD',
+          sign: undefined
+        }
       },
       status: 'unmarked'
     },
@@ -147,11 +162,21 @@ test('returns a transaction object with a posting containing an amount and balan
         type: 'real',
         name: ['Account', 'Test']
       },
-      amount: { commodity: '', value: '10' },
+      amount: {
+        number: '10',
+        value: '10 ',
+        commodity: undefined,
+        sign: undefined
+      },
       assertion: {
         type: 'normal',
         subaccounts: false,
-        amount: { commodity: '', value: '10' }
+        amount: {
+          number: '10',
+          value: '10',
+          commodity: undefined,
+          sign: undefined
+        }
       },
       comment: undefined,
       lotPrice: undefined,

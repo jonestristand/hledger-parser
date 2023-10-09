@@ -232,18 +232,47 @@ class HledgerToRawVisitor extends BaseCstVisitor {
   }
 
   amount(ctx: ParserTypes.AmountCstChildren): Core.Amount {
-    // TODO: Needs error checking, robust parsing for different decimal marks, etc., or maybe parsing only happens in "cooked" version of parse tree?
+    let dash: string | undefined;
+    let plus: string | undefined;
+    let commodity: string | undefined;
 
-    // We know from examining the parser that ctx.Number always exists
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const value = (ctx.DASH ? '-' : '') + ctx.Number![0].image;
-    const commodity = ctx.CommodityText
-      ? (ctx.CommodityText[0].payload as string)
-      : '';
+    const tokens: { data: string, order: number }[] = [];
+
+    tokens.push({ data: ctx.Number[0].image, order: ctx.Number[0].startColumn ?? -1 });
+
+    if (ctx.DASH) {
+      dash = ctx.DASH[0].image;
+      tokens.push({ data: dash, order: ctx.DASH[0].startColumn ?? -1 });
+    } else if (ctx.PLUS) {
+      plus = ctx.PLUS[0].image;
+      tokens.push({ data: plus, order: ctx.PLUS[0].startColumn ?? -1 });
+    }
+
+    const sign = dash ?? plus ?? undefined;
+
+    if (ctx.CommodityText) {
+      commodity = ctx.CommodityText[0].payload as string;
+      tokens.push({ data: commodity, order: ctx.CommodityText[0].startColumn ?? -1 });
+    }
+
+    for (const ws of ctx.AMOUNT_WS ?? []) {
+      tokens.push({ data: ' ', order: ws.startColumn ?? -1 });
+    }
+
+    const value = tokens
+      .sort((a, b) => {
+        if (a.order > b.order) return 1;
+        if (a.order < b.order) return -1;
+        return 0;
+      })
+      .filter((t) => t.order !== -1)
+      .reduce((amount, t) => amount + t.data, '');
 
     return {
-      value,
-      commodity
+      number: ctx.Number[0].image,
+      commodity,
+      sign: sign && (sign === '-' || sign === '+') ? sign : undefined,
+      value
     };
   }
 

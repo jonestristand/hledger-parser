@@ -22,8 +22,10 @@ test('returns a price directive object', (t) => {
       date: '1900/01/01',
       commodity: '$',
       price: {
+        number: '10',
         commodity: 'CAD',
-        value: '10'
+        value: '10CAD',
+        sign: undefined
       }
     },
     'should correctly return all price directive fields'
