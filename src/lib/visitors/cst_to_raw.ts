@@ -238,7 +238,9 @@ class HledgerToRawVisitor extends BaseCstVisitor {
 
     const tokens: { data: string, order: number }[] = [];
 
-    tokens.push({ data: ctx.Number[0].image, order: ctx.Number[0].startColumn ?? -1 });
+    // We know from examining the parser that ctx.Number always exists
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    tokens.push({ data: ctx.Number![0].image, order: ctx.Number![0].startColumn ?? -1 });
 
     if (ctx.DASH) {
       dash = ctx.DASH[0].image;
@@ -269,7 +271,8 @@ class HledgerToRawVisitor extends BaseCstVisitor {
       .reduce((amount, t) => amount + t.data, '');
 
     return {
-      number: ctx.Number[0].image,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      number: ctx.Number![0].image,
       commodity,
       sign: sign && (sign === '-' || sign === '+') ? sign : undefined,
       value

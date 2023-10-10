@@ -182,11 +182,11 @@ export interface AmountCstNode extends CstNode {
 }
 
 export type AmountCstChildren = {
-  DASH?: IToken[];
-  PLUS?: IToken[];
+  DASH?: (IToken)[];
+  PLUS?: (IToken)[];
+  AMOUNT_WS?: (IToken)[];
   CommodityText?: (IToken)[];
-  Number: (IToken)[];
-  AMOUNT_WS?: IToken[];
+  Number?: (IToken)[];
 };
 
 export interface LotPriceCstNode extends CstNode {
@@ -198,8 +198,8 @@ export type LotPriceCstChildren = {
   LPAREN?: IToken[];
   AT?: (IToken)[];
   RPAREN?: IToken[];
+  AMOUNT_WS: IToken[];
   amount: AmountCstNode[];
-  AMOUNT_WS?: IToken[];
 };
 
 export interface AssertionCstNode extends CstNode {
@@ -210,8 +210,8 @@ export interface AssertionCstNode extends CstNode {
 export type AssertionCstChildren = {
   EQUALS: (IToken)[];
   ASTERISK?: IToken[];
+  AMOUNT_WS: IToken[];
   amount: AmountCstNode[];
-  AMOUNT_WS?: IToken[];
 };
 
 export interface StatusIndicatorCstNode extends CstNode {
