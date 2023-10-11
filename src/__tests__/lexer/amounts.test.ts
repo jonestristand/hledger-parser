@@ -210,7 +210,6 @@ const tests = [
       'AMOUNT_WS', { CommodityText: '$' }, 'Number'
     ]),
     title: 'recognizes amounts in lot prices'
-    // TODO: Test lot price, then test tabs in lieu of spaces
   },
   {
     pattern: `1900/01/01 transaction
