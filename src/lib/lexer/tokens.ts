@@ -186,7 +186,7 @@ export const CommodityText = createToken({
   line_breaks: false
 });
 
-export const AMOUNT_WS = createToken({ name: 'AMOUNT_WS', pattern: / +/ });
+export const AMOUNT_WS = createToken({ name: 'AMOUNT_WS', pattern: /[ \t]+/ });
 
 export const PostingStatusIndicator = createToken({
   name: 'PostingStatusIndicator',

@@ -200,7 +200,28 @@ const tests = [
       { CommodityText: '$' }, 'Number'
     ]),
     title: 'recognizes amounts in balance assertions'
-  }
+  },
+  {
+    pattern: `1900/01/01 transaction
+    Assets:Main Chequing    5 foobar @@ $100.00
+    Expenses:Electronics\n`,
+    expected: getExpectedOutput([
+      'Number', 'AMOUNT_WS', { CommodityText: 'foobar' }, 'AMOUNT_WS', 'AT', 'AT',
+      'AMOUNT_WS', { CommodityText: '$' }, 'Number'
+    ]),
+    title: 'recognizes amounts in lot prices'
+    // TODO: Test lot price, then test tabs in lieu of spaces
+  },
+  {
+    pattern: `1900/01/01 transaction
+    Assets:Main Chequing    $\t1.00\t =\t $\t100.00
+    Expenses:Electronics\n`,
+    expected: getExpectedOutput([
+      { CommodityText: '$' }, 'AMOUNT_WS', 'Number', 'AMOUNT_WS', 'EQUALS',
+      'AMOUNT_WS', { CommodityText: '$' }, 'AMOUNT_WS', 'Number'
+    ]),
+    title: 'recognizes amounts containing tabs and spaces'
+  },
 ];
 
 runLexerTests(tests);
