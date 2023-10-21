@@ -16,7 +16,7 @@
 <script src='https://unpkg.com/chevrotain@10.2.0/diagrams/src/diagrams_behavior.js'></script>
 <script src='https://unpkg.com/chevrotain@10.2.0/diagrams/src/main.js'></script>
 
-<div id="diagrams" align="center"></div>
+<div id="diagrams" align="center"></div>    
 
 <script>
     window.serializedGrammar = [
@@ -312,15 +312,15 @@
       },
       {
         "type": "Terminal",
-        "name": "PDirectiveDate",
-        "label": "PDirectiveDate",
+        "name": "Date",
+        "label": "Date",
         "idx": 0,
         "pattern": "([0-9]{4}[-./])?[0-9]{1,2}[-./][0-9]{1,2}"
       },
       {
         "type": "Terminal",
-        "name": "CommodityText",
-        "label": "CommodityText",
+        "name": "PDirectiveCommodityText",
+        "label": "PDirectiveCommodityText",
         "idx": 0
       },
       {
@@ -672,36 +672,125 @@
     "definition": [
       {
         "type": "Alternation",
-        "idx": 1,
+        "idx": 0,
         "definition": [
           {
             "type": "Alternative",
             "definition": [
+              {
+                "type": "Alternation",
+                "idx": 1,
+                "definition": [
+                  {
+                    "type": "Alternative",
+                    "definition": [
+                      {
+                        "type": "Terminal",
+                        "name": "DASH",
+                        "label": "DASH",
+                        "idx": 0,
+                        "pattern": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Alternative",
+                    "definition": [
+                      {
+                        "type": "Terminal",
+                        "name": "PLUS",
+                        "label": "PLUS",
+                        "idx": 0,
+                        "pattern": "+"
+                      }
+                    ]
+                  }
+                ]
+              },
               {
                 "type": "Option",
                 "idx": 0,
                 "definition": [
                   {
                     "type": "Terminal",
-                    "name": "DASH",
-                    "label": "DASH",
+                    "name": "AMOUNT_WS",
+                    "label": "AMOUNT_WS",
                     "idx": 0,
-                    "pattern": "-"
+                    "pattern": "[ \\t]+"
                   }
                 ]
               },
               {
-                "type": "Terminal",
-                "name": "CommodityText",
-                "label": "CommodityText",
-                "idx": 0
-              },
-              {
-                "type": "Terminal",
-                "name": "Number",
-                "label": "Number",
-                "idx": 0,
-                "pattern": "[-+]?[\\d,]+(\\.\\d+)?([Ee][+-]?\\d+)?"
+                "type": "Alternation",
+                "idx": 2,
+                "definition": [
+                  {
+                    "type": "Alternative",
+                    "definition": [
+                      {
+                        "type": "Terminal",
+                        "name": "CommodityText",
+                        "label": "CommodityText",
+                        "idx": 0
+                      },
+                      {
+                        "type": "Option",
+                        "idx": 1,
+                        "definition": [
+                          {
+                            "type": "Terminal",
+                            "name": "AMOUNT_WS",
+                            "label": "AMOUNT_WS",
+                            "idx": 1,
+                            "pattern": "[ \\t]+"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Terminal",
+                        "name": "Number",
+                        "label": "Number",
+                        "idx": 0
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Alternative",
+                    "definition": [
+                      {
+                        "type": "Terminal",
+                        "name": "Number",
+                        "label": "Number",
+                        "idx": 1
+                      },
+                      {
+                        "type": "Option",
+                        "idx": 2,
+                        "definition": [
+                          {
+                            "type": "Option",
+                            "idx": 3,
+                            "definition": [
+                              {
+                                "type": "Terminal",
+                                "name": "AMOUNT_WS",
+                                "label": "AMOUNT_WS",
+                                "idx": 2,
+                                "pattern": "[ \\t]+"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "Terminal",
+                            "name": "CommodityText",
+                            "label": "CommodityText",
+                            "idx": 1
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
@@ -712,22 +801,142 @@
                 "type": "Terminal",
                 "name": "Number",
                 "label": "Number",
-                "idx": 1,
-                "pattern": "[-+]?[\\d,]+(\\.\\d+)?([Ee][+-]?\\d+)?"
+                "idx": 2
               },
               {
                 "type": "Option",
-                "idx": 1,
+                "idx": 4,
                 "definition": [
+                  {
+                    "type": "Option",
+                    "idx": 5,
+                    "definition": [
+                      {
+                        "type": "Terminal",
+                        "name": "AMOUNT_WS",
+                        "label": "AMOUNT_WS",
+                        "idx": 3,
+                        "pattern": "[ \\t]+"
+                      }
+                    ]
+                  },
                   {
                     "type": "Terminal",
                     "name": "CommodityText",
                     "label": "CommodityText",
-                    "idx": 1
+                    "idx": 2
                   }
                 ]
               }
             ]
+          },
+          {
+            "type": "Alternative",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "CommodityText",
+                "label": "CommodityText",
+                "idx": 3
+              },
+              {
+                "type": "Option",
+                "idx": 6,
+                "definition": [
+                  {
+                    "type": "Terminal",
+                    "name": "AMOUNT_WS",
+                    "label": "AMOUNT_WS",
+                    "idx": 4,
+                    "pattern": "[ \\t]+"
+                  }
+                ]
+              },
+              {
+                "type": "Alternation",
+                "idx": 3,
+                "definition": [
+                  {
+                    "type": "Alternative",
+                    "definition": [
+                      {
+                        "type": "Terminal",
+                        "name": "Number",
+                        "label": "Number",
+                        "idx": 3
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Alternative",
+                    "definition": [
+                      {
+                        "type": "Alternation",
+                        "idx": 4,
+                        "definition": [
+                          {
+                            "type": "Alternative",
+                            "definition": [
+                              {
+                                "type": "Terminal",
+                                "name": "DASH",
+                                "label": "DASH",
+                                "idx": 1,
+                                "pattern": "-"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "Alternative",
+                            "definition": [
+                              {
+                                "type": "Terminal",
+                                "name": "PLUS",
+                                "label": "PLUS",
+                                "idx": 1,
+                                "pattern": "+"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Option",
+                        "idx": 7,
+                        "definition": [
+                          {
+                            "type": "Terminal",
+                            "name": "AMOUNT_WS",
+                            "label": "AMOUNT_WS",
+                            "idx": 5,
+                            "pattern": "[ \\t]+"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Terminal",
+                        "name": "Number",
+                        "label": "Number",
+                        "idx": 4
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Option",
+        "idx": 8,
+        "definition": [
+          {
+            "type": "Terminal",
+            "name": "AMOUNT_WS",
+            "label": "AMOUNT_WS",
+            "idx": 6,
+            "pattern": "[ \\t]+"
           }
         ]
       }
@@ -809,6 +1018,13 @@
         ]
       },
       {
+        "type": "Terminal",
+        "name": "AMOUNT_WS",
+        "label": "AMOUNT_WS",
+        "idx": 0,
+        "pattern": "[ \\t]+"
+      },
+      {
         "type": "NonTerminal",
         "name": "amount",
         "idx": 0
@@ -852,6 +1068,13 @@
             "pattern": "\\*"
           }
         ]
+      },
+      {
+        "type": "Terminal",
+        "name": "AMOUNT_WS",
+        "label": "AMOUNT_WS",
+        "idx": 0,
+        "pattern": "[ \\t]+"
       },
       {
         "type": "NonTerminal",

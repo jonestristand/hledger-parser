@@ -1,6 +1,7 @@
 import anyTest, { TestInterface } from 'ava';
 
 import {
+  AMOUNT_WS,
   AT,
   CommodityText,
   JournalNumber,
@@ -23,6 +24,7 @@ test('parses a virtual lot price', (t) => {
     .addToken(LPAREN, '(')
     .addToken(AT, '@')
     .addToken(RPAREN, ')')
+    .addToken(AMOUNT_WS, ' ')
     .addToken(JournalNumber, '1.00')
     .addToken(CommodityText, '$');
   HLedgerParser.input = t.context.lexer.tokenize();
@@ -33,6 +35,7 @@ test('parses a virtual lot price', (t) => {
       LPAREN: 1,
       RPAREN: 1,
       AT: 1,
+      AMOUNT_WS: 1,
       amount: [
         {
           Number: 1,
@@ -50,6 +53,7 @@ test('parses a virtual total lot price', (t) => {
     .addToken(AT, '@')
     .addToken(AT, '@')
     .addToken(RPAREN, ')')
+    .addToken(AMOUNT_WS, ' ')
     .addToken(JournalNumber, '1.00')
     .addToken(CommodityText, '$');
   HLedgerParser.input = t.context.lexer.tokenize();
@@ -60,6 +64,7 @@ test('parses a virtual total lot price', (t) => {
       LPAREN: 1,
       RPAREN: 1,
       AT: 2,
+      AMOUNT_WS: 1,
       amount: [
         {
           Number: 1,
@@ -74,6 +79,7 @@ test('parses a virtual total lot price', (t) => {
 test('parses a lot price', (t) => {
   t.context.lexer
     .addToken(AT, '@')
+    .addToken(AMOUNT_WS, ' ')
     .addToken(JournalNumber, '1.00')
     .addToken(CommodityText, '$');
   HLedgerParser.input = t.context.lexer.tokenize();
@@ -82,6 +88,7 @@ test('parses a lot price', (t) => {
     simplifyCst(HLedgerParser.lotPrice()),
     {
       AT: 1,
+      AMOUNT_WS: 1,
       amount: [
         {
           Number: 1,
@@ -97,6 +104,7 @@ test('parses a total lot price', (t) => {
   t.context.lexer
     .addToken(AT, '@')
     .addToken(AT, '@')
+    .addToken(AMOUNT_WS, ' ')
     .addToken(JournalNumber, '1.00')
     .addToken(CommodityText, '$');
   HLedgerParser.input = t.context.lexer.tokenize();
@@ -105,6 +113,7 @@ test('parses a total lot price', (t) => {
     simplifyCst(HLedgerParser.lotPrice()),
     {
       AT: 2,
+      AMOUNT_WS: 1,
       amount: [
         {
           Number: 1,

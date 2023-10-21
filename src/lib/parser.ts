@@ -3,6 +3,7 @@ import { CstParser } from 'chevrotain';
 import { tokenModeDefinitions } from './lexer';
 import {
   AccountDirective,
+  AMOUNT_WS,
   ASTERISK,
   ASTERISK_AT_START,
   AT,
@@ -24,8 +25,9 @@ import {
   NEWLINE,
   ParenValue,
   PDirective,
-  PDirectiveDate,
+  PDirectiveCommodityText,
   PIPE,
+  PLUS,
   PostingStatusIndicator,
   RealAccountName,
   RPAREN,
@@ -99,10 +101,10 @@ class HLedgerParser extends CstParser {
 
   public priceDirective = this.RULE('priceDirective', () => {
     this.CONSUME(PDirective);
-    this.CONSUME(PDirectiveDate);
-    this.CONSUME(CommodityText);
+    this.CONSUME(JournalDate);
+    this.CONSUME(PDirectiveCommodityText);
     this.SUBRULE(this.amount);
-    this.CONSUME(NEWLINE);
+    this.CONSUME(NEWLINE); // TODO: There is support for inline comments prior to NEWLINE.
   });
 
   public accountDirective = this.RULE('accountDirective', () => {
@@ -190,21 +192,68 @@ class HLedgerParser extends CstParser {
   });
 
   public amount = this.RULE('amount', () => {
-    this.OR1([
+    this.OR([
       {
         ALT: () => {
-          this.OPTION(() => this.CONSUME(DASH));
-          this.CONSUME(CommodityText);
-          this.CONSUME(JournalNumber);
+          this.OR1([
+            { ALT: () => this.CONSUME(DASH) },
+            { ALT: () => this.CONSUME(PLUS) }
+          ]);
+          this.OPTION(() => this.CONSUME(AMOUNT_WS));
+          this.OR2([
+            {
+              ALT: () => {
+                this.CONSUME(CommodityText);
+                this.OPTION1(() => this.CONSUME1(AMOUNT_WS));
+                this.CONSUME(JournalNumber);
+              }
+            },
+            {
+              ALT: () => {
+                this.CONSUME1(JournalNumber);
+                this.OPTION2(() => {
+                  this.OPTION3(() => this.CONSUME2(AMOUNT_WS));
+                  this.CONSUME1(CommodityText);
+                });
+              }
+            }
+          ]);
         }
       },
       {
         ALT: () => {
-          this.CONSUME1(JournalNumber);
-          this.OPTION1(() => this.CONSUME1(CommodityText));
+          this.CONSUME2(JournalNumber);
+          this.OPTION4(() => {
+            this.OPTION5(() => this.CONSUME3(AMOUNT_WS));
+            this.CONSUME2(CommodityText);
+          });
         }
-      }
+      },
+      {
+        ALT: () => {
+          this.CONSUME3(CommodityText);
+          this.OPTION6(() => this.CONSUME4(AMOUNT_WS));
+          this.OR3([
+            {
+              ALT: () => {
+                this.CONSUME3(JournalNumber);
+              }
+            },
+            {
+              ALT: () => {
+                this.OR4([
+                  { ALT: () => this.CONSUME1(DASH) },
+                  { ALT: () => this.CONSUME1(PLUS) }
+                ]);
+                this.OPTION7(() => this.CONSUME5(AMOUNT_WS));
+                this.CONSUME4(JournalNumber);
+              }
+            }
+          ]);
+        }
+      },
     ]);
+    this.OPTION8(() => this.CONSUME6(AMOUNT_WS));
   });
 
   public lotPrice = this.RULE('lotPrice', () => {
@@ -224,6 +273,7 @@ class HLedgerParser extends CstParser {
         }
       }
     ]);
+    this.CONSUME(AMOUNT_WS);
     this.SUBRULE(this.amount);
   });
 
@@ -235,6 +285,7 @@ class HLedgerParser extends CstParser {
     this.OPTION1(() => {
       this.CONSUME(ASTERISK);
     });
+    this.CONSUME(AMOUNT_WS);
     this.SUBRULE(this.amount);
   });
 

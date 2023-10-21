@@ -2,10 +2,11 @@ import anyTest, { TestInterface } from 'ava';
 
 import {
   CommodityText,
+  JournalDate,
   JournalNumber,
   NEWLINE,
   PDirective,
-  PDirectiveDate
+  PDirectiveCommodityText
 } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
@@ -21,8 +22,8 @@ test.before((t) => {
 test('parses a price directive line with commodity and price', (t) => {
   t.context.lexer
     .addToken(PDirective, 'P')
-    .addToken(PDirectiveDate, '2000/01/01')
-    .addToken(CommodityText, '€')
+    .addToken(JournalDate, '2000/01/01')
+    .addToken(PDirectiveCommodityText, '€')
     .addToken(CommodityText, '$')
     .addToken(JournalNumber, '1.50')
     .addToken(NEWLINE, '\n');
@@ -32,8 +33,8 @@ test('parses a price directive line with commodity and price', (t) => {
     simplifyCst(HLedgerParser.priceDirective()),
     {
       PDirective: 1,
-      PDirectiveDate: 1,
-      CommodityText: 1,
+      Date: 1,
+      PDirectiveCommodityText: 1,
       NEWLINE: 1,
       amount: [
         {
@@ -49,8 +50,8 @@ test('parses a price directive line with commodity and price', (t) => {
 test('does not parse a price directive line without newline termination', (t) => {
   t.context.lexer
     .addToken(PDirective, 'P')
-    .addToken(PDirectiveDate, '2000/01/01')
-    .addToken(CommodityText, '€')
+    .addToken(JournalDate, '2000/01/01')
+    .addToken(PDirectiveCommodityText, '€')
     .addToken(CommodityText, '$')
     .addToken(JournalNumber, '1.50');
   HLedgerParser.input = t.context.lexer.tokenize();
@@ -64,8 +65,8 @@ test('does not parse a price directive line without newline termination', (t) =>
 test('does not parse a price directive line without an amount', (t) => {
   t.context.lexer
     .addToken(PDirective, 'P')
-    .addToken(PDirectiveDate, '2000/01/01')
-    .addToken(CommodityText, '€')
+    .addToken(JournalDate, '2000/01/01')
+    .addToken(PDirectiveCommodityText, '€')
     .addToken(CommodityText, '$')
     .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
@@ -79,7 +80,7 @@ test('does not parse a price directive line without an amount', (t) => {
 test('does not parse a price directive line without a date', (t) => {
   t.context.lexer
     .addToken(PDirective, 'P')
-    .addToken(CommodityText, '€')
+    .addToken(PDirectiveCommodityText, '€')
     .addToken(CommodityText, '$')
     .addToken(JournalNumber, '1.50')
     .addToken(NEWLINE, '\n');

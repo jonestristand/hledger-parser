@@ -131,7 +131,12 @@ test('parses a transaction with a posting', (t) => {
     result.transactions[0].postings[0],
     {
       account: { type: 'real', name: ['Assets', 'Chequing'] },
-      amount: { commodity: '$', value: '10' },
+      amount: {
+        number: '10',
+        commodity: '$',
+        value: '$10',
+        sign: undefined
+      },
       assertion: undefined,
       lotPrice: undefined,
       status: 'unmarked',

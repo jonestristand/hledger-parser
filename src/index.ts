@@ -11,48 +11,38 @@ export * as Cooked from './lib/visitors/cooked_types';
 export * as Raw from './lib/visitors/raw_types';
 export * as Core from './lib/types';
 
+export interface ParseReturn {
+  /** An array list of all encountered lexer errors */
+  lexErrors: ILexingError[];
+
+  /** An array list of all encountered parsing errors */
+  parseErrors: IRecognitionException[];
+}
+
 /**
  * Return type interface for the parseLedgerToCST method.
  */
-export interface CSTParseReturn {
+export interface CSTParseReturn extends ParseReturn {
   /** [Chevrotain](https://chevrotain.io/) CstNode tree representing the parsed ledger */
   cstJournal: CstNode;
-
-  /** An array list of all encountered lexer errors */
-  lexErrors: ILexingError[];
-
-  /** An array list of all encountered parsing errors */
-  parseErrors: IRecognitionException[];
 }
 
 /**
  * Return type interface for the parseLedgerToRaw method.
  */
-export interface RawParseReturn {
+export interface RawParseReturn extends ParseReturn {
   /** A list of {@link Raw!}.{@link Raw!JournalItem}s constituting a parsed hledger journal,
    * in the order that the items were encountered in the source file */
   rawJournal: Raw.Journal;
-
-  /** An array list of all encountered lexer errors */
-  lexErrors: ILexingError[];
-
-  /** An array list of all encountered parsing errors */
-  parseErrors: IRecognitionException[];
 }
 
 /**
  * Return type interface for the parseLedgerToRaw method.
  */
-export interface CookedParseReturn {
+export interface CookedParseReturn extends ParseReturn {
   /** A {@link Cooked!}.{@link Cooked!Journal} object constituting a parsed hledger journal
    * with contextual information 'baked in' to the object */
   cookedJournal: Cooked.Journal;
-
-  /** An array list of all encountered lexer errors */
-  lexErrors: ILexingError[];
-
-  /** An array list of all encountered parsing errors */
-  parseErrors: IRecognitionException[];
 }
 
 /**

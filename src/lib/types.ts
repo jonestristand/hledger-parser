@@ -41,7 +41,9 @@ export interface Account {
  */
 export interface Amount {
   value: string;
-  commodity: string;
+  number: string;
+  commodity?: string;
+  sign?: '-' | '+';
 }
 
 /**

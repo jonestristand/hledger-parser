@@ -10,7 +10,7 @@ import {
   JournalNumber,
   NEWLINE,
   PDirective,
-  PDirectiveDate,
+  PDirectiveCommodityText,
   RealAccountName,
   SemicolonComment
 } from '../../lib/lexer/tokens';
@@ -78,8 +78,8 @@ test('parses a hash tag full line comment', (t) => {
 test('parses a price directive', (t) => {
   t.context.lexer
     .addToken(PDirective, 'P')
-    .addToken(PDirectiveDate, '2000/01/02')
-    .addToken(CommodityText, '€')
+    .addToken(JournalDate, '2000/01/02')
+    .addToken(PDirectiveCommodityText, '€')
     .addToken(CommodityText, '$')
     .addToken(JournalNumber, '1.50')
     .addToken(NEWLINE, '\n');
@@ -91,8 +91,8 @@ test('parses a price directive', (t) => {
       priceDirective: [
         {
           PDirective: 1,
-          PDirectiveDate: 1,
-          CommodityText: 1,
+          Date: 1,
+          PDirectiveCommodityText: 1,
           NEWLINE: 1,
           amount: [
             {

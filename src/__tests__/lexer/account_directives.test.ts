@@ -16,6 +16,8 @@ const tests = [
     title: 'recognize account directive and name with end of line at end'
   },
   {
+    // TODO: Account directive comments require two spaces between that and the account name.
+    //  Tests need to be corrected to reflect this format.
     pattern: 'account Assets:Chequing ; a comment\n',
     expected: [
       'AccountDirective',

@@ -27,8 +27,10 @@ test('returns a transaction object with a posting containing a balance assertion
       type: 'normal',
       subaccounts: false,
       amount: {
+        number: '2',
         commodity: '$',
-        value: '2'
+        value: '$2',
+        sign: undefined
       }
     },
     'should contain a transaction posting line with a simple balance assertion'
@@ -58,8 +60,10 @@ test('returns a transaction object with a posting containing a strong balance as
       type: 'strong',
       subaccounts: false,
       amount: {
+        number: '2',
         commodity: '$',
-        value: '2'
+        value: '$2',
+        sign: undefined
       }
     },
     'should contain a transaction posting line with a strong balance assertion'
@@ -89,8 +93,10 @@ test('returns a transaction object with a posting containing a balance assertion
       type: 'normal',
       subaccounts: true,
       amount: {
+        number: '2',
         commodity: '$',
-        value: '2'
+        value: '$2',
+        sign: undefined
       }
     },
     'should contain a transaction posting line with a strong balance assertion with subaccounts'

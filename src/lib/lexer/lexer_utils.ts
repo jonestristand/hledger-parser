@@ -39,20 +39,32 @@ export const matchParenValue: CustomPatternMatcherFunc = (text, offset) => {
   return null;
 };
 
-const commodityTextRegex = /([a-zA-Z\p{Sc}]+)|"([^";\r\n]*)"/uy;
-export const matchCommodityText: CustomPatternMatcherFunc = (text, offset) => {
-  commodityTextRegex.lastIndex = offset;
-  const match = commodityTextRegex.exec(text);
+const commodityTextPattern = '([a-zA-Z\\p{Sc}]+)|"([^";\\r\\n]*)"';
+const priceCommodityTextPattern = `(${commodityTextPattern}) +`;
 
-  if (match) {
-    const result: CustomPatternMatcherReturn = [match[0]];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    result.payload = match[1] ?? match[2];
-    return result;
-  }
+function getCommodityMatchFunc(commodityTextRegex: RegExp): CustomPatternMatcherFunc {
+  return (text, offset) => {
+    commodityTextRegex.lastIndex = offset;
+    const match = commodityTextRegex.exec(text);
 
-  return null;
-};
+    if (match) {
+      const result: CustomPatternMatcherReturn = [match[0]];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      result.payload = (match[1] ?? match[2]).trimEnd();
+      return result;
+    }
+
+    return null;
+  };
+}
+
+export const matchCommodityText: CustomPatternMatcherFunc = getCommodityMatchFunc(
+  new RegExp(commodityTextPattern, 'uy')
+);
+
+export const matchPriceCommodityText: CustomPatternMatcherFunc = getCommodityMatchFunc(
+  new RegExp(priceCommodityTextPattern, 'uy')
+);
 
 export function matchAccountName(delimiter?: '(' | '[') {
   const s = delimiter ?? '(';
@@ -103,3 +115,23 @@ export function matchOnlyAfter(match: RegExp, after: TokenType[]) {
 
   return matcher;
 }
+
+export const matchJournalNumber: CustomPatternMatcherFunc = (text, offset) => {
+  const captureRegex = /\d[\d,. eE+-]*/y;
+  captureRegex.lastIndex = offset;
+  const fullMatch = captureRegex.exec(text);
+
+  if (!fullMatch || fullMatch.length === 0) return null;
+
+  let fullMatchText = fullMatch[0].trimEnd();
+
+  // Edge case for commodities starting with 'E' or 'e'
+  if (/[eE]+$/g.test(fullMatchText)) fullMatchText = fullMatchText.replace(/[eE]+$/, '');
+
+  if (!(/^\d+(,\d+)*(\.\d*)?([Ee][+-]?\d+)?$/g.test(fullMatchText)
+    || /^\d+(\.\d+)*(,\d*)?([Ee][+-]?\d+)?$/g.test(fullMatchText)
+    || /^\d+( \d+)*(\.\d*)?([Ee][+-]?\d+)?$/g.test(fullMatchText)
+    || /^\d+( \d+)*(,\d*)?([Ee][+-]?\d+)?$/g.test(fullMatchText))) return null;
+
+  return [fullMatchText];
+};

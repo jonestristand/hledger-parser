@@ -1,10 +1,12 @@
 import test from 'ava';
 
-import * as indexInterface from '../index';
+import { parseLedgerToRaw } from '../index';
+
+import { assertNoLexingOrParsingErrors } from './utils';
 
 test('correctly parses a properly formatted hledger journal', (t) => {
   const result =
-    indexInterface.parseLedgerToRaw(`1900/01/01 A transaction ; a comment
+    parseLedgerToRaw(`1900/01/01 A transaction ; a comment
     Assets:Chequing        -$1.00 = $99.00
     Expenses:Food
 
@@ -19,8 +21,9 @@ account Expenses:Food ; type: E
 
 P 1900/01/02 $ CAD 10.00
 `);
-  t.is(result.lexErrors.length, 0, 'should not produce any lexer errors');
-  t.is(result.parseErrors.length, 0, 'should not produce any parser errors');
+
+  assertNoLexingOrParsingErrors(t, result);
+
   t.is(result.rawJournal.length, 6, 'should have 6 items in the parsed object');
   t.is(
     result.rawJournal[0].type,
@@ -55,13 +58,13 @@ P 1900/01/02 $ CAD 10.00
 });
 
 test('does not parse text that is not in hledger format', (t) => {
-  const result = indexInterface.parseLedgerToRaw('absolutely wrong');
+  const result = parseLedgerToRaw('absolutely wrong');
   t.is(result.lexErrors.length, 1, 'should return lexer errors that occur');
 });
 
 test('does not parse journal items that are not newline terminated', (t) => {
   t.throws(
-    () => indexInterface.parseLedgerToRaw('P 1900/01/01 $1.00'),
+    () => parseLedgerToRaw('P 1900/01/01 $1.00'),
     null,
     'should throw an error on parsing non-terminated journal item'
   );

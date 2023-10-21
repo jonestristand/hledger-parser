@@ -1,17 +1,14 @@
-import test from 'ava';
+import test, { ExecutionContext } from 'ava';
 
 import { parseLedgerToCST } from '../../index';
 import CstToRawVisitor from '../../lib/visitors/cst_to_raw';
 import * as Raw from '../../lib/visitors/raw_types';
 
-test('returns a transaction object with a posting containing only account name', (t) => {
-  const result = CstToRawVisitor.journal(
-    parseLedgerToCST(`1900/01/01\n    Account:Test\n`).cstJournal.children
-  );
+function assertIsValidTransactionObject(t: ExecutionContext, result: Raw.Journal, message: string) {
   t.is(
     result.length,
     1,
-    'should modify a transaction posting line with only an account name'
+    message
   );
   t.is(result[0].type, 'transaction', 'should be a transaction object');
   t.is(
@@ -24,6 +21,15 @@ test('returns a transaction object with a posting containing only account name',
     'posting',
     'should contain a transaction content line that is a posting'
   );
+}
+
+test('returns a transaction object with a posting containing only account name', (t) => {
+  const result = CstToRawVisitor.journal(
+    parseLedgerToCST(`1900/01/01\n    Account:Test\n`).cstJournal.children
+  );
+
+  assertIsValidTransactionObject(t, result, 'should modify a transaction posting line with only an account name');
+
   t.deepEqual(
     (result[0] as Raw.Transaction).value.contentLines[0].value,
     {
@@ -45,22 +51,9 @@ test('returns an transaction object containing a posting with an account name an
   const result = CstToRawVisitor.journal(
     parseLedgerToCST(`1900/01/01\n    Account:Test  10\n`).cstJournal.children
   );
-  t.is(
-    result.length,
-    1,
-    'should modify a transaction posting line with an account name and amount'
-  );
-  t.is(result[0].type, 'transaction', 'should be a transaction object');
-  t.is(
-    (result[0] as Raw.Transaction).value.contentLines.length,
-    1,
-    'should contain a transaction content line'
-  );
-  t.is(
-    (result[0] as Raw.Transaction).value.contentLines[0].type,
-    'posting',
-    'should contain a transaction content line that is a posting'
-  );
+
+  assertIsValidTransactionObject(t, result, 'should modify a transaction posting line with an account name and amount');
+
   t.deepEqual(
     (result[0] as Raw.Transaction).value.contentLines[0].value,
     {
@@ -68,7 +61,12 @@ test('returns an transaction object containing a posting with an account name an
         type: 'real',
         name: ['Account', 'Test']
       },
-      amount: { commodity: '', value: '10' },
+      amount: {
+        number: '10',
+        value: '10',
+        commodity: undefined,
+        sign: undefined
+      },
       assertion: undefined,
       comment: undefined,
       lotPrice: undefined,
@@ -83,22 +81,9 @@ test('returns a transaction object containing a posting with an account name and
     parseLedgerToCST(`1900/01/01\n    Account:Test  10 @ 2USD\n`).cstJournal
       .children
   );
-  t.is(
-    result.length,
-    1,
-    'should modify a transaction posting line with an account name and amount with a lot price'
-  );
-  t.is(result[0].type, 'transaction', 'should be a transaction object');
-  t.is(
-    (result[0] as Raw.Transaction).value.contentLines.length,
-    1,
-    'should contain a transaction content line'
-  );
-  t.is(
-    (result[0] as Raw.Transaction).value.contentLines[0].type,
-    'posting',
-    'should contain a transaction content line that is a posting'
-  );
+
+  assertIsValidTransactionObject(t, result, 'should modify a transaction posting line with an account name and amount with a lot price');
+
   t.deepEqual(
     (result[0] as Raw.Transaction).value.contentLines[0].value,
     {
@@ -106,12 +91,22 @@ test('returns a transaction object containing a posting with an account name and
         type: 'real',
         name: ['Account', 'Test']
       },
-      amount: { commodity: '', value: '10' },
+      amount: {
+        number: '10',
+        value: '10 ',
+        commodity: undefined,
+        sign: undefined
+      },
       assertion: undefined,
       comment: undefined,
       lotPrice: {
         lotPriceType: 'unit',
-        amount: { commodity: 'USD', value: '2' }
+        amount: {
+          number: '2',
+          commodity: 'USD',
+          value: '2USD',
+          sign: undefined
+        }
       },
       status: 'unmarked'
     },
@@ -124,22 +119,9 @@ test('returns a transaction object with a posting containing an amount and balan
     parseLedgerToCST(`1900/01/01\n    Account:Test  10 = 10\n`).cstJournal
       .children
   );
-  t.is(
-    result.length,
-    1,
-    'should modify a transaction posting line with an account name and amount with a balance assertion'
-  );
-  t.is(result[0].type, 'transaction', 'should be a transaction object');
-  t.is(
-    (result[0] as Raw.Transaction).value.contentLines.length,
-    1,
-    'should contain a transaction content line'
-  );
-  t.is(
-    (result[0] as Raw.Transaction).value.contentLines[0].type,
-    'posting',
-    'should contain a transaction content line that is a posting'
-  );
+
+  assertIsValidTransactionObject(t, result, 'should modify a transaction posting line with an account name and amount with a balance assertion');
+
   t.deepEqual(
     (result[0] as Raw.Transaction).value.contentLines[0].value,
     {
@@ -147,11 +129,21 @@ test('returns a transaction object with a posting containing an amount and balan
         type: 'real',
         name: ['Account', 'Test']
       },
-      amount: { commodity: '', value: '10' },
+      amount: {
+        number: '10',
+        value: '10 ',
+        commodity: undefined,
+        sign: undefined
+      },
       assertion: {
         type: 'normal',
         subaccounts: false,
-        amount: { commodity: '', value: '10' }
+        amount: {
+          number: '10',
+          value: '10',
+          commodity: undefined,
+          sign: undefined
+        }
       },
       comment: undefined,
       lotPrice: undefined,
@@ -165,22 +157,9 @@ test('returns a transaction object containing a posting with a status', (t) => {
   const result = CstToRawVisitor.journal(
     parseLedgerToCST(`1900/01/01\n    ! Account:Test\n`).cstJournal.children
   );
-  t.is(
-    result.length,
-    1,
-    'should modify a transaction posting line with an account name and status indicator'
-  );
-  t.is(result[0].type, 'transaction', 'should be a transaction object');
-  t.is(
-    (result[0] as Raw.Transaction).value.contentLines.length,
-    1,
-    'should contain a transaction content line'
-  );
-  t.is(
-    (result[0] as Raw.Transaction).value.contentLines[0].type,
-    'posting',
-    'should contain a transaction content line that is a posting'
-  );
+
+  assertIsValidTransactionObject(t, result, 'should modify a transaction posting line with an account name and status indicator');
+
   t.deepEqual(
     (result[0] as Raw.Transaction).value.contentLines[0].value,
     {
@@ -203,22 +182,9 @@ test('returns a transaction object wth a posting containing an account name and 
     parseLedgerToCST(`1900/01/01\n    Account:Test ; a comment\n`).cstJournal
       .children
   );
-  t.is(
-    result.length,
-    1,
-    'should modify a transaction posting line with an account name and a comment'
-  );
-  t.is(result[0].type, 'transaction', 'should be a transaction object');
-  t.is(
-    (result[0] as Raw.Transaction).value.contentLines.length,
-    1,
-    'should contain a transaction content line'
-  );
-  t.is(
-    (result[0] as Raw.Transaction).value.contentLines[0].type,
-    'posting',
-    'should contain a transaction content line that is a posting'
-  );
+
+  assertIsValidTransactionObject(t, result, 'should modify a transaction posting line with an account name and a comment');
+
   t.deepEqual(
     (result[0] as Raw.Transaction).value.contentLines[0].value,
     {

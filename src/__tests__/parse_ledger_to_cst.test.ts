@@ -1,10 +1,13 @@
 import test from 'ava';
 
-import * as indexInterface from '../index';
+import { parseLedgerToCST } from '../index';
+
+import { assertNoLexingOrParsingErrors } from './utils';
+
 
 test('correctly lexes a properly formatted hledger journal', (t) => {
   const result =
-    indexInterface.parseLedgerToCST(`1900/01/01 A transaction ; a comment
+    parseLedgerToCST(`1900/01/01 A transaction ; a comment
     Assets:Chequing        -$1.00 = $99.00
     Expenses:Food
 
@@ -19,8 +22,9 @@ account Expenses:Food ; type: E
 
 P 1900/01/02 $ CAD 10.00
 `);
-  t.is(result.lexErrors.length, 0, 'should not produce any lexer errors');
-  t.is(result.parseErrors.length, 0, 'should not produce any parser errors');
+
+  assertNoLexingOrParsingErrors(t, result);
+
   t.is(
     result.cstJournal.name,
     'journal',
@@ -34,12 +38,12 @@ P 1900/01/02 $ CAD 10.00
 });
 
 test('does not lex text that is not in hledger format', (t) => {
-  const result = indexInterface.parseLedgerToCST('absolutely wrong');
+  const result = parseLedgerToCST('absolutely wrong');
   t.is(result.lexErrors.length, 1, 'should return lexer errors that occur');
 });
 
 test('does not lex journal items that are not newline terminated', (t) => {
-  const result3 = indexInterface.parseLedgerToCST('P 1900/01/01 $1.00');
+  const result3 = parseLedgerToCST('P 1900/01/01 $1.00');
   t.is(result3.parseErrors.length, 1, 'should return parser errors that occur');
 });
 

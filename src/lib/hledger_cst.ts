@@ -84,8 +84,8 @@ export interface PriceDirectiveCstNode extends CstNode {
 
 export type PriceDirectiveCstChildren = {
   PDirective: IToken[];
-  PDirectiveDate: IToken[];
-  CommodityText: IToken[];
+  Date: IToken[];
+  PDirectiveCommodityText: IToken[];
   amount: AmountCstNode[];
   NEWLINE: IToken[];
 };
@@ -182,7 +182,9 @@ export interface AmountCstNode extends CstNode {
 }
 
 export type AmountCstChildren = {
-  DASH?: IToken[];
+  DASH?: (IToken)[];
+  PLUS?: (IToken)[];
+  AMOUNT_WS?: (IToken)[];
   CommodityText?: (IToken)[];
   Number?: (IToken)[];
 };
@@ -196,6 +198,7 @@ export type LotPriceCstChildren = {
   LPAREN?: IToken[];
   AT?: (IToken)[];
   RPAREN?: IToken[];
+  AMOUNT_WS: IToken[];
   amount: AmountCstNode[];
 };
 
@@ -207,6 +210,7 @@ export interface AssertionCstNode extends CstNode {
 export type AssertionCstChildren = {
   EQUALS: (IToken)[];
   ASTERISK?: IToken[];
+  AMOUNT_WS: IToken[];
   amount: AmountCstNode[];
 };
 

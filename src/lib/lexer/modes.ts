@@ -1,5 +1,6 @@
 import {
   AccountDirective,
+  AMOUNT_WS,
   ASTERISK,
   ASTERISK_AT_START,
   AT,
@@ -22,8 +23,9 @@ import {
   NEWLINE,
   ParenValue,
   PDirective,
-  PDirectiveDate,
+  PDirectiveCommodityText,
   PIPE,
+  PLUS,
   PostingStatusIndicator,
   RealAccountName,
   RPAREN,
@@ -97,15 +99,16 @@ export const posting_mode = [
 
 export const posting_amount_mode = [
   SemicolonComment,
-  SINGLE_WS,
   AT,
   LPAREN,
   RPAREN,
   EQUALS,
   ASTERISK,
   JournalNumber,
+  AMOUNT_WS,
   CommodityText,
   DASH,
+  PLUS,
   NEWLINE
 ];
 
@@ -123,15 +126,15 @@ export const txn_line_mode = [
 
 export const price_mode = [
   SINGLE_WS,
-  NEWLINE,
-  PDirectiveDate,
-  DASH
+  JournalDate,
+  PDirectiveCommodityText
 ];
 
 export const price_amounts_mode = [
-  SINGLE_WS,
+  AMOUNT_WS,
   NEWLINE,
   JournalNumber,
   CommodityText,
-  DASH
+  DASH,
+  PLUS
 ];

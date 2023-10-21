@@ -22,8 +22,10 @@ test('returns a transaction object with a posting containing a unit lot price', 
     {
       lotPriceType: 'unit',
       amount: {
+        number: '2',
         commodity: 'CAD',
-        value: '2'
+        value: '2CAD',
+        sign: undefined
       }
     },
     'should contain a transaction posting line with a unit lot price'
@@ -48,8 +50,10 @@ test('returns a transaction object with a posting containing a total lot price',
     {
       lotPriceType: 'total',
       amount: {
+        number: '2',
         commodity: 'CAD',
-        value: '2'
+        value: '2CAD',
+        sign: undefined
       }
     },
     'should contain a transaction posting line with a total lot price'
