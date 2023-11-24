@@ -44,8 +44,6 @@ export const COLON = createToken({ name: 'COLON', pattern: ':' });
 export const EXCLAMATION = createToken({ name: 'EXCLAMATION', pattern: '!' });
 export const EQUALS = createToken({ name: 'EQUALS', pattern: '=' });
 export const AT = createToken({ name: 'AT', pattern: '@' });
-export const PIPE = createToken({ name: 'PIPE', pattern: '|' });
-
 export const SEMICOLON = createToken({ name: 'SEMICOLON', pattern: /;/ });
 export const HASHTAG = createToken({ name: 'HASHTAG', pattern: /#/ });
 export const ASTERISK = createToken({ name: 'ASTERISK', pattern: /\*/ });
@@ -226,6 +224,19 @@ export const ParenValue = createToken({
 export const Text = createToken({
   name: 'Text',
   pattern: /[^|;\r\n]+/ ///[a-zA-Z_][a-zA-Z _]*[a-zA-Z_]/
+});
+
+export const PIPE = createToken({
+  name: 'PIPE',
+  pattern: '|',
+  line_breaks: false,
+  push_mode: 'memo_mode'
+});
+
+export const Memo = createToken({
+  name: 'Memo',
+  pattern: /[^;\r\n]+/,
+  line_breaks: false
 });
 
 // ====- Price Directive Tokens -====

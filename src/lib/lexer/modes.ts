@@ -19,6 +19,7 @@ import {
   JournalDate,
   JournalNumber,
   LPAREN,
+  Memo,
   MultipleWSPostingMode,
   NEWLINE,
   ParenValue,
@@ -137,4 +138,10 @@ export const price_amounts_mode = [
   CommodityText,
   DASH,
   PLUS
+];
+
+export const memo_mode = [
+  SemicolonComment,
+  NEWLINE,
+  Memo
 ];
