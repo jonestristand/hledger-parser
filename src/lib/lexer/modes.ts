@@ -5,10 +5,12 @@ import {
   ASTERISK_AT_START,
   AT,
   CommentText,
+  CommodityDirective,
   CommodityText,
   DASH,
   DateAtStart,
   EQUALS,
+  FormatSubdirective,
   HASHTAG_AT_START,
   INDENT,
   InlineCommentTagColon,
@@ -42,6 +44,7 @@ export const default_mode = [
   DateAtStart,
   AccountDirective,
   PDirective,
+  CommodityDirective,
   INDENT,
   SEMICOLON_AT_START,
   HASHTAG_AT_START,
@@ -53,6 +56,7 @@ export const default_mode = [
 export const indent_mode = [
   SemicolonComment,
   PostingStatusIndicator,
+  FormatSubdirective,
   VirtualAccountName,
   VirtualBalancedAccountName,
   RealAccountName
@@ -137,4 +141,24 @@ export const price_amounts_mode = [
   CommodityText,
   DASH,
   PLUS
+];
+
+export const commodity_mode = [
+  AMOUNT_WS,
+  NEWLINE,
+  JournalNumber,
+  CommodityText,
+  DASH,
+  PLUS,
+  SemicolonComment
+];
+
+export const format_mode = [
+  AMOUNT_WS,
+  NEWLINE,
+  JournalNumber,
+  CommodityText,
+  DASH,
+  PLUS,
+  SemicolonComment
 ];

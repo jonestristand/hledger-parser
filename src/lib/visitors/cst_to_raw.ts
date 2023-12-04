@@ -337,6 +337,14 @@ class HledgerToRawVisitor extends BaseCstVisitor {
       return ''; // default blank description
     }
   }
+
+  commodityDirective() {}
+
+  commodityAmount() {}
+
+  commodityDirectiveContentLine() {}
+
+  formatSubdirective() {}
 }
 
 export default new HledgerToRawVisitor();

@@ -243,6 +243,55 @@ export type DescriptionCstChildren = {
   PIPE?: IToken[];
 };
 
+export interface CommodityDirectiveCstNode extends CstNode {
+  name: "commodityDirective";
+  children: CommodityDirectiveCstChildren;
+}
+
+export type CommodityDirectiveCstChildren = {
+  CommodityDirective: IToken[];
+  commodityAmount?: CommodityAmountCstNode[];
+  NEWLINE?: (IToken)[];
+  commodityDirectiveContentLine?: (CommodityDirectiveContentLineCstNode)[];
+  CommodityText?: IToken[];
+  formatSubdirective?: FormatSubdirectiveCstNode[];
+};
+
+export interface CommodityAmountCstNode extends CstNode {
+  name: "commodityAmount";
+  children: CommodityAmountCstChildren;
+}
+
+export type CommodityAmountCstChildren = {
+  DASH?: (IToken)[];
+  PLUS?: (IToken)[];
+  AMOUNT_WS?: (IToken)[];
+  CommodityText?: (IToken)[];
+  Number?: (IToken)[];
+};
+
+export interface CommodityDirectiveContentLineCstNode extends CstNode {
+  name: "commodityDirectiveContentLine";
+  children: CommodityDirectiveContentLineCstChildren;
+}
+
+export type CommodityDirectiveContentLineCstChildren = {
+  INDENT: IToken[];
+  inlineComment: InlineCommentCstNode[];
+};
+
+export interface FormatSubdirectiveCstNode extends CstNode {
+  name: "formatSubdirective";
+  children: FormatSubdirectiveCstChildren;
+}
+
+export type FormatSubdirectiveCstChildren = {
+  INDENT: IToken[];
+  FormatSubdirective: IToken[];
+  commodityAmount: CommodityAmountCstNode[];
+  inlineComment?: InlineCommentCstNode[];
+};
+
 export interface ICstNodeVisitor<IN, OUT> extends ICstVisitor<IN, OUT> {
   lineComment(children: LineCommentCstChildren, param?: IN): OUT;
   inlineComment(children: InlineCommentCstChildren, param?: IN): OUT;
@@ -265,4 +314,8 @@ export interface ICstNodeVisitor<IN, OUT> extends ICstVisitor<IN, OUT> {
   statusIndicator(children: StatusIndicatorCstChildren, param?: IN): OUT;
   chequeNumber(children: ChequeNumberCstChildren, param?: IN): OUT;
   description(children: DescriptionCstChildren, param?: IN): OUT;
+  commodityDirective(children: CommodityDirectiveCstChildren, param?: IN): OUT;
+  commodityAmount(children: CommodityAmountCstChildren, param?: IN): OUT;
+  commodityDirectiveContentLine(children: CommodityDirectiveContentLineCstChildren, param?: IN): OUT;
+  formatSubdirective(children: FormatSubdirectiveCstChildren, param?: IN): OUT;
 }
