@@ -255,6 +255,14 @@ export const CommodityDirective = createToken({
   push_mode: 'commodity_mode'
 });
 
+export const DefaultCommodityDirective = createToken({
+  name: 'DefaultCommodityDirective',
+  pattern: matchOnlyAtStart(/D /y),
+  start_chars_hint: ['D', 'd'],
+  line_breaks: false,
+  push_mode: 'commodity_mode'
+});
+
 export const FormatSubdirective = createToken({
   name: 'FormatSubdirective',
   pattern: /format /,

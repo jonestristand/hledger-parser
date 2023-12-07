@@ -7,6 +7,7 @@ import {
   INDENT,
   InlineCommentText,
   JournalNumber,
+  NEWLINE,
   SemicolonComment
 } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
@@ -25,7 +26,8 @@ test('parses a format subdirective', (t) => {
     .addToken(INDENT, '    ')
     .addToken(FormatSubdirective, 'format ')
     .addToken(CommodityText, '$')
-    .addToken(JournalNumber, '1000.00');
+    .addToken(JournalNumber, '1000.00')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -38,9 +40,24 @@ test('parses a format subdirective', (t) => {
           CommodityText: 1,
           Number: 1
         }
-      ]
+      ],
+      NEWLINE: 1
     },
-    '<formatSubdirective>     format $1000.00'
+    '<formatSubdirective>     format $1000.00\\n'
+  );
+});
+
+test('does not parse a format subdirective without newline termination', (t) => {
+  t.context.lexer
+    .addToken(INDENT, '    ')
+    .addToken(FormatSubdirective, 'format ')
+    .addToken(CommodityText, '$')
+    .addToken(JournalNumber, '1000.00');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.falsy(
+    HLedgerParser.formatSubdirective(),
+    '<formatSubdirective!>     format $1000.00'
   );
 });
 
@@ -52,7 +69,8 @@ test('parses a format subdirective with an inline comment', (t) => {
     .addToken(CommodityText, 'CAD')
     .addToken(AMOUNT_WS, ' ')
     .addToken(SemicolonComment, ';')
-    .addToken(InlineCommentText, 'comment');
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -76,9 +94,44 @@ test('parses a format subdirective with an inline comment', (t) => {
             }
           ]
         }
-      ]
+      ],
+      NEWLINE: 1
     },
     '<formatSubdirective>     format 1000.00CAD ; comment\\n'
+  );
+});
+
+test('does not parse a format subdirective with an inline comment without newline termination', (t) => {
+  t.context.lexer
+    .addToken(INDENT, '    ')
+    .addToken(FormatSubdirective, 'format ')
+    .addToken(JournalNumber, '1000.00')
+    .addToken(CommodityText, 'CAD')
+    .addToken(AMOUNT_WS, ' ')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'comment');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.falsy(
+    HLedgerParser.formatSubdirective(),
+    '<formatSubdirective!>     format 1000.00CAD ; comment'
+  )
+});
+
+test('does not parse a format subdirective without a space before inline comment', (t) => {
+  t.context.lexer
+    .addToken(INDENT, '    ')
+    .addToken(FormatSubdirective, 'format ')
+    .addToken(JournalNumber, '1000.00')
+    .addToken(CommodityText, 'CAD')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.falsy(
+    HLedgerParser.formatSubdirective(),
+    '<formatSubdirective!>     format 1000.00CAD; comment\\n'
   );
 });
 
@@ -86,12 +139,13 @@ test('does not parse a format subdirective without a commodity', (t) => {
   t.context.lexer
     .addToken(INDENT, '    ')
     .addToken(FormatSubdirective, 'format ')
-    .addToken(JournalNumber, '1000.00');
+    .addToken(JournalNumber, '1000.00')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
     HLedgerParser.formatSubdirective(),
-    '<formatSubdirective!>     format 1000.00'
+    '<formatSubdirective!>     format 1000.00\\n'
   );
 });
 
@@ -99,12 +153,13 @@ test('does not parse a format subdirective without a number', (t) => {
   t.context.lexer
     .addToken(INDENT, '    ')
     .addToken(FormatSubdirective, 'format ')
-    .addToken(CommodityText, '$');
+    .addToken(CommodityText, '$')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
     HLedgerParser.formatSubdirective(),
-    '<formatSubdirective!>     format $'
+    '<formatSubdirective!>     format $\\n'
   );
 });
 
@@ -112,11 +167,12 @@ test('does not parse a format subdirective without an indent', (t) => {
   t.context.lexer
     .addToken(FormatSubdirective, 'format ')
     .addToken(JournalNumber, '1000.00')
-    .addToken(CommodityText, 'CAD');
+    .addToken(CommodityText, 'CAD')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
     HLedgerParser.formatSubdirective(),
-    '<formatSubdirective!> format 1000.00CAD'
+    '<formatSubdirective!> format 1000.00CAD\\n'
   );
 });

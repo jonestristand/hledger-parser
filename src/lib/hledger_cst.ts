@@ -251,9 +251,11 @@ export interface CommodityDirectiveCstNode extends CstNode {
 export type CommodityDirectiveCstChildren = {
   CommodityDirective: IToken[];
   commodityAmount?: CommodityAmountCstNode[];
+  inlineComment?: (InlineCommentCstNode)[];
   NEWLINE?: (IToken)[];
   commodityDirectiveContentLine?: (CommodityDirectiveContentLineCstNode)[];
   CommodityText?: IToken[];
+  AMOUNT_WS?: IToken[];
   formatSubdirective?: FormatSubdirectiveCstNode[];
 };
 
@@ -290,6 +292,20 @@ export type FormatSubdirectiveCstChildren = {
   FormatSubdirective: IToken[];
   commodityAmount: CommodityAmountCstNode[];
   inlineComment?: InlineCommentCstNode[];
+  NEWLINE: IToken[];
+};
+
+export interface DefaultCommodityDirectiveCstNode extends CstNode {
+  name: "defaultCommodityDirective";
+  children: DefaultCommodityDirectiveCstChildren;
+}
+
+export type DefaultCommodityDirectiveCstChildren = {
+  DefaultCommodityDirective: IToken[];
+  commodityAmount: CommodityAmountCstNode[];
+  inlineComment?: InlineCommentCstNode[];
+  NEWLINE: (IToken)[];
+  commodityDirectiveContentLine?: CommodityDirectiveContentLineCstNode[];
 };
 
 export interface ICstNodeVisitor<IN, OUT> extends ICstVisitor<IN, OUT> {
@@ -318,4 +334,5 @@ export interface ICstNodeVisitor<IN, OUT> extends ICstVisitor<IN, OUT> {
   commodityAmount(children: CommodityAmountCstChildren, param?: IN): OUT;
   commodityDirectiveContentLine(children: CommodityDirectiveContentLineCstChildren, param?: IN): OUT;
   formatSubdirective(children: FormatSubdirectiveCstChildren, param?: IN): OUT;
+  defaultCommodityDirective(children: DefaultCommodityDirectiveCstChildren, param?: IN): OUT;
 }

@@ -1189,6 +1189,17 @@
                 "idx": 0
               },
               {
+                "type": "Option",
+                "idx": 1,
+                "definition": [
+                  {
+                    "type": "NonTerminal",
+                    "name": "inlineComment",
+                    "idx": 5
+                  }
+                ]
+              },
+              {
                 "type": "Repetition",
                 "idx": 0,
                 "definition": [
@@ -1205,6 +1216,13 @@
                     "idx": 1
                   }
                 ]
+              },
+              {
+                "type": "Terminal",
+                "name": "NEWLINE",
+                "label": "NEWLINE",
+                "idx": 0,
+                "pattern": "(\\r\\n|\\r|\\n)"
               }
             ]
           },
@@ -1218,20 +1236,20 @@
                 "idx": 1
               },
               {
-                "type": "Repetition",
-                "idx": 1,
+                "type": "Option",
+                "idx": 2,
                 "definition": [
                   {
                     "type": "Terminal",
-                    "name": "NEWLINE",
-                    "label": "NEWLINE",
-                    "idx": 2,
-                    "pattern": "(\\r\\n|\\r|\\n)"
+                    "name": "AMOUNT_WS",
+                    "label": "AMOUNT_WS",
+                    "idx": 1,
+                    "pattern": "[ \\t]+"
                   },
                   {
                     "type": "NonTerminal",
-                    "name": "commodityDirectiveContentLine",
-                    "idx": 2
+                    "name": "inlineComment",
+                    "idx": 6
                   }
                 ]
               },
@@ -1239,8 +1257,26 @@
                 "type": "Terminal",
                 "name": "NEWLINE",
                 "label": "NEWLINE",
-                "idx": 3,
+                "idx": 2,
                 "pattern": "(\\r\\n|\\r|\\n)"
+              },
+              {
+                "type": "Repetition",
+                "idx": 1,
+                "definition": [
+                  {
+                    "type": "NonTerminal",
+                    "name": "commodityDirectiveContentLine",
+                    "idx": 2
+                  },
+                  {
+                    "type": "Terminal",
+                    "name": "NEWLINE",
+                    "label": "NEWLINE",
+                    "idx": 3,
+                    "pattern": "(\\r\\n|\\r|\\n)"
+                  }
+                ]
               },
               {
                 "type": "NonTerminal",
@@ -1252,33 +1288,20 @@
                 "idx": 2,
                 "definition": [
                   {
+                    "type": "NonTerminal",
+                    "name": "commodityDirectiveContentLine",
+                    "idx": 4
+                  },
+                  {
                     "type": "Terminal",
                     "name": "NEWLINE",
                     "label": "NEWLINE",
                     "idx": 4,
                     "pattern": "(\\r\\n|\\r|\\n)"
-                  },
-                  {
-                    "type": "NonTerminal",
-                    "name": "commodityDirectiveContentLine",
-                    "idx": 4
                   }
                 ]
               }
             ]
-          }
-        ]
-      },
-      {
-        "type": "Option",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Terminal",
-            "name": "NEWLINE",
-            "label": "NEWLINE",
-            "idx": 0,
-            "pattern": "(\\r\\n|\\r|\\n)"
           }
         ]
       }
@@ -1600,6 +1623,67 @@
             "idx": 0
           }
         ]
+      },
+      {
+        "type": "Terminal",
+        "name": "NEWLINE",
+        "label": "NEWLINE",
+        "idx": 0,
+        "pattern": "(\\r\\n|\\r|\\n)"
+      }
+    ]
+  },
+  {
+    "type": "Rule",
+    "name": "defaultCommodityDirective",
+    "orgText": "",
+    "definition": [
+      {
+        "type": "Terminal",
+        "name": "DefaultCommodityDirective",
+        "label": "DefaultCommodityDirective",
+        "idx": 0
+      },
+      {
+        "type": "NonTerminal",
+        "name": "commodityAmount",
+        "idx": 0
+      },
+      {
+        "type": "Option",
+        "idx": 1,
+        "definition": [
+          {
+            "type": "NonTerminal",
+            "name": "inlineComment",
+            "idx": 2
+          }
+        ]
+      },
+      {
+        "type": "Repetition",
+        "idx": 0,
+        "definition": [
+          {
+            "type": "Terminal",
+            "name": "NEWLINE",
+            "label": "NEWLINE",
+            "idx": 1,
+            "pattern": "(\\r\\n|\\r|\\n)"
+          },
+          {
+            "type": "NonTerminal",
+            "name": "commodityDirectiveContentLine",
+            "idx": 1
+          }
+        ]
+      },
+      {
+        "type": "Terminal",
+        "name": "NEWLINE",
+        "label": "NEWLINE",
+        "idx": 0,
+        "pattern": "(\\r\\n|\\r|\\n)"
       }
     ]
   }

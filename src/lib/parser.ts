@@ -12,6 +12,7 @@ import {
   CommodityText,
   DASH,
   DateAtStart,
+  DefaultCommodityDirective,
   EQUALS,
   FormatSubdirective,
   HASHTAG_AT_START,
@@ -330,29 +331,37 @@ class HLedgerParser extends CstParser {
       {
         ALT: () => {
           this.SUBRULE(this.commodityAmount);
+          this.OPTION1({
+            GATE: () => this.LA(0).tokenType === AMOUNT_WS,
+            DEF: () => this.SUBRULE5(this.inlineComment)
+          });
           this.MANY(() => {
             this.CONSUME1(NEWLINE);
             this.SUBRULE1(this.commodityDirectiveContentLine);
           });
+          this.CONSUME(NEWLINE);
         }
       },
       {
         ALT: () => {
           this.CONSUME1(CommodityText);
-          this.MANY1(() => {
-            this.CONSUME2(NEWLINE);
-            this.SUBRULE2(this.commodityDirectiveContentLine);
+          this.OPTION2(() => {
+            this.CONSUME1(AMOUNT_WS);
+            this.SUBRULE6(this.inlineComment);
           });
-          this.CONSUME3(NEWLINE);
+          this.CONSUME2(NEWLINE);
+          this.MANY1(() => {
+            this.SUBRULE2(this.commodityDirectiveContentLine);
+            this.CONSUME3(NEWLINE);
+          });
           this.SUBRULE3(this.formatSubdirective);
           this.MANY2(() => {
-            this.CONSUME4(NEWLINE);
             this.SUBRULE4(this.commodityDirectiveContentLine);
+            this.CONSUME4(NEWLINE);
           });
         }
       }
     ]);
-    this.OPTION(() => this.CONSUME(NEWLINE));
   });
 
   public commodityAmount = this.RULE('commodityAmount', () => {
@@ -364,15 +373,30 @@ class HLedgerParser extends CstParser {
     this.SUBRULE(this.inlineComment); // TODO: Use OR() when there are more types of subdirective to parse
   });
 
-  public formatSubdirective = this.RULE(
-    'formatSubdirective',
-    () => {
-      this.CONSUME(INDENT);
-      this.CONSUME(FormatSubdirective);
-      this.SUBRULE(this.commodityAmount);
-      this.OPTION(() => this.SUBRULE(this.inlineComment));
-    }
-  );
+  public formatSubdirective = this.RULE('formatSubdirective', () => {
+    this.CONSUME(INDENT);
+    this.CONSUME(FormatSubdirective);
+    this.SUBRULE(this.commodityAmount);
+    this.OPTION({
+      GATE: () => this.LA(0).tokenType === AMOUNT_WS,
+      DEF: () => this.SUBRULE(this.inlineComment)
+    });
+    this.CONSUME(NEWLINE);
+  });
+
+  public defaultCommodityDirective = this.RULE('defaultCommodityDirective', () => {
+    this.CONSUME(DefaultCommodityDirective);
+    this.SUBRULE(this.commodityAmount);
+    this.OPTION1({
+      GATE: () => this.LA(0).tokenType === AMOUNT_WS,
+      DEF: () => this.SUBRULE2(this.inlineComment)
+    });
+    this.MANY(() => {
+      this.CONSUME1(NEWLINE);
+      this.SUBRULE1(this.commodityDirectiveContentLine);
+    });
+    this.CONSUME(NEWLINE);
+  });
 }
 
 const ParserInstance = new HLedgerParser();

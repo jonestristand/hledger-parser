@@ -1,6 +1,7 @@
 import anyTest, { TestInterface } from 'ava';
 
 import {
+  AMOUNT_WS,
   CommodityDirective,
   CommodityText,
   DASH,
@@ -73,6 +74,31 @@ test('does not parse a commodity directive without a commodity if amount has a d
   );
 });
 
+test('does not parse a commodity directive without newline termination', (t) => {
+  t.context.lexer
+    .addToken(CommodityDirective, 'commodity ')
+    .addToken(CommodityText, 'CAD');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.falsy(
+    HLedgerParser.commodityDirective(),
+    '<commodityDirective!> commodity CAD'
+  );
+});
+
+test('does not parse a commodity directive with inline format without newline termination', (t) => {
+  t.context.lexer
+    .addToken(CommodityDirective, 'commodity ')
+    .addToken(JournalNumber, '1000.00')
+    .addToken(CommodityText, 'CAD');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.falsy(
+    HLedgerParser.commodityDirective(),
+    '<commodityDirective!> commodity 1000.00CAD'
+  );
+});
+
 test('parses a commodity directive with format subdirective', (t) => {
   t.context.lexer
     .addToken(CommodityDirective, 'commodity ')
@@ -81,7 +107,8 @@ test('parses a commodity directive with format subdirective', (t) => {
     .addToken(INDENT, '    ')
     .addToken(FormatSubdirective, 'format ')
     .addToken(JournalNumber, '1000.00')
-    .addToken(CommodityText, 'CAD');
+    .addToken(CommodityText, 'CAD')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -99,11 +126,12 @@ test('parses a commodity directive with format subdirective', (t) => {
               CommodityText: 1,
               Number: 1
             }
-          ]
+          ],
+          NEWLINE: 1
         }
       ]
     },
-    '<commodityDirective> commodity CAD\\n    format 1000.00CAD'
+    '<commodityDirective> commodity CAD\\n    format 1000.00CAD\\n'
   );
 });
 
@@ -114,12 +142,13 @@ test('does not parse a commodity directive with invalid format subdirective', (t
     .addToken(NEWLINE, '\n')
     .addToken(FormatSubdirective, 'format ')
     .addToken(JournalNumber, '1000.00')
-    .addToken(CommodityText, 'CAD');
+    .addToken(CommodityText, 'CAD')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
     HLedgerParser.commodityDirective(),
-    '<commodityDirective!> commodity CAD\\nformat 1000.00CAD'
+    '<commodityDirective!> commodity CAD\\nformat 1000.00CAD\\n'
   );
 });
 
@@ -152,12 +181,13 @@ test('does not parse a commodity directive with inline format if format subdirec
     .addToken(INDENT, '    ')
     .addToken(FormatSubdirective, 'format ')
     .addToken(JournalNumber, '1000.00')
-    .addToken(CommodityText, 'CAD');
+    .addToken(CommodityText, 'CAD')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.falsy(
     HLedgerParser.commodityDirective(),
-    '<commodityDirective!> commodity 1000.00CAD\\n    format 1000.00CAD'
+    '<commodityDirective!> commodity 1000.00CAD\\n    format 1000.00CAD\\n'
   );
 });
 
@@ -182,7 +212,8 @@ test('parses a commodity directive with a subdirective comment', (t) => {
     .addToken(NEWLINE, '\n')
     .addToken(INDENT, '    ')
     .addToken(SemicolonComment, ';')
-    .addToken(InlineCommentText, 'comment');
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -195,7 +226,7 @@ test('parses a commodity directive with a subdirective comment', (t) => {
           CommodityText: 1,
         }
       ],
-      NEWLINE: 1,
+      NEWLINE: 2,
       commodityDirectiveContentLine: [
         {
           INDENT: 1,
@@ -212,7 +243,7 @@ test('parses a commodity directive with a subdirective comment', (t) => {
         }
       ]
     },
-    '<commodityDirective> commodity 1000.00CAD\\n    ; comment'
+    '<commodityDirective> commodity 1000.00CAD\\n    ; comment\\n'
   );
 });
 
@@ -228,7 +259,8 @@ test('parses a commodity directive with multiple subdirective comments', (t) => 
     .addToken(NEWLINE, '\n')
     .addToken(INDENT, '    ')
     .addToken(SemicolonComment, ';')
-    .addToken(InlineCommentText, 'comment');
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -241,7 +273,7 @@ test('parses a commodity directive with multiple subdirective comments', (t) => 
           CommodityText: 1
         }
       ],
-      NEWLINE: 2,
+      NEWLINE: 3,
       commodityDirectiveContentLine: [
         {
           INDENT: 1,
@@ -271,7 +303,7 @@ test('parses a commodity directive with multiple subdirective comments', (t) => 
         }
       ]
     },
-    '<commodityDirective> commodity 1000.00CAD\\n    ; comment\\n    ; comment'
+    '<commodityDirective> commodity 1000.00CAD\\n    ; comment\\n    ; comment\\n'
   );
 });
 
@@ -287,7 +319,8 @@ test('parses a commodity directive with a format subdirective and subdirective c
     .addToken(NEWLINE, '\n')
     .addToken(INDENT, '    ')
     .addToken(SemicolonComment, ';')
-    .addToken(InlineCommentText, 'comment');
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -305,7 +338,8 @@ test('parses a commodity directive with a format subdirective and subdirective c
               CommodityText: 1,
               Number: 1
             }
-          ]
+          ],
+          NEWLINE: 1
         }
       ],
       commodityDirectiveContentLine: [
@@ -324,7 +358,7 @@ test('parses a commodity directive with a format subdirective and subdirective c
         }
       ]
     },
-    '<commodityDirective> commodity CAD\\n    format 1000.00CAD\\n    ; comment'
+    '<commodityDirective> commodity CAD\\n    format 1000.00CAD\\n    ; comment\\n'
   );
 });
 
@@ -340,7 +374,8 @@ test('parses a commodity directive with a subdirective comment preceding a forma
     .addToken(INDENT, '    ')
     .addToken(FormatSubdirective, 'format ')
     .addToken(JournalNumber, '1000.00')
-    .addToken(CommodityText, 'USD');
+    .addToken(CommodityText, 'USD')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -358,7 +393,8 @@ test('parses a commodity directive with a subdirective comment preceding a forma
               CommodityText: 1,
               Number: 1
             }
-          ]
+          ],
+          NEWLINE: 1
         }
       ],
       commodityDirectiveContentLine: [
@@ -377,7 +413,7 @@ test('parses a commodity directive with a subdirective comment preceding a forma
         }
       ]
     },
-    '<commodityDirective> commodity USD\\n    ; comment\\n    format 1000.00USD'
+    '<commodityDirective> commodity USD\\n    ; comment\\n    format 1000.00USD\\n'
   );
 });
 
@@ -397,7 +433,8 @@ test('parses a commodity directive with a format subdirective inbetween several 
     .addToken(NEWLINE, '\n')
     .addToken(INDENT, '    ')
     .addToken(SemicolonComment, ';')
-    .addToken(InlineCommentText, 'comment');
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
@@ -415,7 +452,8 @@ test('parses a commodity directive with a format subdirective inbetween several 
               CommodityText: 1,
               Number: 1
             }
-          ]
+          ],
+          NEWLINE: 1
         }
       ],
       commodityDirectiveContentLine: [
@@ -447,7 +485,268 @@ test('parses a commodity directive with a format subdirective inbetween several 
         }
       ]
     },
-    '<commodityDirective> commodity CAD\\n    ; comment\\n    format 1000.00CAD\\n    ; comment'
+    '<commodityDirective> commodity CAD\\n    ; comment\\n    format 1000.00CAD\\n    ; comment\\n'
+  );
+});
+
+test('parses a commodity directive with an inline comment', (t) => {
+  t.context.lexer
+    .addToken(CommodityDirective, 'commodity ')
+    .addToken(CommodityText, 'CAD')
+    .addToken(AMOUNT_WS, ' ')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n')
+    .addToken(INDENT, '    ')
+    .addToken(FormatSubdirective, 'format ')
+    .addToken(JournalNumber, '1000.00')
+    .addToken(CommodityText, 'CAD')
+    .addToken(NEWLINE, '\n');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.deepEqual(
+    simplifyCst(HLedgerParser.commodityDirective()),
+    {
+      CommodityDirective: 1,
+      CommodityText: 1,
+      AMOUNT_WS: 1,
+      inlineComment: [
+        {
+          SemicolonComment: 1,
+          inlineCommentItem: [
+            {
+              InlineCommentText: 1
+            }
+          ]
+        }
+      ],
+      NEWLINE: 1,
+      formatSubdirective: [
+        {
+          INDENT: 1,
+          FormatSubdirective: 1,
+          commodityAmount: [
+            {
+              CommodityText: 1,
+              Number: 1
+            }
+          ],
+          NEWLINE: 1
+        }
+      ],
+    },
+    '<commodityDirective> commodity CAD ; comment\\n    format 1000.00CAD\\n'
+  );
+});
+
+test('parses a commodity directive with inline format and an inline comment', (t) => {
+  t.context.lexer
+    .addToken(CommodityDirective, 'commodity ')
+    .addToken(CommodityText, 'CAD')
+    .addToken(JournalNumber, '1000.00')
+    .addToken(AMOUNT_WS, ' ')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.deepEqual(
+    simplifyCst(HLedgerParser.commodityDirective()),
+    {
+      CommodityDirective: 1,
+      commodityAmount: [
+        {
+          AMOUNT_WS: 1,
+          CommodityText: 1,
+          Number: 1
+        }
+      ],
+      inlineComment: [
+        {
+          SemicolonComment: 1,
+          inlineCommentItem: [
+            {
+              InlineCommentText: 1
+            }
+          ]
+        }
+      ],
+      NEWLINE: 1
+    },
+    '<commodityDirective> commodity CAD1000.00 ; comment\\n'
+  );
+});
+
+test('parses a commodity directive with an inline comment and subdirective comments', (t) => {
+  t.context.lexer
+    .addToken(CommodityDirective, 'commodity ')
+    .addToken(CommodityText, 'CAD')
+    .addToken(AMOUNT_WS, ' ')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n')
+    .addToken(INDENT, '    ')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n')
+    .addToken(INDENT, '    ')
+    .addToken(FormatSubdirective, 'format ')
+    .addToken(JournalNumber, '1000.00')
+    .addToken(CommodityText, 'CAD')
+    .addToken(NEWLINE, '\n');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.deepEqual(
+    simplifyCst(HLedgerParser.commodityDirective()),
+    {
+      CommodityDirective: 1,
+      CommodityText: 1,
+      AMOUNT_WS: 1,
+      inlineComment: [
+        {
+          SemicolonComment: 1,
+          inlineCommentItem: [
+            {
+              InlineCommentText: 1
+            }
+          ]
+        }
+      ],
+      NEWLINE: 2,
+      commodityDirectiveContentLine: [
+        {
+          INDENT: 1,
+          inlineComment: [
+            {
+              SemicolonComment: 1,
+              inlineCommentItem: [
+                {
+                  InlineCommentText: 1
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      formatSubdirective: [
+        {
+          INDENT: 1,
+          FormatSubdirective: 1,
+          commodityAmount: [
+            {
+              CommodityText: 1,
+              Number: 1
+            }
+          ],
+          NEWLINE: 1
+        }
+      ],
+    },
+    '<commodityDirective> commodity CAD ; comment\\n    ; comment\\n    format 1000.00CAD\\n'
+  );
+});
+
+test('parses a commodity directive with inline format and an inline comment and subdirective comments', (t) => {
+  t.context.lexer
+    .addToken(CommodityDirective, 'commodity ')
+    .addToken(CommodityText, 'CAD')
+    .addToken(JournalNumber, '1000.00')
+    .addToken(AMOUNT_WS, ' ')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n')
+    .addToken(INDENT, '    ')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.deepEqual(
+    simplifyCst(HLedgerParser.commodityDirective()),
+    {
+      CommodityDirective: 1,
+      commodityAmount: [
+        {
+          AMOUNT_WS: 1,
+          CommodityText: 1,
+          Number: 1
+        }
+      ],
+      inlineComment: [
+        {
+          SemicolonComment: 1,
+          inlineCommentItem: [
+            {
+              InlineCommentText: 1
+            }
+          ]
+        }
+      ],
+      NEWLINE: 2,
+      commodityDirectiveContentLine: [
+        {
+          INDENT: 1,
+          inlineComment: [
+            {
+              SemicolonComment: 1,
+              inlineCommentItem: [
+                {
+                  InlineCommentText: 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    '<commodityDirective> commodity CAD1000.00 ; comment\\n    ; comment\\n'
+  );
+});
+
+test('does not parse commodity directive without a space before inline comment', (t) => {
+  t.context.lexer
+    .addToken(CommodityDirective, 'commodity ')
+    .addToken(CommodityText, 'CAD')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.falsy(
+    HLedgerParser.commodityDirective(),
+    '<commodityDirective!> commodity CAD;comment'
+  );
+});
+
+test('does not parse commodity directive with inline format without a space before inline comment', (t) => {
+  t.context.lexer
+    .addToken(CommodityDirective, 'commodity ')
+    .addToken(CommodityText, 'CAD')
+    .addToken(JournalNumber, '1000.00')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.falsy(
+    HLedgerParser.commodityDirective(),
+    '<commodityDirective!> commodity CAD1000.00;comment\\n'
+  );
+});
+
+test('does not parse commodity directive with inline format and inline comment without newline termination', (t) => {
+  t.context.lexer
+    .addToken(CommodityDirective, 'commodity ')
+    .addToken(CommodityText, 'CAD')
+    .addToken(JournalNumber, '1000.00')
+    .addToken(AMOUNT_WS, ' ')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'comment');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.falsy(
+    HLedgerParser.commodityDirective(),
+    '<commodityDirective!> commodity CAD1000.00;comment'
   );
 });
 

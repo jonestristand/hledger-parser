@@ -345,6 +345,8 @@ class HledgerToRawVisitor extends BaseCstVisitor {
   commodityDirectiveContentLine() {}
 
   formatSubdirective() {}
+
+  defaultCommodityDirective() {}
 }
 
 export default new HledgerToRawVisitor();
