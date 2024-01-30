@@ -4,6 +4,7 @@ import { notEmpty } from '../type_utils';
 import type * as ParserTypes from '../hledger_cst';
 import type * as Core from '../types';
 import type * as Raw from './raw_types';
+import type { IToken } from 'chevrotain';
 
 const BaseCstVisitor = HLedgerParser.getBaseCstVisitorConstructor();
 
@@ -326,13 +327,13 @@ class HledgerToRawVisitor extends BaseCstVisitor {
   }
 
   description(ctx: ParserTypes.DescriptionCstChildren): Core.TxnDescription {
-    if (ctx.Text.length == 1) {
-      return ctx.Text[0].image.trim();
-    } else if (ctx.Text.length == 2) {
+    if (ctx.Memo) {
       return {
         payee: ctx.Text[0].image.trim(),
-        memo: ctx.Text[1].image.trim()
+        memo: (ctx.Memo as IToken[])[0].image.trim()
       };
+    } else if (ctx.Text.length == 1) {
+      return ctx.Text[0].image.trim();
     } else {
       return ''; // default blank description
     }
