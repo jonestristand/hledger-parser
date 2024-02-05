@@ -331,37 +331,26 @@ class HLedgerParser extends CstParser {
       {
         ALT: () => {
           this.SUBRULE(this.commodityAmount);
-          this.OPTION1({
+          this.OPTION({
             GATE: () => this.LA(0).tokenType === AMOUNT_WS,
-            DEF: () => this.SUBRULE5(this.inlineComment)
+            DEF: () => this.SUBRULE1(this.inlineComment)
           });
-          this.MANY(() => {
-            this.CONSUME1(NEWLINE);
-            this.SUBRULE1(this.commodityDirectiveContentLine);
-          });
-          this.CONSUME(NEWLINE);
         }
       },
       {
         ALT: () => {
-          this.CONSUME1(CommodityText);
-          this.OPTION2(() => {
-            this.CONSUME1(AMOUNT_WS);
-            this.SUBRULE6(this.inlineComment);
-          });
-          this.CONSUME2(NEWLINE);
-          this.MANY1(() => {
-            this.SUBRULE2(this.commodityDirectiveContentLine);
-            this.CONSUME3(NEWLINE);
-          });
-          this.SUBRULE3(this.formatSubdirective);
-          this.MANY2(() => {
-            this.SUBRULE4(this.commodityDirectiveContentLine);
-            this.CONSUME4(NEWLINE);
+          this.CONSUME(CommodityText);
+          this.OPTION1(() => {
+            this.CONSUME(AMOUNT_WS);
+            this.SUBRULE2(this.inlineComment);
           });
         }
       }
     ]);
+    this.CONSUME(NEWLINE);
+    this.MANY(() => {
+      this.SUBRULE3(this.commodityDirectiveContentLine);
+    });
   });
 
   public commodityAmount = this.RULE('commodityAmount', () => {
@@ -370,18 +359,29 @@ class HLedgerParser extends CstParser {
 
   public commodityDirectiveContentLine = this.RULE('commodityDirectiveContentLine', () => {
     this.CONSUME(INDENT);
-    this.SUBRULE(this.inlineComment); // TODO: Use OR() when there are more types of subdirective to parse
+    this.OR([
+      {
+        ALT: () => {
+          this.SUBRULE(this.inlineComment);
+          this.CONSUME(NEWLINE);
+        }
+      },
+      {
+        ALT: () => {
+          this.SUBRULE1(this.formatSubdirective);
+          this.OPTION({
+            GATE: () => this.LA(0).tokenType === AMOUNT_WS,
+            DEF: () => this.SUBRULE1(this.inlineComment)
+          });
+          this.CONSUME1(NEWLINE);
+        }
+      }
+    ]);
   });
 
   public formatSubdirective = this.RULE('formatSubdirective', () => {
-    this.CONSUME(INDENT);
     this.CONSUME(FormatSubdirective);
     this.SUBRULE(this.commodityAmount);
-    this.OPTION({
-      GATE: () => this.LA(0).tokenType === AMOUNT_WS,
-      DEF: () => this.SUBRULE(this.inlineComment)
-    });
-    this.CONSUME(NEWLINE);
   });
 
   public defaultCommodityDirective = this.RULE('defaultCommodityDirective', () => {
@@ -391,10 +391,15 @@ class HLedgerParser extends CstParser {
       GATE: () => this.LA(0).tokenType === AMOUNT_WS,
       DEF: () => this.SUBRULE2(this.inlineComment)
     });
+    this.CONSUME(NEWLINE);
     this.MANY(() => {
-      this.CONSUME1(NEWLINE);
-      this.SUBRULE1(this.commodityDirectiveContentLine);
+      this.SUBRULE1(this.defaultCommodityDirectiveContentLine);
     });
+  });
+
+  public defaultCommodityDirectiveContentLine = this.RULE('defaultCommodityDirectiveContentLine', () => {
+    this.CONSUME(INDENT);
+    this.SUBRULE(this.inlineComment);
     this.CONSUME(NEWLINE);
   });
 }

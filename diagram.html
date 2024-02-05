@@ -1190,39 +1190,14 @@
               },
               {
                 "type": "Option",
-                "idx": 1,
+                "idx": 0,
                 "definition": [
                   {
                     "type": "NonTerminal",
                     "name": "inlineComment",
-                    "idx": 5
-                  }
-                ]
-              },
-              {
-                "type": "Repetition",
-                "idx": 0,
-                "definition": [
-                  {
-                    "type": "Terminal",
-                    "name": "NEWLINE",
-                    "label": "NEWLINE",
-                    "idx": 1,
-                    "pattern": "(\\r\\n|\\r|\\n)"
-                  },
-                  {
-                    "type": "NonTerminal",
-                    "name": "commodityDirectiveContentLine",
                     "idx": 1
                   }
                 ]
-              },
-              {
-                "type": "Terminal",
-                "name": "NEWLINE",
-                "label": "NEWLINE",
-                "idx": 0,
-                "pattern": "(\\r\\n|\\r|\\n)"
               }
             ]
           },
@@ -1233,75 +1208,45 @@
                 "type": "Terminal",
                 "name": "CommodityText",
                 "label": "CommodityText",
-                "idx": 1
+                "idx": 0
               },
               {
                 "type": "Option",
-                "idx": 2,
+                "idx": 1,
                 "definition": [
                   {
                     "type": "Terminal",
                     "name": "AMOUNT_WS",
                     "label": "AMOUNT_WS",
-                    "idx": 1,
+                    "idx": 0,
                     "pattern": "[ \\t]+"
                   },
                   {
                     "type": "NonTerminal",
                     "name": "inlineComment",
-                    "idx": 6
-                  }
-                ]
-              },
-              {
-                "type": "Terminal",
-                "name": "NEWLINE",
-                "label": "NEWLINE",
-                "idx": 2,
-                "pattern": "(\\r\\n|\\r|\\n)"
-              },
-              {
-                "type": "Repetition",
-                "idx": 1,
-                "definition": [
-                  {
-                    "type": "NonTerminal",
-                    "name": "commodityDirectiveContentLine",
                     "idx": 2
-                  },
-                  {
-                    "type": "Terminal",
-                    "name": "NEWLINE",
-                    "label": "NEWLINE",
-                    "idx": 3,
-                    "pattern": "(\\r\\n|\\r|\\n)"
-                  }
-                ]
-              },
-              {
-                "type": "NonTerminal",
-                "name": "formatSubdirective",
-                "idx": 3
-              },
-              {
-                "type": "Repetition",
-                "idx": 2,
-                "definition": [
-                  {
-                    "type": "NonTerminal",
-                    "name": "commodityDirectiveContentLine",
-                    "idx": 4
-                  },
-                  {
-                    "type": "Terminal",
-                    "name": "NEWLINE",
-                    "label": "NEWLINE",
-                    "idx": 4,
-                    "pattern": "(\\r\\n|\\r|\\n)"
                   }
                 ]
               }
             ]
+          }
+        ]
+      },
+      {
+        "type": "Terminal",
+        "name": "NEWLINE",
+        "label": "NEWLINE",
+        "idx": 0,
+        "pattern": "(\\r\\n|\\r|\\n)"
+      },
+      {
+        "type": "Repetition",
+        "idx": 0,
+        "definition": [
+          {
+            "type": "NonTerminal",
+            "name": "commodityDirectiveContentLine",
+            "idx": 3
           }
         ]
       }
@@ -1584,9 +1529,55 @@
         "idx": 0
       },
       {
-        "type": "NonTerminal",
-        "name": "inlineComment",
-        "idx": 0
+        "type": "Alternation",
+        "idx": 0,
+        "definition": [
+          {
+            "type": "Alternative",
+            "definition": [
+              {
+                "type": "NonTerminal",
+                "name": "inlineComment",
+                "idx": 0
+              },
+              {
+                "type": "Terminal",
+                "name": "NEWLINE",
+                "label": "NEWLINE",
+                "idx": 0,
+                "pattern": "(\\r\\n|\\r|\\n)"
+              }
+            ]
+          },
+          {
+            "type": "Alternative",
+            "definition": [
+              {
+                "type": "NonTerminal",
+                "name": "formatSubdirective",
+                "idx": 1
+              },
+              {
+                "type": "Option",
+                "idx": 0,
+                "definition": [
+                  {
+                    "type": "NonTerminal",
+                    "name": "inlineComment",
+                    "idx": 1
+                  }
+                ]
+              },
+              {
+                "type": "Terminal",
+                "name": "NEWLINE",
+                "label": "NEWLINE",
+                "idx": 1,
+                "pattern": "(\\r\\n|\\r|\\n)"
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -1595,12 +1586,6 @@
     "name": "formatSubdirective",
     "orgText": "",
     "definition": [
-      {
-        "type": "Terminal",
-        "name": "INDENT",
-        "label": "INDENT",
-        "idx": 0
-      },
       {
         "type": "Terminal",
         "name": "FormatSubdirective",
@@ -1612,24 +1597,6 @@
         "type": "NonTerminal",
         "name": "commodityAmount",
         "idx": 0
-      },
-      {
-        "type": "Option",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "NonTerminal",
-            "name": "inlineComment",
-            "idx": 0
-          }
-        ]
-      },
-      {
-        "type": "Terminal",
-        "name": "NEWLINE",
-        "label": "NEWLINE",
-        "idx": 0,
-        "pattern": "(\\r\\n|\\r|\\n)"
       }
     ]
   },
@@ -1661,22 +1628,40 @@
         ]
       },
       {
+        "type": "Terminal",
+        "name": "NEWLINE",
+        "label": "NEWLINE",
+        "idx": 0,
+        "pattern": "(\\r\\n|\\r|\\n)"
+      },
+      {
         "type": "Repetition",
         "idx": 0,
         "definition": [
           {
-            "type": "Terminal",
-            "name": "NEWLINE",
-            "label": "NEWLINE",
-            "idx": 1,
-            "pattern": "(\\r\\n|\\r|\\n)"
-          },
-          {
             "type": "NonTerminal",
-            "name": "commodityDirectiveContentLine",
+            "name": "defaultCommodityDirectiveContentLine",
             "idx": 1
           }
         ]
+      }
+    ]
+  },
+  {
+    "type": "Rule",
+    "name": "defaultCommodityDirectiveContentLine",
+    "orgText": "",
+    "definition": [
+      {
+        "type": "Terminal",
+        "name": "INDENT",
+        "label": "INDENT",
+        "idx": 0
+      },
+      {
+        "type": "NonTerminal",
+        "name": "inlineComment",
+        "idx": 0
       },
       {
         "type": "Terminal",

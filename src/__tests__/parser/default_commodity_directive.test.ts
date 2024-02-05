@@ -141,10 +141,11 @@ test('parses a default commodity directive with a subdirective comment', (t) => 
           CommodityText: 1,
         }
       ],
-      NEWLINE: 2,
-      commodityDirectiveContentLine: [
+      NEWLINE: 1,
+      defaultCommodityDirectiveContentLine: [
         {
           INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,
@@ -188,10 +189,11 @@ test('parses a default commodity directive with multiple subdirective comments',
           CommodityText: 1
         }
       ],
-      NEWLINE: 3,
-      commodityDirectiveContentLine: [
+      NEWLINE: 1,
+      defaultCommodityDirectiveContentLine: [
         {
           INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,
@@ -205,6 +207,7 @@ test('parses a default commodity directive with multiple subdirective comments',
         },
         {
           INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,
@@ -328,10 +331,11 @@ test('parses a default commodity directive with an inline comment and subdirecti
           ]
         }
       ],
-      NEWLINE: 2,
-      commodityDirectiveContentLine: [
+      NEWLINE: 1,
+      defaultCommodityDirectiveContentLine: [
         {
           INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,

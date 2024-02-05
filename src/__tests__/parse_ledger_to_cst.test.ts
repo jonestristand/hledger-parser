@@ -21,6 +21,17 @@ account Expenses:Food ; type: E
 # Full-line comment
 
 P 1900/01/02 $ CAD 10.00
+
+D $1000.00 ; default commodity
+    ; This is the default commodity
+    ; Additional comments
+
+commodity USD ; American currency
+    format 1000.00 USD ; This is the format
+    ; Additional comments
+
+commodity CAD1000.00 ; Canadian currency
+    ; Additional comments
 `);
 
   assertNoLexingOrParsingErrors(t, result);
@@ -32,8 +43,8 @@ P 1900/01/02 $ CAD 10.00
   );
   t.is(
     result.cstJournal.children.journalItem.length,
-    10,
-    'should have 10 child nodes'
+    13,
+    'should have 13 child nodes'
   );
 });
 

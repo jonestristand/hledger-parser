@@ -1,3 +1,4 @@
+import { CommodityAmount } from '../types';
 import * as Core from '../types';
 
 /**
@@ -14,7 +15,9 @@ export type JournalItem =
   | Transaction
   | Comment
   | PriceDirective
-  | AccountDirective;
+  | AccountDirective
+  | CommodityDirective
+  | DefaultCommodityDirective;
 
 /**
  * Type for a 'raw' [hledger transaction](https://hledger.org/1.26/hledger.html#transactions)
@@ -125,3 +128,43 @@ export interface AccountDirective {
  * can be an inline comment or (in future) a ledger-type subdirective.
  */
 export type AccountDirectiveContentLine = InlineComment;
+
+/**
+ * Type for a 'raw' [commodity directive](https://hledger.org/1.31/hledger.html#commodity-directive)
+ */
+export interface CommodityDirective {
+  type: 'commodityDirective';
+  value: {
+    commodity?: string;
+    format?: CommodityAmount;
+    comments?: InlineComment;
+    contentLines: CommodityDirectiveContentLine[];
+  };
+}
+
+/**
+ * Type for a 'raw' [format sudbdirective](https://hledger.org/1.31/hledger.html#commodity-directive)
+ */
+export interface FormatSubdirective {
+  type: 'formatSubdirective';
+  value: {
+    format: Core.CommodityAmount;
+    comments?: InlineComment;
+  }
+}
+
+/**
+ * Type for a 'raw' [default commodity directive](https://hledger.org/1.31/hledger.html#d-directive)
+ */
+export interface DefaultCommodityDirective {
+  type: 'defaultCommodityDirective';
+  value: {
+    format: CommodityAmount;
+    comments?: InlineComment;
+    contentLines: DefaultCommodityDirectiveContentLine[];
+  };
+}
+
+export type CommodityDirectiveContentLine = InlineComment | FormatSubdirective;
+
+export type DefaultCommodityDirectiveContentLine = InlineComment;

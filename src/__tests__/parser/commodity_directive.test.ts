@@ -117,91 +117,26 @@ test('parses a commodity directive with format subdirective', (t) => {
       CommodityDirective: 1,
       CommodityText: 1,
       NEWLINE: 1,
-      formatSubdirective: [
+      commodityDirectiveContentLine: [
         {
           INDENT: 1,
-          FormatSubdirective: 1,
-          commodityAmount: [
+          NEWLINE: 1,
+          formatSubdirective: [
             {
-              CommodityText: 1,
-              Number: 1
+              FormatSubdirective: 1,
+              commodityAmount: [
+                {
+                  CommodityText: 1,
+                  Number: 1
+                }
+              ]
             }
-          ],
-          NEWLINE: 1
+          ]
         }
       ]
     },
     '<commodityDirective> commodity CAD\\n    format 1000.00CAD\\n'
   );
-});
-
-test('does not parse a commodity directive with invalid format subdirective', (t) => {
-  t.context.lexer
-    .addToken(CommodityDirective, 'commodity ')
-    .addToken(CommodityText, 'CAD')
-    .addToken(NEWLINE, '\n')
-    .addToken(FormatSubdirective, 'format ')
-    .addToken(JournalNumber, '1000.00')
-    .addToken(CommodityText, 'CAD')
-    .addToken(NEWLINE, '\n');
-  HLedgerParser.input = t.context.lexer.tokenize();
-
-  t.falsy(
-    HLedgerParser.commodityDirective(),
-    '<commodityDirective!> commodity CAD\\nformat 1000.00CAD\\n'
-  );
-});
-
-// TODO: This test does not make sense at the parser level, as we should not
-//  be concerned with the value of parsed tokens here. Move this test to the
-//  commodity directive suite in cst_to_raw_visitor.
-// test('does not parse a commodity directive if its commodity differs from that in format subdirective', (t) => {
-//   t.context.lexer
-//     .addToken(CommodityDirective, 'commodity ')
-//     .addToken(CommodityText, 'CAD')
-//     .addToken(NEWLINE, '\n')
-//     .addToken(INDENT, '    ')
-//     .addToken(FormatSubdirective, 'format ')
-//     .addToken(JournalNumber, '1000.00')
-//     .addToken(CommodityText, 'USD');
-//   HLedgerParser.input = t.context.lexer.tokenize();
-//
-//   t.falsy(
-//     HLedgerParser.commodityDirective(),
-//     '<commodityDirective!> commodity CAD\\n    format 1000.00USD'
-//   );
-// });
-
-test('does not parse a commodity directive with inline format if format subdirective exists', (t) => {
-  t.context.lexer
-    .addToken(CommodityDirective, 'commodity ')
-    .addToken(JournalNumber, '1000.00')
-    .addToken(CommodityText, 'CAD')
-    .addToken(NEWLINE, '\n')
-    .addToken(INDENT, '    ')
-    .addToken(FormatSubdirective, 'format ')
-    .addToken(JournalNumber, '1000.00')
-    .addToken(CommodityText, 'CAD')
-    .addToken(NEWLINE, '\n');
-  HLedgerParser.input = t.context.lexer.tokenize();
-
-  t.falsy(
-    HLedgerParser.commodityDirective(),
-    '<commodityDirective!> commodity 1000.00CAD\\n    format 1000.00CAD\\n'
-  );
-});
-
-test('does not parse a non-inline format commodity directive without format subdirective', (t) => {
-  t.context.lexer
-    .addToken(CommodityDirective, 'commodity ')
-    .addToken(CommodityText, 'CAD')
-    .addToken(NEWLINE, '\n');
-  HLedgerParser.input = t.context.lexer.tokenize();
-
-  t.falsy(
-    HLedgerParser.commodityDirective(),
-    '<commodityDirective!> commodity CAD\\n'
-  )
 });
 
 test('parses a commodity directive with a subdirective comment', (t) => {
@@ -226,10 +161,11 @@ test('parses a commodity directive with a subdirective comment', (t) => {
           CommodityText: 1,
         }
       ],
-      NEWLINE: 2,
+      NEWLINE: 1,
       commodityDirectiveContentLine: [
         {
           INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,
@@ -273,10 +209,11 @@ test('parses a commodity directive with multiple subdirective comments', (t) => 
           CommodityText: 1
         }
       ],
-      NEWLINE: 3,
+      NEWLINE: 1,
       commodityDirectiveContentLine: [
         {
           INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,
@@ -290,6 +227,7 @@ test('parses a commodity directive with multiple subdirective comments', (t) => 
         },
         {
           INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,
@@ -328,23 +266,26 @@ test('parses a commodity directive with a format subdirective and subdirective c
     {
       CommodityDirective: 1,
       CommodityText: 1,
-      NEWLINE: 2,
-      formatSubdirective: [
-        {
-          INDENT: 1,
-          FormatSubdirective: 1,
-          commodityAmount: [
-            {
-              CommodityText: 1,
-              Number: 1
-            }
-          ],
-          NEWLINE: 1
-        }
-      ],
+      NEWLINE: 1,
       commodityDirectiveContentLine: [
         {
           INDENT: 1,
+          NEWLINE: 1,
+          formatSubdirective: [
+            {
+              FormatSubdirective: 1,
+              commodityAmount: [
+                {
+                  CommodityText: 1,
+                  Number: 1
+                }
+              ],
+            }
+          ]
+        },
+        {
+          INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,
@@ -383,29 +324,32 @@ test('parses a commodity directive with a subdirective comment preceding a forma
     {
       CommodityDirective: 1,
       CommodityText: 1,
-      NEWLINE: 2,
-      formatSubdirective: [
-        {
-          INDENT: 1,
-          FormatSubdirective: 1,
-          commodityAmount: [
-            {
-              CommodityText: 1,
-              Number: 1
-            }
-          ],
-          NEWLINE: 1
-        }
-      ],
+      NEWLINE: 1,
       commodityDirectiveContentLine: [
         {
           INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,
               inlineCommentItem: [
                 {
                   InlineCommentText: 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          INDENT: 1,
+          NEWLINE: 1,
+          formatSubdirective: [
+            {
+              FormatSubdirective: 1,
+              commodityAmount: [
+                {
+                  CommodityText: 1,
+                  Number: 1
                 }
               ]
             }
@@ -442,23 +386,11 @@ test('parses a commodity directive with a format subdirective inbetween several 
     {
       CommodityDirective: 1,
       CommodityText: 1,
-      NEWLINE: 3,
-      formatSubdirective: [
-        {
-          INDENT: 1,
-          FormatSubdirective: 1,
-          commodityAmount: [
-            {
-              CommodityText: 1,
-              Number: 1
-            }
-          ],
-          NEWLINE: 1
-        }
-      ],
+      NEWLINE: 1,
       commodityDirectiveContentLine: [
         {
           INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,
@@ -472,6 +404,22 @@ test('parses a commodity directive with a format subdirective inbetween several 
         },
         {
           INDENT: 1,
+          NEWLINE: 1,
+          formatSubdirective: [
+            {
+              FormatSubdirective: 1,
+              commodityAmount: [
+                {
+                  CommodityText: 1,
+                  Number: 1
+                }
+              ]
+            }
+          ],
+        },
+        {
+          INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,
@@ -521,19 +469,23 @@ test('parses a commodity directive with an inline comment', (t) => {
         }
       ],
       NEWLINE: 1,
-      formatSubdirective: [
+      commodityDirectiveContentLine: [
         {
           INDENT: 1,
-          FormatSubdirective: 1,
-          commodityAmount: [
+          NEWLINE: 1,
+          formatSubdirective: [
             {
-              CommodityText: 1,
-              Number: 1
+              FormatSubdirective: 1,
+              commodityAmount: [
+                {
+                  CommodityText: 1,
+                  Number: 1
+                }
+              ]
             }
-          ],
-          NEWLINE: 1
+          ]
         }
-      ],
+      ]
     },
     '<commodityDirective> commodity CAD ; comment\\n    format 1000.00CAD\\n'
   );
@@ -612,10 +564,11 @@ test('parses a commodity directive with an inline comment and subdirective comme
           ]
         }
       ],
-      NEWLINE: 2,
+      NEWLINE: 1,
       commodityDirectiveContentLine: [
         {
           INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,
@@ -626,21 +579,23 @@ test('parses a commodity directive with an inline comment and subdirective comme
               ]
             }
           ]
-        }
-      ],
-      formatSubdirective: [
+        },
         {
           INDENT: 1,
-          FormatSubdirective: 1,
-          commodityAmount: [
+          NEWLINE: 1,
+          formatSubdirective: [
             {
-              CommodityText: 1,
-              Number: 1
+              FormatSubdirective: 1,
+              commodityAmount: [
+                {
+                  CommodityText: 1,
+                  Number: 1
+                }
+              ]
             }
-          ],
-          NEWLINE: 1
+          ]
         }
-      ],
+      ]
     },
     '<commodityDirective> commodity CAD ; comment\\n    ; comment\\n    format 1000.00CAD\\n'
   );
@@ -682,10 +637,11 @@ test('parses a commodity directive with inline format and an inline comment and 
           ]
         }
       ],
-      NEWLINE: 2,
+      NEWLINE: 1,
       commodityDirectiveContentLine: [
         {
           INDENT: 1,
+          NEWLINE: 1,
           inlineComment: [
             {
               SemicolonComment: 1,

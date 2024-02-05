@@ -338,15 +338,47 @@ class HledgerToRawVisitor extends BaseCstVisitor {
     }
   }
 
-  commodityDirective() {}
+  commodityDirective(ctx: ParserTypes.CommodityDirectiveCstChildren): Raw.CommodityDirective {
+    // TODO: Uncomment these lines.
+    // const contentLines = ctx.commodityDirectiveContentLine
+    //   ?.map((c) => this.commodityDirectiveContentLine(c.children))
+    //   ?.filter(notEmpty);
 
-  commodityAmount() {}
+    return {
+      type: 'commodityDirective',
+      value: {
+        commodity: ctx.CommodityText ? ctx.CommodityText[0].payload as string : undefined,
+        format: ctx.commodityAmount ? this.commodityAmount(ctx.commodityAmount[0].children) : undefined,
+        // TODO: The parser does not consider the format subdirective a content line. Look at how
+        //  transactions handle this and replicate such that we can consider the format subdirective a
+        //  content line. We need to do this to preserve the order in which the format subdirective
+        //  appears in the content lines. However, this makes it difficult to limit the format
+        //  subdirective to one instance in the parser. We may need to allow multiple while parsing
+        //  and throw an error higher up the stack.
+        contentLines: []
+      }
+    };
+  }
 
-  commodityDirectiveContentLine() {}
+  commodityAmount(ctx: ParserTypes.CommodityAmountCstChildren): Core.CommodityAmount {
+    return {} as unknown as Core.CommodityAmount;
+  }
 
-  formatSubdirective() {}
+  commodityDirectiveContentLine(ctx: ParserTypes.CommodityDirectiveContentLineCstChildren): Raw.CommodityDirectiveContentLine {
+    return {} as unknown as Raw.CommodityDirectiveContentLine;
+  }
 
-  defaultCommodityDirective() {}
+  formatSubdirective(ctx: ParserTypes.FormatSubdirectiveCstChildren): Raw.FormatSubdirective {
+    return {} as unknown as Raw.FormatSubdirective;
+  }
+
+  defaultCommodityDirective(ctx: ParserTypes.DefaultCommodityDirectiveCstChildren): Raw.DefaultCommodityDirective {
+    return {} as unknown as Raw.DefaultCommodityDirective;
+  }
+
+  defaultCommodityDirectiveContentLine(ctx: ParserTypes.DefaultCommodityDirectiveContentLineCstChildren): Raw.DefaultCommodityDirectiveContentLine {
+    return {} as unknown as Raw.DefaultCommodityDirectiveContentLine;
+  }
 }
 
 export default new HledgerToRawVisitor();

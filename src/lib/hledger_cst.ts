@@ -252,11 +252,10 @@ export type CommodityDirectiveCstChildren = {
   CommodityDirective: IToken[];
   commodityAmount?: CommodityAmountCstNode[];
   inlineComment?: (InlineCommentCstNode)[];
-  NEWLINE?: (IToken)[];
-  commodityDirectiveContentLine?: (CommodityDirectiveContentLineCstNode)[];
   CommodityText?: IToken[];
   AMOUNT_WS?: IToken[];
-  formatSubdirective?: FormatSubdirectiveCstNode[];
+  NEWLINE: IToken[];
+  commodityDirectiveContentLine?: CommodityDirectiveContentLineCstNode[];
 };
 
 export interface CommodityAmountCstNode extends CstNode {
@@ -279,7 +278,9 @@ export interface CommodityDirectiveContentLineCstNode extends CstNode {
 
 export type CommodityDirectiveContentLineCstChildren = {
   INDENT: IToken[];
-  inlineComment: InlineCommentCstNode[];
+  inlineComment?: (InlineCommentCstNode)[];
+  NEWLINE?: (IToken)[];
+  formatSubdirective?: FormatSubdirectiveCstNode[];
 };
 
 export interface FormatSubdirectiveCstNode extends CstNode {
@@ -288,11 +289,8 @@ export interface FormatSubdirectiveCstNode extends CstNode {
 }
 
 export type FormatSubdirectiveCstChildren = {
-  INDENT: IToken[];
   FormatSubdirective: IToken[];
   commodityAmount: CommodityAmountCstNode[];
-  inlineComment?: InlineCommentCstNode[];
-  NEWLINE: IToken[];
 };
 
 export interface DefaultCommodityDirectiveCstNode extends CstNode {
@@ -304,8 +302,19 @@ export type DefaultCommodityDirectiveCstChildren = {
   DefaultCommodityDirective: IToken[];
   commodityAmount: CommodityAmountCstNode[];
   inlineComment?: InlineCommentCstNode[];
-  NEWLINE: (IToken)[];
-  commodityDirectiveContentLine?: CommodityDirectiveContentLineCstNode[];
+  NEWLINE: IToken[];
+  defaultCommodityDirectiveContentLine?: DefaultCommodityDirectiveContentLineCstNode[];
+};
+
+export interface DefaultCommodityDirectiveContentLineCstNode extends CstNode {
+  name: "defaultCommodityDirectiveContentLine";
+  children: DefaultCommodityDirectiveContentLineCstChildren;
+}
+
+export type DefaultCommodityDirectiveContentLineCstChildren = {
+  INDENT: IToken[];
+  inlineComment: InlineCommentCstNode[];
+  NEWLINE: IToken[];
 };
 
 export interface ICstNodeVisitor<IN, OUT> extends ICstVisitor<IN, OUT> {
@@ -335,4 +344,5 @@ export interface ICstNodeVisitor<IN, OUT> extends ICstVisitor<IN, OUT> {
   commodityDirectiveContentLine(children: CommodityDirectiveContentLineCstChildren, param?: IN): OUT;
   formatSubdirective(children: FormatSubdirectiveCstChildren, param?: IN): OUT;
   defaultCommodityDirective(children: DefaultCommodityDirectiveCstChildren, param?: IN): OUT;
+  defaultCommodityDirectiveContentLine(children: DefaultCommodityDirectiveContentLineCstChildren, param?: IN): OUT;
 }

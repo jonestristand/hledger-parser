@@ -20,6 +20,16 @@ account Expenses:Food ; type: E
 # Full-line comment
 
 P 1900/01/02 $ CAD 10.00
+
+D $1000.00 ; comment
+    ; subdirective comment
+
+commodity CAD ; comment
+    format 1000.00 CAD ; comment
+    ; subdirective comment
+
+commodity 1000.00 USD ; comment
+    ; subdirective comment
 `);
 
   assertNoLexingOrParsingErrors(t, cstResult);
@@ -53,5 +63,20 @@ P 1900/01/02 $ CAD 10.00
     result[5].type,
     'priceDirective',
     'should have a priceDirective as the 6th element'
+  );
+  t.is(
+    result[6].type,
+    'defaultCommodityDirective',
+    'should have a defaultCommodityDirective as the 7th element'
+  );
+  t.is(
+    result[7].type,
+    'commodityDirective',
+    'should have a commodityDirective as the 8th element'
+  );
+  t.is(
+    result[8].type,
+    'commodityDirective',
+    'should have a commodityDirective as the 9th element'
   );
 });

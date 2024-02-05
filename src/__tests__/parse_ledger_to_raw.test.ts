@@ -1,12 +1,14 @@
-import test from 'ava';
+import anyTest, { TestInterface } from 'ava';
 
 import { parseLedgerToRaw } from '../index';
 
 import { assertNoLexingOrParsingErrors } from './utils';
 
-test('correctly parses a properly formatted hledger journal', (t) => {
-  const result =
-    parseLedgerToRaw(`1900/01/01 A transaction ; a comment
+const test = anyTest as TestInterface<{ journal: string }>;
+
+test.before((t) => {
+  t.context = {
+    journal: `1900/01/01 A transaction ; a comment
     Assets:Chequing        -$1.00 = $99.00
     Expenses:Food
 
@@ -20,7 +22,23 @@ account Expenses:Food ; type: E
 # Full-line comment
 
 P 1900/01/02 $ CAD 10.00
-`);
+
+D $1000.00 ; comment
+    ; subdirective comment
+
+commodity 1000.00 CAD ; comment
+    ; subdirective comment
+
+commodity USD ; comment
+    ; subdirective comment
+    format USD 1000.00 ; comment
+    ; subdirective comment
+`
+  };
+});
+
+test('correctly parses a properly formatted hledger journal', (t) => {
+  const result = parseLedgerToRaw(t.context.journal);
 
   assertNoLexingOrParsingErrors(t, result);
 
@@ -40,6 +58,8 @@ P 1900/01/02 $ CAD 10.00
     'accountDirective',
     'should have an accountDirective as the 3rd element'
   );
+  // TODO: Note that there must be two spaces between the account name in an account
+  //  directive and an inline comment. See: https://hledger.org/1.31/hledger.html#account-comments
   t.is(
     result.rawJournal[3].type,
     'accountDirective',
@@ -54,6 +74,21 @@ P 1900/01/02 $ CAD 10.00
     result.rawJournal[5].type,
     'priceDirective',
     'should have a priceDirective as the 6th element'
+  );
+  t.is(
+    result.rawJournal[6].type,
+    'defaultCommodityDirective',
+    'should have a defaultCommodityDirective as the 7th element'
+  );
+  t.is(
+    result.rawJournal[7].type,
+    'commodityDirective',
+    'should have a commodityDirective as the 8th element'
+  );
+  t.is(
+    result.rawJournal[8].type,
+    'commodityDirective',
+    'should have a commodityDirective as the 9th element'
   );
 });
 
