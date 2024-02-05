@@ -239,8 +239,9 @@ export interface DescriptionCstNode extends CstNode {
 }
 
 export type DescriptionCstChildren = {
-  Text: (IToken)[];
+  Text: IToken[];
   PIPE?: IToken[];
+  Memo?: IToken[];
 };
 
 export interface CommodityDirectiveCstNode extends CstNode {

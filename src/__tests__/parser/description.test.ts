@@ -1,6 +1,6 @@
 import anyTest, { TestInterface } from 'ava';
 
-import { PIPE, Text } from '../../lib/lexer/tokens';
+import { Memo, PIPE, Text } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
 import { MockLexer, simplifyCst } from '../utils';
 
@@ -25,21 +25,38 @@ test('parses a description', (t) => {
   );
 });
 
-test('parses a description with a single memo', (t) => {
+test('parses a description with a memo', (t) => {
   t.context.lexer
     .addToken(Text, 'payee')
     .addToken(PIPE, '|')
-    .addToken(Text, 'memo');
+    .addToken(Memo, 'memo');
   HLedgerParser.input = t.context.lexer.tokenize();
 
   t.deepEqual(
     simplifyCst(HLedgerParser.description()),
     {
-      Text: 2,
-      PIPE: 1
+      Text: 1,
+      PIPE: 1,
+      Memo: 1
     },
     '<description> payee|memo'
   );
 });
 
-// TODO: Write tests wrt the following issue: https://github.com/jonestristand/hledger-parser/issues/2
+test('parses a description with a memo containing pipe characters', (t) => {
+  t.context.lexer
+    .addToken(Text, 'payee')
+    .addToken(PIPE, '|')
+    .addToken(Memo, 'memo|note|text')
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.deepEqual(
+    simplifyCst(HLedgerParser.description()),
+    {
+      Text: 1,
+      PIPE: 1,
+      Memo: 1
+    },
+    '<description> payee|memo|note|text'
+  );
+});

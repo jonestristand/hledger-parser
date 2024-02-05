@@ -25,6 +25,7 @@ import {
   JournalDate,
   JournalNumber,
   LPAREN,
+  Memo,
   NEWLINE,
   ParenValue,
   PDirective,
@@ -321,7 +322,7 @@ class HLedgerParser extends CstParser {
     this.CONSUME(Text);
     this.OPTION(() => {
       this.CONSUME(PIPE);
-      this.CONSUME1(Text);
+      this.CONSUME1(Memo);
     });
   });
 

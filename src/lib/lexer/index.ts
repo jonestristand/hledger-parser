@@ -9,6 +9,7 @@ import {
   indent_mode,
   inline_comment_mode,
   inline_comment_tag_mode,
+  memo_mode,
   posting_amount_mode,
   posting_mode,
   price_amounts_mode,
@@ -30,6 +31,7 @@ export const tokenModeDefinitions = {
     format_mode,
     price_mode,
     price_amounts_mode,
+    memo_mode,
     default_mode
   },
   defaultMode: 'default_mode'
