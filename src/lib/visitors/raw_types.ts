@@ -149,7 +149,6 @@ export interface FormatSubdirective {
   type: 'formatSubdirective';
   value: {
     format: Core.CommodityAmount;
-    comments?: InlineComment;
   }
 }
 
@@ -165,6 +164,17 @@ export interface DefaultCommodityDirective {
   };
 }
 
-export type CommodityDirectiveContentLine = InlineComment | FormatSubdirective;
+export interface CommodityDirectiveContentLine {
+  type: 'commodityDirectiveContentLine';
+  value: {
+    formatSubdirective?: FormatSubdirective;
+    inlineComment?: InlineComment;
+  }
+}
 
-export type DefaultCommodityDirectiveContentLine = InlineComment;
+export interface DefaultCommodityDirectiveContentLine {
+  type: 'defaultCommodityDirectiveContentLine';
+  value: {
+    inlineComment: InlineComment;
+  }
+}

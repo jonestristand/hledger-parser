@@ -43,8 +43,8 @@ commodity CAD1000.00 ; Canadian currency
   );
   t.is(
     result.cstJournal.children.journalItem.length,
-    13,
-    'should have 13 child nodes'
+    16,
+    'should have 16 child nodes'
   );
 });
 

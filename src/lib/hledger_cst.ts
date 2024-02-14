@@ -64,6 +64,8 @@ export type JournalItemCstChildren = {
   lineComment?: LineCommentCstNode[];
   priceDirective?: PriceDirectiveCstNode[];
   accountDirective?: AccountDirectiveCstNode[];
+  commodityDirective?: CommodityDirectiveCstNode[];
+  defaultCommodityDirective?: DefaultCommodityDirectiveCstNode[];
   NEWLINE?: IToken[];
 };
 

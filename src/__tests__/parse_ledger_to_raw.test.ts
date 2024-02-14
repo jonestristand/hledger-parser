@@ -42,7 +42,7 @@ test('correctly parses a properly formatted hledger journal', (t) => {
 
   assertNoLexingOrParsingErrors(t, result);
 
-  t.is(result.rawJournal.length, 6, 'should have 6 items in the parsed object');
+  t.is(result.rawJournal.length, 9, 'should have 9 items in the parsed object');
   t.is(
     result.rawJournal[0].type,
     'transaction',

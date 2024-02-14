@@ -92,6 +92,8 @@ class HLedgerParser extends CstParser {
       { ALT: () => this.SUBRULE(this.lineComment) },
       { ALT: () => this.SUBRULE(this.priceDirective) },
       { ALT: () => this.SUBRULE(this.accountDirective) },
+      { ALT: () => this.SUBRULE(this.commodityDirective) },
+      { ALT: () => this.SUBRULE(this.defaultCommodityDirective) },
       { ALT: () => this.CONSUME(NEWLINE) }
     ]);
   });

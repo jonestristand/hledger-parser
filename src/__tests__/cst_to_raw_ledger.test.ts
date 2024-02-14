@@ -37,7 +37,7 @@ commodity 1000.00 USD ; comment
   const result = cstToRawLedger(
     cstResult.cstJournal
   );
-  t.is(result.length, 6, 'should have 6 items in the parsed object');
+  t.is(result.length, 9, 'should have 9 items in the parsed object');
   t.is(
     result[0].type,
     'transaction',

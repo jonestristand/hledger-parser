@@ -4,7 +4,6 @@ import { notEmpty } from '../type_utils';
 import type * as ParserTypes from '../hledger_cst';
 import type * as Core from '../types';
 import type * as Raw from './raw_types';
-import type { IToken } from 'chevrotain';
 
 const BaseCstVisitor = HLedgerParser.getBaseCstVisitorConstructor();
 
@@ -43,6 +42,16 @@ class HledgerToRawVisitor extends BaseCstVisitor {
       return {
         type: 'accountDirective',
         value: this.accountDirective(ctx.accountDirective[0].children)
+      };
+    } else if (ctx.commodityDirective) {
+      return {
+        type: 'commodityDirective',
+        value: this.commodityDirective(ctx.commodityDirective[0].children)
+      };
+    } else if (ctx.defaultCommodityDirective) {
+      return {
+        type: 'defaultCommodityDirective',
+        value: this.defaultCommodityDirective(ctx.defaultCommodityDirective[0].children)
       };
     } else {
       return null;
@@ -330,7 +339,7 @@ class HledgerToRawVisitor extends BaseCstVisitor {
     if (ctx.Memo) {
       return {
         payee: ctx.Text[0].image.trim(),
-        memo: (ctx.Memo as IToken[])[0].image.trim()
+        memo: ctx.Memo[0].image.trim()
       };
     } else if (ctx.Text.length == 1) {
       return ctx.Text[0].image.trim();
@@ -339,46 +348,99 @@ class HledgerToRawVisitor extends BaseCstVisitor {
     }
   }
 
-  commodityDirective(ctx: ParserTypes.CommodityDirectiveCstChildren): Raw.CommodityDirective {
-    // TODO: Uncomment these lines.
-    // const contentLines = ctx.commodityDirectiveContentLine
-    //   ?.map((c) => this.commodityDirectiveContentLine(c.children))
-    //   ?.filter(notEmpty);
+  commodityDirective(ctx: ParserTypes.CommodityDirectiveCstChildren): Raw.CommodityDirective['value'] {
+    const contentLines = ctx.commodityDirectiveContentLine
+      ?.map((c) => this.commodityDirectiveContentLine(c.children))
+      ?.filter(notEmpty);
+    const formatSubdirectives = contentLines
+      ?.filter((c) => c.value.formatSubdirective) ?? [];
+    const formatSubdirectiveCommodityText = formatSubdirectives.length > 0
+      ? formatSubdirectives[0].value.formatSubdirective?.value.format.commodity
+      : null;
+
+    if (formatSubdirectives.length > 1) {
+      throw Error('Only one format subdirective can be defined in the commodity directive');
+    }
+
+    if (ctx.CommodityText
+      && formatSubdirectiveCommodityText
+      && ctx.CommodityText[0].payload !== formatSubdirectiveCommodityText) {
+      throw Error('The commodity text of the directive and format subdirective must match');
+    }
+
+    if (ctx.commodityAmount && formatSubdirectives.length > 0) {
+      throw Error('Format subdirective is invalid if inline commodity directive format exists');
+    }
 
     return {
-      type: 'commodityDirective',
-      value: {
-        commodity: ctx.CommodityText ? ctx.CommodityText[0].payload as string : undefined,
-        format: ctx.commodityAmount ? this.commodityAmount(ctx.commodityAmount[0].children) : undefined,
-        // TODO: The parser does not consider the format subdirective a content line. Look at how
-        //  transactions handle this and replicate such that we can consider the format subdirective a
-        //  content line. We need to do this to preserve the order in which the format subdirective
-        //  appears in the content lines. However, this makes it difficult to limit the format
-        //  subdirective to one instance in the parser. We may need to allow multiple while parsing
-        //  and throw an error higher up the stack.
-        contentLines: []
-      }
+      commodity: ctx.CommodityText ? ctx.CommodityText[0].payload as string : undefined,
+      format: ctx.commodityAmount ? this.commodityAmount(ctx.commodityAmount[0].children) : undefined,
+      contentLines: contentLines ?? [],
+      comments: ctx.inlineComment ? this.inlineComment(ctx.inlineComment[0].children) : undefined
     };
   }
 
   commodityAmount(ctx: ParserTypes.CommodityAmountCstChildren): Core.CommodityAmount {
-    return {} as unknown as Core.CommodityAmount;
+    const baseAmount = this.amount(
+      {
+        DASH: ctx.DASH,
+        PLUS: ctx.PLUS,
+        AMOUNT_WS: ctx.AMOUNT_WS,
+        CommodityText: ctx.CommodityText,
+        Number: ctx.Number
+      }
+    );
+
+    if (!baseAmount.commodity) throw Error('Commodity text must have a value');
+
+    return baseAmount as Core.CommodityAmount;
   }
 
   commodityDirectiveContentLine(ctx: ParserTypes.CommodityDirectiveContentLineCstChildren): Raw.CommodityDirectiveContentLine {
-    return {} as unknown as Raw.CommodityDirectiveContentLine;
+    const contentLine: Raw.CommodityDirectiveContentLine = {
+      type: 'commodityDirectiveContentLine',
+      value: {}
+    };
+
+    if (ctx.formatSubdirective) {
+      contentLine.value.formatSubdirective = this.formatSubdirective(ctx.formatSubdirective[0].children);
+    }
+
+    if (ctx.inlineComment) {
+      contentLine.value.inlineComment = this.inlineComment(ctx.inlineComment[0].children);
+    }
+
+    return contentLine;
   }
 
   formatSubdirective(ctx: ParserTypes.FormatSubdirectiveCstChildren): Raw.FormatSubdirective {
-    return {} as unknown as Raw.FormatSubdirective;
+    return {
+      type: 'formatSubdirective',
+      value: {
+        format: this.commodityAmount(ctx.commodityAmount[0].children)
+      }
+    };
   }
 
-  defaultCommodityDirective(ctx: ParserTypes.DefaultCommodityDirectiveCstChildren): Raw.DefaultCommodityDirective {
-    return {} as unknown as Raw.DefaultCommodityDirective;
+  defaultCommodityDirective(ctx: ParserTypes.DefaultCommodityDirectiveCstChildren): Raw.DefaultCommodityDirective['value'] {
+    const contentLines = ctx.defaultCommodityDirectiveContentLine
+      ?.map((c) => this.defaultCommodityDirectiveContentLine(c.children))
+      ?.filter(notEmpty);
+
+    return {
+      format: this.commodityAmount(ctx.commodityAmount[0].children),
+      contentLines: contentLines ?? [],
+      comments: ctx.inlineComment ? this.inlineComment(ctx.inlineComment[0].children) : undefined
+    };
   }
 
   defaultCommodityDirectiveContentLine(ctx: ParserTypes.DefaultCommodityDirectiveContentLineCstChildren): Raw.DefaultCommodityDirectiveContentLine {
-    return {} as unknown as Raw.DefaultCommodityDirectiveContentLine;
+    return {
+      type: 'defaultCommodityDirectiveContentLine',
+      value: {
+        inlineComment: this.inlineComment(ctx.inlineComment[0].children)
+      }
+    };
   }
 }
 

@@ -51,6 +51,18 @@ test('returns a price directive object', (t) => {
   t.is(
     result[0].type,
     'priceDirective',
-    'should return a priceDirective object'
+    'should return a price directive object'
+  );
+});
+
+test('returns a commodity directive object', (t) => {
+  const result = CstToRawVisitor.journal(
+    parseLedgerToCST(`commodity CAD1000.00\n`).cstJournal.children
+  );
+  t.is(result.length, 1, 'should modify a commodity directive');
+  t.is(
+    result[0].type,
+    'commodityDirective',
+    'should return a commodity directive object'
   );
 });

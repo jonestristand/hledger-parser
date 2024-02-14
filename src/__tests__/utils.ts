@@ -8,8 +8,10 @@ import {
 } from 'chevrotain';
 import _ from 'lodash';
 
-import { ParseReturn } from '../index';
+import { CSTParseReturn, ParseReturn } from '../index';
 import { notEmpty } from '../lib/type_utils';
+import CstToRawVisitor from '../lib/visitors/cst_to_raw';
+import * as Raw from '../lib/visitors/raw_types';
 
 import type { CstNode } from 'chevrotain';
 
@@ -93,4 +95,21 @@ export function assertNoLexingOrParsingErrors(t: ExecutionContext, result: Parse
     0,
     `should not produce parsing errors: ${result.parseErrors.toString()}`
   );
+}
+
+export function assertIsValidCommodityDirectiveObject(t: ExecutionContext, result: Raw.Journal) {
+  t.is(result.length, 1, 'should contain a single journal item');
+  t.is(result[0].type, 'commodityDirective', 'should be a commodity directive object');
+}
+
+export function getCommodityDirectiveObject(t: ExecutionContext, cstResult: CSTParseReturn): Raw.CommodityDirective {
+  assertNoLexingOrParsingErrors(t, cstResult);
+
+  const result = CstToRawVisitor.journal(
+    cstResult.cstJournal.children
+  );
+
+  assertIsValidCommodityDirectiveObject(t, result);
+
+  return result[0] as Raw.CommodityDirective;
 }
