@@ -3,8 +3,10 @@ import anyTest, { TestInterface } from 'ava';
 import {
   AccountDirective,
   CommentText,
+  CommodityDirective,
   CommodityText,
   DateAtStart,
+  DefaultCommodityDirective,
   HASHTAG_AT_START,
   JournalDate,
   JournalNumber,
@@ -151,5 +153,61 @@ test('does not parse a full line semicolon comment with incorrect token', (t) =>
   t.falsy(
     HLedgerParser.journalItem(),
     '<journalItem!> ; a comment with wrong semicolon token'
+  );
+});
+
+test('parses a commodity directive', (t) => {
+  t.context.lexer
+    .addToken(CommodityDirective, 'commodity ')
+    .addToken(CommodityText, 'CAD')
+    .addToken(JournalNumber, '1000.00')
+    .addToken(NEWLINE, '\n');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.deepEqual(
+    simplifyCst(HLedgerParser.journalItem()),
+    {
+      commodityDirective: [
+        {
+          CommodityDirective: 1,
+          commodityAmount: [
+            {
+              CommodityText: 1,
+              Number: 1
+            }
+          ],
+          NEWLINE: 1
+        }
+      ]
+    },
+    '<journalItem> commodity CAD1000.00\\n'
+  );
+});
+
+test('parses a default commodity directive', (t) => {
+  t.context.lexer
+    .addToken(DefaultCommodityDirective, 'D ')
+    .addToken(CommodityText, 'CAD')
+    .addToken(JournalNumber, '1000.00')
+    .addToken(NEWLINE, '\n');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.deepEqual(
+    simplifyCst(HLedgerParser.journalItem()),
+    {
+      defaultCommodityDirective: [
+        {
+          DefaultCommodityDirective: 1,
+          commodityAmount: [
+            {
+              CommodityText: 1,
+              Number: 1
+            }
+          ],
+          NEWLINE: 1
+        }
+      ]
+    },
+    '<journalItem> D CAD1000.00\\n'
   );
 });

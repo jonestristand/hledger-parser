@@ -64,6 +64,8 @@ export type JournalItemCstChildren = {
   lineComment?: LineCommentCstNode[];
   priceDirective?: PriceDirectiveCstNode[];
   accountDirective?: AccountDirectiveCstNode[];
+  commodityDirective?: CommodityDirectiveCstNode[];
+  defaultCommodityDirective?: DefaultCommodityDirectiveCstNode[];
   NEWLINE?: IToken[];
 };
 
@@ -244,6 +246,80 @@ export type DescriptionCstChildren = {
   Memo?: IToken[];
 };
 
+export interface CommodityDirectiveCstNode extends CstNode {
+  name: "commodityDirective";
+  children: CommodityDirectiveCstChildren;
+}
+
+export type CommodityDirectiveCstChildren = {
+  CommodityDirective: IToken[];
+  commodityAmount?: CommodityAmountCstNode[];
+  inlineComment?: (InlineCommentCstNode)[];
+  CommodityText?: IToken[];
+  AMOUNT_WS?: IToken[];
+  NEWLINE: IToken[];
+  commodityDirectiveContentLine?: CommodityDirectiveContentLineCstNode[];
+};
+
+export interface CommodityAmountCstNode extends CstNode {
+  name: "commodityAmount";
+  children: CommodityAmountCstChildren;
+}
+
+export type CommodityAmountCstChildren = {
+  DASH?: (IToken)[];
+  PLUS?: (IToken)[];
+  AMOUNT_WS?: (IToken)[];
+  CommodityText?: (IToken)[];
+  Number?: (IToken)[];
+};
+
+export interface CommodityDirectiveContentLineCstNode extends CstNode {
+  name: "commodityDirectiveContentLine";
+  children: CommodityDirectiveContentLineCstChildren;
+}
+
+export type CommodityDirectiveContentLineCstChildren = {
+  INDENT: IToken[];
+  inlineComment?: (InlineCommentCstNode)[];
+  NEWLINE?: (IToken)[];
+  formatSubdirective?: FormatSubdirectiveCstNode[];
+};
+
+export interface FormatSubdirectiveCstNode extends CstNode {
+  name: "formatSubdirective";
+  children: FormatSubdirectiveCstChildren;
+}
+
+export type FormatSubdirectiveCstChildren = {
+  FormatSubdirective: IToken[];
+  commodityAmount: CommodityAmountCstNode[];
+};
+
+export interface DefaultCommodityDirectiveCstNode extends CstNode {
+  name: "defaultCommodityDirective";
+  children: DefaultCommodityDirectiveCstChildren;
+}
+
+export type DefaultCommodityDirectiveCstChildren = {
+  DefaultCommodityDirective: IToken[];
+  commodityAmount: CommodityAmountCstNode[];
+  inlineComment?: InlineCommentCstNode[];
+  NEWLINE: IToken[];
+  defaultCommodityDirectiveContentLine?: DefaultCommodityDirectiveContentLineCstNode[];
+};
+
+export interface DefaultCommodityDirectiveContentLineCstNode extends CstNode {
+  name: "defaultCommodityDirectiveContentLine";
+  children: DefaultCommodityDirectiveContentLineCstChildren;
+}
+
+export type DefaultCommodityDirectiveContentLineCstChildren = {
+  INDENT: IToken[];
+  inlineComment: InlineCommentCstNode[];
+  NEWLINE: IToken[];
+};
+
 export interface ICstNodeVisitor<IN, OUT> extends ICstVisitor<IN, OUT> {
   lineComment(children: LineCommentCstChildren, param?: IN): OUT;
   inlineComment(children: InlineCommentCstChildren, param?: IN): OUT;
@@ -266,4 +342,10 @@ export interface ICstNodeVisitor<IN, OUT> extends ICstVisitor<IN, OUT> {
   statusIndicator(children: StatusIndicatorCstChildren, param?: IN): OUT;
   chequeNumber(children: ChequeNumberCstChildren, param?: IN): OUT;
   description(children: DescriptionCstChildren, param?: IN): OUT;
+  commodityDirective(children: CommodityDirectiveCstChildren, param?: IN): OUT;
+  commodityAmount(children: CommodityAmountCstChildren, param?: IN): OUT;
+  commodityDirectiveContentLine(children: CommodityDirectiveContentLineCstChildren, param?: IN): OUT;
+  formatSubdirective(children: FormatSubdirectiveCstChildren, param?: IN): OUT;
+  defaultCommodityDirective(children: DefaultCommodityDirectiveCstChildren, param?: IN): OUT;
+  defaultCommodityDirectiveContentLine(children: DefaultCommodityDirectiveContentLineCstChildren, param?: IN): OUT;
 }
