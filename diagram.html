@@ -156,14 +156,13 @@
         "name": "InlineCommentTagName",
         "label": "InlineCommentTagName",
         "idx": 0,
-        "pattern": "[a-zA-Z0-9_-]+(?=:)"
+        "pattern": "[^\\s:]+(?=:)"
       },
       {
         "type": "Terminal",
         "name": "InlineCommentTagColon",
         "label": "InlineCommentTagColon",
-        "idx": 0,
-        "pattern": ":"
+        "idx": 0
       },
       {
         "type": "Option",
