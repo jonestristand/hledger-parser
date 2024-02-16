@@ -8,6 +8,7 @@ import {
   matchOnlyAtStart,
   matchParenValue,
   matchPriceCommodityText,
+  matchTagColon,
   NewlineName
 } from './lexer_utils';
 
@@ -107,13 +108,14 @@ export const InlineCommentText = createToken({
 
 export const InlineCommentTagName = createToken({
   name: 'InlineCommentTagName',
-  pattern: /[a-zA-Z0-9_-]+(?=:)/,
+  pattern: /[^\s:]+(?=:)/,
   line_breaks: false
 });
 
 export const InlineCommentTagColon = createToken({
   name: 'InlineCommentTagColon',
-  pattern: ':',
+  pattern: matchTagColon,
+  line_breaks: false,
   push_mode: 'inline_comment_tag_mode'
 });
 

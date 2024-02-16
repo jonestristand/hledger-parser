@@ -97,7 +97,7 @@ test('does not parse a tag not containing a colon', (t) => {
 });
 
 test('does not parse a tag value pair not separated by a colon', (t) => {
-t.context.lexer
+  t.context.lexer
     .addToken(InlineCommentTagName, 'tag')
     .addToken(InlineCommentTagValue, 'value');
   HLedgerParser.input = t.context.lexer.tokenize();

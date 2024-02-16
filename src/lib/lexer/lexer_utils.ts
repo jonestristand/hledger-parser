@@ -39,6 +39,9 @@ export const matchParenValue: CustomPatternMatcherFunc = (text, offset) => {
   return null;
 };
 
+// TODO: Ensure there is Unicode character support for commodity text. Currently, there only
+//  appears to be support for it as long as the text is wrapped in double quotes. Might need
+//  to verify the validity of Unicode characters in unquoted commodity text.
 const commodityTextPattern = '([a-zA-Z\\p{Sc}]+)|"([^";\\r\\n]*)"';
 const priceCommodityTextPattern = `(${commodityTextPattern}) +`;
 
@@ -134,4 +137,16 @@ export const matchJournalNumber: CustomPatternMatcherFunc = (text, offset) => {
     || /^\d+( \d+)*(,\d*)?([Ee][+-]?\d+)?$/g.test(fullMatchText))) return null;
 
   return [fullMatchText];
+};
+
+export const matchTagColon: CustomPatternMatcherFunc = (text, offset) => {
+  const tagColonRegex = /(?<!\s):/y;
+  tagColonRegex.lastIndex = offset;
+  const match = tagColonRegex.exec(text);
+
+  if (match) {
+    return [match[0]];
+  }
+
+  return null;
 };
