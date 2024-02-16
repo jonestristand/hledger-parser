@@ -46,6 +46,10 @@ export interface Amount {
   sign?: '-' | '+';
 }
 
+export type CommodityAmount = Omit<Amount, `commodity`> & {
+  commodity: string;
+};
+
 /**
  * Type for an [hledger lot price](https://hledger.org/1.26/hledger.html#lot-prices-lot-dates),
  * either the total lot price or unit lot price.

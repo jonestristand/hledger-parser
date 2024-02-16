@@ -17,7 +17,7 @@ const tests = [
   },
   {
     // TODO: Account directive comments require two spaces between that and the account name.
-    //  Tests need to be corrected to reflect this format.
+    //  Tests need to be corrected to reflect this format. See: https://hledger.org/1.31/hledger.html#account-comments
     pattern: 'account Assets:Chequing ; a comment\n',
     expected: [
       'AccountDirective',

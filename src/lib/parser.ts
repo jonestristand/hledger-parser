@@ -8,10 +8,13 @@ import {
   ASTERISK_AT_START,
   AT,
   CommentText,
+  CommodityDirective,
   CommodityText,
   DASH,
   DateAtStart,
+  DefaultCommodityDirective,
   EQUALS,
+  FormatSubdirective,
   HASHTAG_AT_START,
   INDENT,
   InlineCommentTagColon,
@@ -89,6 +92,8 @@ class HLedgerParser extends CstParser {
       { ALT: () => this.SUBRULE(this.lineComment) },
       { ALT: () => this.SUBRULE(this.priceDirective) },
       { ALT: () => this.SUBRULE(this.accountDirective) },
+      { ALT: () => this.SUBRULE(this.commodityDirective) },
+      { ALT: () => this.SUBRULE(this.defaultCommodityDirective) },
       { ALT: () => this.CONSUME(NEWLINE) }
     ]);
   });
@@ -192,7 +197,7 @@ class HLedgerParser extends CstParser {
     ]);
   });
 
-  public amount = this.RULE('amount', () => {
+  private parseAmount(mandatoryCommodity = false) {
     this.OR([
       {
         ALT: () => {
@@ -212,10 +217,15 @@ class HLedgerParser extends CstParser {
             {
               ALT: () => {
                 this.CONSUME1(JournalNumber);
-                this.OPTION2(() => {
-                  this.OPTION3(() => this.CONSUME2(AMOUNT_WS));
+                if (mandatoryCommodity) {
+                  this.OPTION2(() => this.CONSUME2(AMOUNT_WS));
                   this.CONSUME1(CommodityText);
-                });
+                } else {
+                  this.OPTION9(() => {
+                    this.OPTION3(() => this.CONSUME7(AMOUNT_WS));
+                    this.CONSUME4(CommodityText);
+                  });
+                }
               }
             }
           ]);
@@ -224,10 +234,15 @@ class HLedgerParser extends CstParser {
       {
         ALT: () => {
           this.CONSUME2(JournalNumber);
-          this.OPTION4(() => {
-            this.OPTION5(() => this.CONSUME3(AMOUNT_WS));
+          if (mandatoryCommodity) {
+            this.OPTION4(() => this.CONSUME3(AMOUNT_WS));
             this.CONSUME2(CommodityText);
-          });
+          } else {
+            this.OPTION4(() => {
+              this.OPTION5(() => this.CONSUME3(AMOUNT_WS));
+              this.CONSUME2(CommodityText);
+            });
+          }
         }
       },
       {
@@ -255,6 +270,10 @@ class HLedgerParser extends CstParser {
       },
     ]);
     this.OPTION8(() => this.CONSUME6(AMOUNT_WS));
+  }
+
+  public amount = this.RULE('amount', () => {
+    this.parseAmount();
   });
 
   public lotPrice = this.RULE('lotPrice', () => {
@@ -307,6 +326,84 @@ class HLedgerParser extends CstParser {
       this.CONSUME(PIPE);
       this.CONSUME1(Memo);
     });
+  });
+
+  public commodityDirective = this.RULE('commodityDirective', () => {
+    this.CONSUME(CommodityDirective);
+    this.OR([
+      {
+        ALT: () => {
+          this.SUBRULE(this.commodityAmount);
+          this.OPTION({
+            GATE: () => this.LA(0).tokenType === AMOUNT_WS,
+            DEF: () => this.SUBRULE1(this.inlineComment)
+          });
+        }
+      },
+      {
+        ALT: () => {
+          this.CONSUME(CommodityText);
+          this.OPTION1(() => {
+            this.CONSUME(AMOUNT_WS);
+            this.SUBRULE2(this.inlineComment);
+          });
+        }
+      }
+    ]);
+    this.CONSUME(NEWLINE);
+    this.MANY(() => {
+      this.SUBRULE3(this.commodityDirectiveContentLine);
+    });
+  });
+
+  public commodityAmount = this.RULE('commodityAmount', () => {
+    this.parseAmount(true);
+  });
+
+  public commodityDirectiveContentLine = this.RULE('commodityDirectiveContentLine', () => {
+    this.CONSUME(INDENT);
+    this.OR([
+      {
+        ALT: () => {
+          this.SUBRULE(this.inlineComment);
+          this.CONSUME(NEWLINE);
+        }
+      },
+      {
+        ALT: () => {
+          this.SUBRULE1(this.formatSubdirective);
+          this.OPTION({
+            GATE: () => this.LA(0).tokenType === AMOUNT_WS,
+            DEF: () => this.SUBRULE1(this.inlineComment)
+          });
+          this.CONSUME1(NEWLINE);
+        }
+      }
+    ]);
+  });
+
+  public formatSubdirective = this.RULE('formatSubdirective', () => {
+    this.CONSUME(FormatSubdirective);
+    this.SUBRULE(this.commodityAmount);
+  });
+
+  public defaultCommodityDirective = this.RULE('defaultCommodityDirective', () => {
+    this.CONSUME(DefaultCommodityDirective);
+    this.SUBRULE(this.commodityAmount);
+    this.OPTION1({
+      GATE: () => this.LA(0).tokenType === AMOUNT_WS,
+      DEF: () => this.SUBRULE2(this.inlineComment)
+    });
+    this.CONSUME(NEWLINE);
+    this.MANY(() => {
+      this.SUBRULE1(this.defaultCommodityDirectiveContentLine);
+    });
+  });
+
+  public defaultCommodityDirectiveContentLine = this.RULE('defaultCommodityDirectiveContentLine', () => {
+    this.CONSUME(INDENT);
+    this.SUBRULE(this.inlineComment);
+    this.CONSUME(NEWLINE);
   });
 }
 

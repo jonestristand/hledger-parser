@@ -257,3 +257,29 @@ export const PDirectiveCommodityText = createToken({
   line_breaks: false,
   push_mode: 'price_amounts_mode'
 });
+
+// ====- Commodity Directive Tokens -====
+
+export const CommodityDirective = createToken({
+  name: 'CommodityDirective',
+  pattern: matchOnlyAtStart(/commodity /y),
+  start_chars_hint: ['C', 'c'],
+  line_breaks: false,
+  push_mode: 'commodity_mode'
+});
+
+export const DefaultCommodityDirective = createToken({
+  name: 'DefaultCommodityDirective',
+  pattern: matchOnlyAtStart(/D /y),
+  start_chars_hint: ['D', 'd'],
+  line_breaks: false,
+  push_mode: 'commodity_mode'
+});
+
+export const FormatSubdirective = createToken({
+  name: 'FormatSubdirective',
+  pattern: /format /,
+  start_chars_hint: ['F', 'f'],
+  line_breaks: false,
+  push_mode: 'format_mode'
+});
