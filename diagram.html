@@ -369,14 +369,21 @@
       },
       {
         "type": "Terminal",
-        "name": "RealAccountName",
-        "label": "RealAccountName",
+        "name": "AccountName",
+        "label": "AccountName",
         "idx": 0
       },
       {
         "type": "Option",
         "idx": 0,
         "definition": [
+          {
+            "type": "Terminal",
+            "name": "DOUBLE_WS",
+            "label": "DOUBLE_WS",
+            "idx": 0,
+            "pattern": "[ \\t]{2}"
+          },
           {
             "type": "NonTerminal",
             "name": "inlineComment",

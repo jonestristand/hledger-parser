@@ -6,7 +6,7 @@ import * as Raw from '../../lib/visitors/raw_types';
 
 test('returns an inline comment object when inline comment is empty', (t) => {
   const result = CstToRawVisitor.journal(
-    parseLedgerToCST(`account test ;\n`).cstJournal.children
+    parseLedgerToCST(`account test  ;\n`).cstJournal.children
   );
   t.is(result.length, 1, 'should modify an empty inline comment');
   t.truthy(
@@ -22,7 +22,7 @@ test('returns an inline comment object when inline comment is empty', (t) => {
 
 test('returns an inline comment object when inline comment contains a single white-space', (t) => {
   const result = CstToRawVisitor.journal(
-    parseLedgerToCST(`account test ; \n`).cstJournal.children
+    parseLedgerToCST(`account test  ; \n`).cstJournal.children
   );
   t.is(result.length, 1, 'should modify an inline comment of one white-space');
   t.truthy(
@@ -38,7 +38,7 @@ test('returns an inline comment object when inline comment contains a single whi
 
 test('returns an inline comment object when inline comment contains multiple white-space', (t) => {
   const result = CstToRawVisitor.journal(
-    parseLedgerToCST(`account test ;  \t \n`).cstJournal.children
+    parseLedgerToCST(`account test  ;  \t \n`).cstJournal.children
   );
   t.is(
     result.length,
@@ -58,7 +58,7 @@ test('returns an inline comment object when inline comment contains multiple whi
 
 test('returns an inline comment object when inline comment contains text', (t) => {
   const result = CstToRawVisitor.journal(
-    parseLedgerToCST(`account test ; comment\n`).cstJournal.children
+    parseLedgerToCST(`account test  ; comment\n`).cstJournal.children
   );
   t.is(result.length, 1, 'should modify an inline comment with text');
   t.truthy(
@@ -74,7 +74,7 @@ test('returns an inline comment object when inline comment contains text', (t) =
 
 test('returns an inline comment object when inline comment contains text, tags, and tag values', (t) => {
   const result = CstToRawVisitor.journal(
-    parseLedgerToCST(`account test ; comment tag-name: tag-value, tag-name2:\n`)
+    parseLedgerToCST(`account test  ; comment tag-name: tag-value, tag-name2:\n`)
       .cstJournal.children
   );
   t.is(result.length, 1, 'should modify an inline comment with text and a tag');

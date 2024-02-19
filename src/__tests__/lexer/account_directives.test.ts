@@ -3,25 +3,28 @@ import { runLexerTests } from './utils';
 const tests = [
   {
     pattern: 'account Assets:Chequing  ',
-    expected: ['AccountDirective', { RealAccountName: ['Assets', 'Chequing'] }],
+    expected: [
+      'AccountDirective',
+      { AccountName: ['Assets', 'Chequing'] },
+      'DOUBLE_WS'
+    ],
     title: 'recognize account directive and name with double-space at end'
   },
   {
     pattern: 'account Assets:Chequing\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets', 'Chequing'] },
+      { AccountName: ['Assets', 'Chequing'] },
       'NEWLINE'
     ],
     title: 'recognize account directive and name with end of line at end'
   },
   {
-    // TODO: Account directive comments require two spaces between that and the account name.
-    //  Tests need to be corrected to reflect this format. See: https://hledger.org/1.31/hledger.html#account-comments
-    pattern: 'account Assets:Chequing ; a comment\n',
+    pattern: 'account Assets:Chequing  ; a comment\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets', 'Chequing'] },
+      { AccountName: ['Assets', 'Chequing'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentText',
       'NEWLINE'
@@ -29,10 +32,11 @@ const tests = [
     title: 'recognize account directive and name with comment at end'
   },
   {
-    pattern: 'account Assets:Chequing ; a comment with: a tag\n',
+    pattern: 'account Assets:Chequing  ; a comment with: a tag\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets', 'Chequing'] },
+      { AccountName: ['Assets', 'Chequing'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentText',
       'InlineCommentTagName',
@@ -46,7 +50,7 @@ const tests = [
     pattern: 'account Assets:Chequing\n    ; a comment\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets', 'Chequing'] },
+      { AccountName: ['Assets', 'Chequing'] },
       'NEWLINE',
       'INDENT',
       'SemicolonComment',
@@ -59,7 +63,8 @@ const tests = [
     pattern: 'account (Assets:Chequing)  ',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['(Assets', 'Chequing)'] }
+      { AccountName: ['(Assets', 'Chequing)'] },
+      'DOUBLE_WS'
     ],
     title:
       'ignore ( and treat it as part of the account name of a real account (hledger bug)'
@@ -68,7 +73,8 @@ const tests = [
     pattern: 'account [Assets:Chequing]  ',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['[Assets', 'Chequing]'] }
+      { AccountName: ['[Assets', 'Chequing]'] },
+      'DOUBLE_WS'
     ],
     title:
       'ignore [ and treat it as part of the account name of a real account (hledger bug)'

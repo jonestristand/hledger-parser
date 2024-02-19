@@ -6,7 +6,7 @@ import * as Raw from '../../lib/visitors/raw_types';
 
 test('returns an inline comment object from inline comment text', (t) => {
   const result = CstToRawVisitor.journal(
-    parseLedgerToCST(`account test ; comment text item\n`).cstJournal.children
+    parseLedgerToCST(`account test  ; comment text item\n`).cstJournal.children
   );
   t.is(result.length, 1, 'should modify an inline comment with text');
   t.truthy(
@@ -22,7 +22,7 @@ test('returns an inline comment object from inline comment text', (t) => {
 
 test('returns an inline comment object from inline comment tag and value', (t) => {
   const result = CstToRawVisitor.journal(
-    parseLedgerToCST(`account test ; comment-tag-item: value\n`).cstJournal
+    parseLedgerToCST(`account test  ; comment-tag-item: value\n`).cstJournal
       .children
   );
   t.is(

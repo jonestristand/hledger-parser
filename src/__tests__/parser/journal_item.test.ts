@@ -2,6 +2,7 @@ import anyTest, { TestInterface } from 'ava';
 
 import {
   AccountDirective,
+  AccountName,
   CommentText,
   CommodityDirective,
   CommodityText,
@@ -13,7 +14,6 @@ import {
   NEWLINE,
   PDirective,
   PDirectiveCommodityText,
-  RealAccountName,
   SemicolonComment
 } from '../../lib/lexer/tokens';
 import HLedgerParser from '../../lib/parser';
@@ -112,7 +112,7 @@ test('parses a price directive', (t) => {
 test('parses an account directive', (t) => {
   t.context.lexer
     .addToken(AccountDirective, 'account')
-    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(AccountName, 'Assets:Chequing')
     .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
@@ -122,7 +122,7 @@ test('parses an account directive', (t) => {
       accountDirective: [
         {
           AccountDirective: 1,
-          RealAccountName: 1,
+          AccountName: 1,
           NEWLINE: 1
         }
       ]

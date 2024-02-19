@@ -1,5 +1,6 @@
 import {
   AccountDirective,
+  AccountName,
   AMOUNT_WS,
   ASTERISK,
   ASTERISK_AT_START,
@@ -10,6 +11,7 @@ import {
   DASH,
   DateAtStart,
   DefaultCommodityDirective,
+  DOUBLE_WS,
   EQUALS,
   FormatSubdirective,
   HASHTAG_AT_START,
@@ -67,9 +69,10 @@ export const indent_mode = [
 
 export const account_mode = [
   NEWLINE,
+  DOUBLE_WS,
   SINGLE_WS,
   SemicolonComment,
-  RealAccountName
+  AccountName
 ];
 
 export const comment_mode = [

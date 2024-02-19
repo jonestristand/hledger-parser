@@ -2,10 +2,11 @@ import anyTest, { TestInterface } from 'ava';
 
 import {
   AccountDirective,
+  AccountName,
+  DOUBLE_WS,
   INDENT,
   InlineCommentText,
   NEWLINE,
-  RealAccountName,
   SemicolonComment,
   VirtualAccountName,
   VirtualBalancedAccountName
@@ -24,7 +25,7 @@ test.before((t) => {
 test('parses an account directive', (t) => {
   t.context.lexer
     .addToken(AccountDirective, 'account')
-    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(AccountName, 'Assets:Chequing')
     .addToken(NEWLINE, '\n');
   HLedgerParser.input = t.context.lexer.tokenize();
 
@@ -32,17 +33,18 @@ test('parses an account directive', (t) => {
     simplifyCst(HLedgerParser.accountDirective()),
     {
       AccountDirective: 1,
-      RealAccountName: 1,
+      AccountName: 1,
       NEWLINE: 1
     },
-    '<accountDirective>     account Assets:Chequing\\n'
+    '<accountDirective> account Assets:Chequing\\n'
   );
 });
 
 test('parses an account directive with inline comment', (t) => {
   t.context.lexer
     .addToken(AccountDirective, 'account')
-    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(AccountName, 'Assets:Chequing')
+    .addToken(DOUBLE_WS, '  ')
     .addToken(SemicolonComment, ';')
     .addToken(InlineCommentText, 'a comment')
     .addToken(NEWLINE, '\n');
@@ -52,8 +54,9 @@ test('parses an account directive with inline comment', (t) => {
     simplifyCst(HLedgerParser.accountDirective()),
     {
       AccountDirective: 1,
-      RealAccountName: 1,
+      AccountName: 1,
       NEWLINE: 1,
+      DOUBLE_WS: 1,
       inlineComment: [
         {
           SemicolonComment: 1,
@@ -65,14 +68,14 @@ test('parses an account directive with inline comment', (t) => {
         }
       ]
     },
-    '<accountDirective>     account Assets:Chequing ; a comment\\n'
+    '<accountDirective> account Assets:Chequing  ; a comment\\n'
   );
 });
 
 test('parses an account directive with a content line', (t) => {
   t.context.lexer
     .addToken(AccountDirective, 'account')
-    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(AccountName, 'Assets:Chequing')
     .addToken(NEWLINE, '\n')
     .addToken(INDENT, '    ')
     .addToken(SemicolonComment, ';')
@@ -84,7 +87,7 @@ test('parses an account directive with a content line', (t) => {
     simplifyCst(HLedgerParser.accountDirective()),
     {
       AccountDirective: 1,
-      RealAccountName: 1,
+      AccountName: 1,
       NEWLINE: 1,
       accountDirectiveContentLine: [
         {
@@ -103,14 +106,14 @@ test('parses an account directive with a content line', (t) => {
         }
       ]
     },
-    '<accountDirective>     account Assets:Chequing\\n    ; a comment\\n'
+    '<accountDirective> account Assets:Chequing\\n    ; a comment\\n'
   );
 });
 
 test('parses an account directive with multiple content lines', (t) => {
   t.context.lexer
     .addToken(AccountDirective, 'account')
-    .addToken(RealAccountName, 'Assets:Chequing')
+    .addToken(AccountName, 'Assets:Chequing')
     .addToken(NEWLINE, '\n')
     .addToken(INDENT, '    ')
     .addToken(SemicolonComment, ';')
@@ -126,7 +129,7 @@ test('parses an account directive with multiple content lines', (t) => {
     simplifyCst(HLedgerParser.accountDirective()),
     {
       AccountDirective: 1,
-      RealAccountName: 1,
+      AccountName: 1,
       NEWLINE: 1,
       accountDirectiveContentLine: [
         {
@@ -159,7 +162,7 @@ test('parses an account directive with multiple content lines', (t) => {
         }
       ]
     },
-    '<accountDirective>     account Assets:Chequing\\n    ; a comment\\n    ; another comment\\n'
+    '<accountDirective> account Assets:Chequing\\n    ; a comment\\n    ; another comment\\n'
   );
 });
 
@@ -172,7 +175,7 @@ test('does not parse virtual account in account directive', (t) => {
 
   t.falsy(
     HLedgerParser.accountDirective(),
-    '<accountDirective!>     account (Assets:Chequing)\\n'
+    '<accountDirective!> account (Assets:Chequing)\\n'
   );
 });
 
@@ -185,6 +188,21 @@ test('does not parse virtual balanced account in account directive', (t) => {
 
   t.falsy(
     HLedgerParser.accountDirective(),
-    '<accountDirective!>     account [Assets:Chequing]\\n'
+    '<accountDirective!> account [Assets:Chequing]\\n'
+  );
+});
+
+test('does not parse an account directive without a double whitespace delimiting an inline comment', (t) => {
+  t.context.lexer
+    .addToken(AccountDirective, 'account')
+    .addToken(AccountName, 'Assets:Chequing')
+    .addToken(SemicolonComment, ';')
+    .addToken(InlineCommentText, 'comment')
+    .addToken(NEWLINE, '\n');
+  HLedgerParser.input = t.context.lexer.tokenize();
+
+  t.falsy(
+    HLedgerParser.accountDirective(),
+    '<accountDirective!> account Assets:Chequing ; comment\\n'
   );
 });

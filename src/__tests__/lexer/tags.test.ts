@@ -5,7 +5,8 @@ const tests = [
     pattern: 'account Assets  ; tag:\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -17,7 +18,8 @@ const tests = [
     pattern: 'account Assets  ; tag1:,tag2:\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -32,7 +34,8 @@ const tests = [
     pattern: 'account Assets  ; tag: value\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -45,7 +48,8 @@ const tests = [
     pattern: 'account Assets  ; tag1: value1,tag2:value2\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -62,7 +66,8 @@ const tests = [
     pattern: 'account Assets  ; comment tag:\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentText',
       'InlineCommentTagName',
@@ -75,7 +80,8 @@ const tests = [
     pattern: 'account Assets  ; tag:, comment\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -89,7 +95,8 @@ const tests = [
     pattern: 'account Assets  ; tag: value, comment\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -104,7 +111,8 @@ const tests = [
     pattern: 'account Assets  ; tag1:, comment tag2:\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -120,7 +128,8 @@ const tests = [
     pattern: 'account Assets  ; :tag:\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentText',
       'InlineCommentTagName',
@@ -133,7 +142,8 @@ const tests = [
     pattern: 'account Assets  ; :tag1:tag2:tag3:\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentText',
       'InlineCommentTagName',
@@ -147,7 +157,8 @@ const tests = [
     pattern: 'account Assets  ; ~`!@#$%^&*()_-+={},[]\\|"\'.<;>tag1:\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -159,7 +170,8 @@ const tests = [
     pattern: 'account Assets  ; 标签:\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -171,7 +183,8 @@ const tests = [
     pattern: 'account Assets  ; بطاقةشعار:\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -183,7 +196,8 @@ const tests = [
     pattern: 'account Assets  ; תָג:\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -195,7 +209,8 @@ const tests = [
     pattern: 'account Assets  ; Тег:\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -207,7 +222,8 @@ const tests = [
     pattern: 'account Assets  ; ,:value\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentTagName',
       'InlineCommentTagColon',
@@ -220,7 +236,8 @@ const tests = [
     pattern: 'account Assets  ; ::::::tag1:\n',
     expected: [
       'AccountDirective',
-      { RealAccountName: ['Assets'] },
+      { AccountName: ['Assets'] },
+      'DOUBLE_WS',
       'SemicolonComment',
       'InlineCommentText',
       'InlineCommentTagName',

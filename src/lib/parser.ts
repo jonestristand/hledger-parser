@@ -3,6 +3,7 @@ import { CstParser } from 'chevrotain';
 import { tokenModeDefinitions } from './lexer';
 import {
   AccountDirective,
+  AccountName,
   AMOUNT_WS,
   ASTERISK,
   ASTERISK_AT_START,
@@ -13,6 +14,7 @@ import {
   DASH,
   DateAtStart,
   DefaultCommodityDirective,
+  DOUBLE_WS,
   EQUALS,
   FormatSubdirective,
   HASHTAG_AT_START,
@@ -115,8 +117,9 @@ class HLedgerParser extends CstParser {
 
   public accountDirective = this.RULE('accountDirective', () => {
     this.CONSUME(AccountDirective);
-    this.CONSUME(RealAccountName);
+    this.CONSUME(AccountName);
     this.OPTION(() => {
+      this.CONSUME(DOUBLE_WS);
       this.SUBRULE(this.inlineComment);
     });
     this.CONSUME(NEWLINE);

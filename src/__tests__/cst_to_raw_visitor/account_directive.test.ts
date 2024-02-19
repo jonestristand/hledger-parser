@@ -27,7 +27,7 @@ test('returns an account directive object', (t) => {
 
 test('returns an account directive object with a comment', (t) => {
   const result = CstToRawVisitor.journal(
-    parseLedgerToCST(`account test:account ; comment\n`).cstJournal.children
+    parseLedgerToCST(`account test:account  ; comment\n`).cstJournal.children
   );
   t.is(
     result.length,

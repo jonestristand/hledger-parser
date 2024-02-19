@@ -35,6 +35,11 @@ export const SINGLE_WS = createToken({
   group: Lexer.SKIPPED
 });
 
+export const DOUBLE_WS = createToken({
+  name: 'DOUBLE_WS',
+  pattern: /[ \t]{2}/,
+});
+
 export const DIGIT = createToken({ name: 'DIGIT', pattern: /\d/ });
 export const SLASH = createToken({ name: 'SLASH', pattern: '/' });
 export const DOT = createToken({ name: 'DOT', pattern: '.' });
@@ -138,6 +143,12 @@ export const AccountDirective = createToken({
   start_chars_hint: ['A', 'a'],
   line_breaks: false,
   push_mode: 'account_mode'
+});
+
+export const AccountName = createToken({
+  name: 'AccountName',
+  pattern: matchAccountName(),
+  line_breaks: false
 });
 
 // ====- Posting Tokens -====

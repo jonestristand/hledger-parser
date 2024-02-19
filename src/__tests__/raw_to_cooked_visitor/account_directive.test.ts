@@ -20,7 +20,7 @@ test('parses an account directive', (t) => {
 
 test('parses an account directive with an inline comment containing a tag and value', (t) => {
   const result = RawToCookedVisitor.journal(
-    parseLedgerToRaw(`account Assets:Chequing ;type: A\n`).rawJournal
+    parseLedgerToRaw(`account Assets:Chequing  ;type: A\n`).rawJournal
   );
   t.is(result.accounts.length, 1, 'should have 1 parsed account directive');
   t.deepEqual(
@@ -50,7 +50,7 @@ test('parses an account directive with a subdirective tag and value', (t) => {
 
 test('parses an account directive with combined inline and subdirective tags', (t) => {
   const result = RawToCookedVisitor.journal(
-    parseLedgerToRaw(`account Assets:Chequing ;secret:\n    ;type: A\n`)
+    parseLedgerToRaw(`account Assets:Chequing  ;secret:\n    ;type: A\n`)
       .rawJournal
   );
   t.is(result.accounts.length, 1, 'should have 1 parsed account directive');

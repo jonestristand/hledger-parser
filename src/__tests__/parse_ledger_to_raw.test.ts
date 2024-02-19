@@ -17,7 +17,7 @@ test.before((t) => {
     Assets:Investments     20 funds @ $1.00
 
 account Assets:Chequing
-account Expenses:Food ; type: E
+account Expenses:Food  ; type: E
 
 # Full-line comment
 

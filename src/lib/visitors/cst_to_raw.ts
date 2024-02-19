@@ -128,7 +128,7 @@ class HledgerToRawVisitor extends BaseCstVisitor {
       ?.filter(notEmpty);
 
     return {
-      account: ctx.RealAccountName[0].payload as string[],
+      account: ctx.AccountName[0].payload as string[],
       comments: ctx.inlineComment
         ? this.inlineComment(ctx.inlineComment[0].children)
         : undefined,

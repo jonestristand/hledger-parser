@@ -99,7 +99,8 @@ export interface AccountDirectiveCstNode extends CstNode {
 
 export type AccountDirectiveCstChildren = {
   AccountDirective: IToken[];
-  RealAccountName: IToken[];
+  AccountName: IToken[];
+  DOUBLE_WS?: IToken[];
   inlineComment?: InlineCommentCstNode[];
   NEWLINE: IToken[];
   accountDirectiveContentLine?: AccountDirectiveContentLineCstNode[];
