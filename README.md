@@ -1,3 +1,6 @@
+> [!CAUTION]
+> This repository has been **DEPRECATED**. The project is still maintained at https://github.com/goldenpathtechnologies/hledger-parser.
+
 # Welcome to hledger-parser 👋
 
 <p>
